@@ -1,0 +1,30 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Run CPRL Tests",
+      "request": "launch",
+      "mainClass": "test.cprl.Corretor",
+      "projectName": "CPRL",
+      "classPaths": [
+        "${workspaceFolder}/lib/junit_4/junit-4.13.1.jar",
+        "${workspaceFolder}/lib/junit_4/hamcrest-all-1.3.jar",
+        "${workspaceFolder}/src",
+        "${workspaceFolder}/test"
+      ]
+    },
+    {
+      "type": "java",
+      "name": "Run Parser Tests",
+      "request": "launch",
+      "mainClass": "test.cprl.TestParser",
+      "projectName": "CPRL",
+      "classPaths": [
+        "${workspaceFolder}/lib/junit_4/junit-4.13.1.jar",
+        "${workspaceFolder}/lib/junit_4/hamcrest-all-1.3.jar",
+        "${workspaceFolder}/src",
+        "${workspaceFolder}/test"
+      ]
+    }
+  ]
+}

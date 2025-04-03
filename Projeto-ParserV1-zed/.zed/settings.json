@@ -1,0 +1,26 @@
+{
+  "language_overrides": {
+    "Java": {
+      "format_on_save": true,
+      "tab_size": 4
+    }
+  },
+  "lsp": {
+    "java": {
+      "classpath": [
+        "./lib/junit_4/junit-4.13.1.jar",
+        "./lib/junit_4/hamcrest-all-1.3.jar",
+        "./lib/CopyLibs/org-netbeans-modules-java-j2seproject-copylibstask.jar"
+      ],
+      "javaHome": null
+    }
+  },
+  "formatter": {
+    "java": {
+      "indent_size": 4,
+      "tab_width": 4,
+      "continuation_indent_size": 4
+    }
+  },
+  "preferred_line_length": 100
+}
