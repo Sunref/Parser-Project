@@ -250,12 +250,21 @@ public class Parser {
      * arrayTypeDecl = "type" typeId "=" "array" "[" intConstValue "]" "of" typeName ";" .
      */
     public void parseArrayTypeDecl() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-
-        // sua implementação aqui
-
-        // </editor-fold>
-
+        //Implementação por Fernanda
+        try {
+            match(Symbol.typeRW);
+            match(Symbol.equals);
+            match(Symbol.arrayRW);
+            match(Symbol.leftBracket);
+            match(Symbol.IntegerRW);
+            match(Symbol.rightBracket);
+            match(Symbol.ofRW);
+            match(Symbol.intLiteral);
+            match(Symbol.semicolon);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            exit();
+        }
     }
 
     /**
@@ -306,12 +315,10 @@ public class Parser {
      * subprogramDecls = ( subprogramDecl )* .
      */
     public void parseSubprogramDecls() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-
-        // sua implementação aqui
-
-        // </editor-fold>
-
+        //Implementação por Fernanda
+        while (scanner.getSymbol().isSubprogramDeclStarter()) {
+            parseSubprogramDecl();
+        }
     }
 
     /**
@@ -326,12 +333,14 @@ public class Parser {
          * functionRW. Use a mensagem "Invalid subprogram decl.".
          */
 
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-
-        // sua implementação aqui
-
-        // </editor-fold>
-
+        //Implementação por Fernanda
+        if (scanner.getSymbol() == Symbol.procedureRW) {
+            parseProcedureDecl();
+        } else if (scanner.getSymbol() == Symbol.functionRW) {
+            parseProcedureDecl();
+        } else {
+            throw new InternalError("Invalid subprogram decl.");
+        }
     }
 
     /**
