@@ -143,13 +143,24 @@ public class Parser {
          */
 
         //Implementação por Fernanda
-        if (scanner.getSymbol() == Symbol.constRW) {
+        switch (scanner.getSymbol()) {
+            case constRW:
+                System.out.println("aa");
             parseConstDecl();
-        } else if (scanner.getSymbol() == Symbol.varRW) {
+            break;
+            case varRW:
+                                System.out.println("ab");
+
             parseVarDecl();
-        } else if (scanner.getSymbol() == Symbol.typeRW) {
+            break;
+            case typeRW:
+                                System.out.println("ac");
+
             parseArrayTypeDecl();
-        } else {
+            break;
+            default:
+                                System.out.println("ad");
+
             throw new InternalError("Invalid initial decl.");
         }
     }
