@@ -770,16 +770,10 @@ public class Parser {
      */
     public void parseRelation() throws IOException {
         //Implementação por Fernanda
-        try {
+        parseSimpleExpr();
+        if (scanner.getSymbol().isRelationalOperator()) {
+            matchCurrentSymbol();
             parseSimpleExpr();
-            //preciso ver o que está errado aqui - fernandita
-            if (scanner.getSymbol().isRelationalOp) {
-                matchCurrentSymbol();
-                parseSimpleExpr();
-            }
-        } catch (ParserException e) {
-            ErrorHandler.getInstance().reportError(e);
-            exit();
         }
     }
 
@@ -790,12 +784,17 @@ public class Parser {
      *   addingOp = "+" | "-" .
      */
     public void parseSimpleExpr() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
+        //Implementação por Fernanda
+        if (scanner.getSymbol().isAddingOperator()) {
+            matchCurrentSymbol();
+        }
 
-        // sua implementação aqui
+        parseTerm();
 
-        // </editor-fold>
-
+        while (scanner.getSymbol().isAddingOperator()) {
+            matchCurrentSymbol();
+            parseTerm();
+        }
     }
 
     /**
@@ -805,12 +804,13 @@ public class Parser {
      * multiplyingOp = "*" | "/" | "mod" .
      */
     public void parseTerm() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
+        //Implementação por Fernanda
+        parseFactor();
 
-        // sua implementação aqui
-
-        // </editor-fold>
-
+        while (scanner.getSymbol().isMultiplyingOperator()) {
+            matchCurrentSymbol();
+            parseFactor();
+        }
     }
 
     /**
@@ -874,12 +874,12 @@ public class Parser {
      * constValue = literal | constId .
      */
     public void parseConstValue() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-
-        // sua implementação aqui
-
-        // </editor-fold>
-
+        //Implementação por Fernanda
+        if (scanner.getSymbol().isLiteral()) {
+            matchCurrentSymbol();
+        } else {
+            matchCurrentSymbol();
+        }
     }
 
     /**
