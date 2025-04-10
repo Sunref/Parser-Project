@@ -5,6 +5,7 @@ import edu.citadel.compiler.InternalCompilerException;
 import edu.citadel.compiler.ParserException;
 import edu.citadel.compiler.Position;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -143,24 +144,13 @@ public class Parser {
          */
 
         //Implementação por Fernanda
-        switch (scanner.getSymbol()) {
-            case constRW:
-                System.out.println("aa");
+        if (scanner.getSymbol() == Symbol.constRW) {
             parseConstDecl();
-            break;
-            case varRW:
-                                System.out.println("ab");
-
+        } else if (scanner.getSymbol() == Symbol.varRW) {
             parseVarDecl();
-            break;
-            case typeRW:
-                                System.out.println("ac");
-
+        } else if (scanner.getSymbol() == Symbol.typeRW) {
             parseArrayTypeDecl();
-            break;
-            default:
-                                System.out.println("ad");
-
+        } else {
             throw new InternalError("Invalid initial decl.");
         }
     }
@@ -510,12 +500,16 @@ public class Parser {
      * assignmentStmt = variable ":=" expression ";" .
      */
     public void parseAssignmentStmt() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-
-        // sua implementação aqui
-
-        // </editor-fold>
-
+        //Implementação por Fernanda
+        try {
+            parseVariable();
+            match(Symbol.assign);
+            parseExpression();
+            match(Symbol.semicolon);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            exit();
+        }
     }
 
     /**
@@ -526,12 +520,32 @@ public class Parser {
      *          ( "else" statements )? "end" "if" ";" .
      */
     public void parseIfStmt() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
+        //Implementação por Fernanda
+        try {
+            match(Symbol.ifRW);
+            parseExpression();
+            match(Symbol.thenRW);
+            parseStatements();
 
-        // sua implementação aqui
+            while (scanner.getSymbol() == Symbol.elsifRW) {
+                matchCurrentSymbol();
+                parseExpression();
+                match(Symbol.thenRW);
+                parseStatements();
+            }
 
-        // </editor-fold>
+            if (scanner.getSymbol() == Symbol.elseRW) {
+                matchCurrentSymbol();
+                parseStatements();
+            }
 
+            match(Symbol.andRW);
+            match(Symbol.ifRW);
+            match(Symbol.semicolon);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            exit();
+        }
     }
 
     /**
@@ -540,12 +554,22 @@ public class Parser {
      * loopStmt = ( "while" booleanExpr )? "loop" statements "end" "loop" ";" .
      */
     public void parseLoopStmt() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
+        //Implementação por Fernanda
+        try {
+            if (scanner.getSymbol() == Symbol.whileRW) {
+                matchCurrentSymbol();
+                parseExpression();
+            }
 
-        // sua implementação aqui
-
-        // </editor-fold>
-
+            match(Symbol.loopRW);
+            parseStatements();
+            match(Symbol.endRW);
+            match(Symbol.loopRW);
+            match(Symbol.semicolon);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            exit();
+        }
     }
 
     /**
@@ -554,12 +578,19 @@ public class Parser {
      * exitStmt = "exit" ( "when" booleanExpr )? ";" .
      */
     public void parseExitStmt() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
+        //Implementação por Fernanda
+        try {
+            match(Symbol.endRW);
 
-        // sua implementação aqui
+            if (scanner.getSymbol() == Symbol.whenRW) {
+                parseExpression();
+            }
 
-        // </editor-fold>
-
+            match(Symbol.semicolon);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            exit();
+        }
     }
 
     /**
@@ -738,12 +769,18 @@ public class Parser {
      * relationalOp = "=" | "!=" | "<" | "<=" | ">" | ">=" .
      */
     public void parseRelation() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-
-        // sua implementação aqui
-
-        // </editor-fold>
-
+        //Implementação por Fernanda
+        try {
+            parseSimpleExpr();
+            //preciso ver o que está errado aqui - fernandita
+            if (scanner.getSymbol().isRelationalOp) {
+                matchCurrentSymbol();
+                parseSimpleExpr();
+            }
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            exit();
+        }
     }
 
     /**
