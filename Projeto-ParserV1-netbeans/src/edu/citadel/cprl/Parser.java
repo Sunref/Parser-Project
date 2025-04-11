@@ -544,13 +544,13 @@ public class Parser {
         //Implementação por Fernanda
         try {
             match(Symbol.ifRW);
-            parseExpression();
+            parseRelation();
             match(Symbol.thenRW);
             parseStatements();
 
             while (scanner.getSymbol() == Symbol.elsifRW) {
                 matchCurrentSymbol();
-                parseExpression();
+                parseRelation();
                 match(Symbol.thenRW);
                 parseStatements();
             }
@@ -560,7 +560,7 @@ public class Parser {
                 parseStatements();
             }
 
-            match(Symbol.andRW);
+            match(Symbol.endRW);
             match(Symbol.ifRW);
             match(Symbol.semicolon);
         } catch (ParserException e) {

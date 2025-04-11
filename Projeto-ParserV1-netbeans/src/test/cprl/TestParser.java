@@ -27,7 +27,7 @@ public class TestParser {
         // testes CPRL0
         //executar( "../examples/Incorrect/CPRL0/Incorrect_101.cprl" );  // 01
         //executar( "../examples/Incorrect/CPRL0/Incorrect_102.cprl" );  // 02
-        executar( "../examples/Incorrect/CPRL0/Incorrect_103.cprl" );  // 03
+        //executar( "../examples/Incorrect/CPRL0/Incorrect_103.cprl" );  // 03
         //executar( "../examples/Incorrect/CPRL0/Incorrect_104.cprl" );  // 04
         //executar( "../examples/Incorrect/CPRL0/Incorrect_105.cprl" );  // 05
         //executar( "../examples/Incorrect/CPRL0/Incorrect_106.cprl" );  // 06
@@ -35,7 +35,7 @@ public class TestParser {
         //executar( "../examples/Incorrect/CPRL0/Incorrect_108.cprl" );  // 08
         //executar( "../examples/Incorrect/CPRL0/Incorrect_109.cprl" );  // 09
         //executar( "../examples/Incorrect/CPRL0/Incorrect_110.cprl" );  // 10
-        //executar( "../examples/Incorrect/CPRL0/Incorrect_111.cprl" );  // 11
+        executar( "../examples/Incorrect/CPRL0/Incorrect_111.cprl" );  // 11
         //executar( "../examples/Incorrect/CPRL0/Incorrect_112.cprl" );  // 12
         //executar( "../examples/Incorrect/CPRL0/Incorrect_113.cprl" );  // 13
         //executar( "../examples/Incorrect/CPRL0/Incorrect_114.cprl" );  // 14
