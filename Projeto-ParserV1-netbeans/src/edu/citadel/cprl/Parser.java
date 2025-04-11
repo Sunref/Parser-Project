@@ -601,9 +601,10 @@ public class Parser {
     public void parseExitStmt() throws IOException {
         //Implementação por Fernanda
         try {
-            match(Symbol.endRW);
+            match(Symbol.exitRW);
 
             if (scanner.getSymbol() == Symbol.whenRW) {
+                matchCurrentSymbol();
                 parseExpression();
             }
 
