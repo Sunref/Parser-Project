@@ -164,10 +164,12 @@ public class Parser {
         //Implementação por Fernanda
         try {
             match(Symbol.constRW);
+            Token constIdToken = scanner.getToken();
             match(Symbol.identifier);
             match(Symbol.assign);
             parseLiteral();
             match(Symbol.semicolon);
+            idTable.add(constIdToken, IdType.constantId);
         } catch (ParserException e) {
             ErrorHandler.getInstance().reportError(e);
             exit();
@@ -445,7 +447,6 @@ public class Parser {
      */
     public void parseStatements() throws IOException {
         //Implementação por Fernanda
-
         while (scanner.getSymbol().isStmtStarter()) {
             parseStatement();
         }
@@ -469,7 +470,6 @@ public class Parser {
          */
 
         //Implementação por Fernanda
-
         Symbol symbol = scanner.getSymbol();
 
         if (symbol == Symbol.identifier) {
@@ -627,12 +627,13 @@ public class Parser {
      * expressions = expression ( "," expression )* .
      */
     public void parseExpressions() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
+        //Implementação por Fernanda
+        parseExpression();
 
-        // sua implementação aqui
-
-        // </editor-fold>
-
+        while (scanner.getSymbol() == Symbol.comma) {
+            matchCurrentSymbol();
+            parseExpression();
+        }
     }
 
     /**

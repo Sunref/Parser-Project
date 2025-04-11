@@ -25,9 +25,9 @@ public class TestParser {
          */
         
         // testes CPRL0
-        executar( "../examples/Incorrect/CPRL0/Incorrect_101.cprl" );  // 01
+        //executar( "../examples/Incorrect/CPRL0/Incorrect_101.cprl" );  // 01
         //executar( "../examples/Incorrect/CPRL0/Incorrect_102.cprl" );  // 02
-        //executar( "../examples/Incorrect/CPRL0/Incorrect_103.cprl" );  // 03
+        executar( "../examples/Incorrect/CPRL0/Incorrect_103.cprl" );  // 03
         //executar( "../examples/Incorrect/CPRL0/Incorrect_104.cprl" );  // 04
         //executar( "../examples/Incorrect/CPRL0/Incorrect_105.cprl" );  // 05
         //executar( "../examples/Incorrect/CPRL0/Incorrect_106.cprl" );  // 06
