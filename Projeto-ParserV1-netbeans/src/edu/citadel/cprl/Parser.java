@@ -621,12 +621,15 @@ public class Parser {
      * readStmt = "read" variable ";" .
      */
     public void parseReadStmt() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-
-        // sua implementação aqui
-
-        // </editor-fold>
-
+        //Implementação por Fernanda
+        try {
+            match(Symbol.readRW);
+            parseVariable();
+            match(Symbol.semicolon);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            exit();
+        }
     }
 
     /**
@@ -635,12 +638,15 @@ public class Parser {
      * writeStmt = "write" expressions ";" .
      */
     public void parseWriteStmt() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-
-        // sua implementação aqui
-
-        // </editor-fold>
-
+        //Implementação por Fernanda
+        try {
+            match(Symbol.writeRW);
+            parseExpressions();
+            match(Symbol.semicolon);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            exit();
+        }
     }
 
     /**
