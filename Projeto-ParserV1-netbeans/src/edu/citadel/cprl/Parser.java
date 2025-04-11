@@ -727,12 +727,17 @@ public class Parser {
      * returnStmt = "return" ( expression )? ";" .
      */
     public void parseReturnStmt() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-
-        // sua implementação aqui
-
-        // </editor-fold>
-
+        //Implementaçao por Fernanda
+        try {
+            match(Symbol.returnRW);
+            if (scanner.getSymbol() != Symbol.semicolon) {
+                parseExpression();
+            }
+            match(Symbol.semicolon);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            exit();
+        }
     }
 
     /**
