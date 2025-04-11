@@ -5,7 +5,6 @@ import edu.citadel.compiler.InternalCompilerException;
 import edu.citadel.compiler.ParserException;
 import edu.citadel.compiler.Position;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -472,25 +471,46 @@ public class Parser {
         //Implementação por Fernanda
         Symbol symbol = scanner.getSymbol();
 
-        if (symbol == Symbol.identifier) {
-            IdType idType = idTable.get(scanner.getToken());
-            if (idType != null) {
-                if (idType == IdType.variableId) {
-                    parseAssignmentStmt();
-                } else if (idType == IdType.procedureId) {
-                    parseProcedureCallStmt();
+        try {
+            if (symbol == Symbol.identifier) {
+                IdType idType = idTable.get(scanner.getToken());
+                if (idType != null) {
+                    if (idType == IdType.variableId) {
+                        parseAssignmentStmt();
+                    } else if (idType == IdType.procedureId) {
+                        parseProcedureCallStmt();
+                    } else {
+                        throw error(
+                            "Identifier \"" +
+                            scanner.getToken() +
+                            "\" cannot start a statement."
+                        );
+                    }
                 } else {
-                    throw new InternalError("Invalid identifier type");
+                    throw error(
+                        "Identifier \"" +
+                        scanner.getToken() +
+                        "\" has not been declared."
+                    );
                 }
-            } else {
-                throw new InternalError("Identifier not found");
+            } else if (symbol == Symbol.ifRW) {
+                parseIfStmt();
+            } else if (symbol == Symbol.loopRW || symbol == Symbol.whileRW) {
+                parseLoopStmt();
+            } else if (symbol == Symbol.exitRW) {
+                parseExitStmt();
+            } else if (symbol == Symbol.readRW) {
+                parseReadStmt();
+            } else if (symbol == Symbol.writeRW) {
+                parseWriteStmt();
+            } else if (symbol == Symbol.writelnRW) {
+                parseWritelnStmt();
+            } else if (symbol == Symbol.returnRW) {
+                parseReturnStmt();
             }
-        } else if (symbol == Symbol.ifRW) {
-            parseIfStmt();
-        } else if (symbol == Symbol.loopRW || symbol == Symbol.whileRW) {
-            parseLoopStmt();
-        } else if (symbol == Symbol.exitRW) {
-            parseExitStmt();
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            exit();
         }
     }
 
@@ -502,7 +522,8 @@ public class Parser {
     public void parseAssignmentStmt() throws IOException {
         //Implementação por Fernanda
         try {
-            parseVariable();
+            Token identifierToken = scanner.getToken();
+            match(Symbol.identifier);
             match(Symbol.assign);
             parseExpression();
             match(Symbol.semicolon);
@@ -662,12 +683,18 @@ public class Parser {
      * procedureCallStmt = procId ( actualParameters )? ";" .
      */
     public void parseProcedureCallStmt() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-
-        // sua implementação aqui
-
-        // </editor-fold>
-
+        //Implementação por Fernanda
+        try {
+            Token procIdToken = scanner.getToken();
+            match(Symbol.identifier);
+            if (scanner.getSymbol() == Symbol.leftParen) {
+                parseActualParameters();
+            }
+            match(Symbol.semicolon);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            exit();
+        }
     }
 
     /**
@@ -676,12 +703,15 @@ public class Parser {
      * actualParameters = "(" expressions ")" .
      */
     public void parseActualParameters() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-
-        // sua implementação aqui
-
-        // </editor-fold>
-
+        //Implementação por Fernanda
+        try {
+            match(Symbol.leftParen);
+            parseExpressions();
+            match(Symbol.rightParen);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            exit();
+        }
     }
 
     /**
