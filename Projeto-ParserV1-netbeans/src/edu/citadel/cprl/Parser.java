@@ -339,7 +339,7 @@ public class Parser {
         if (scanner.getSymbol() == Symbol.procedureRW) {
             parseProcedureDecl();
         } else if (scanner.getSymbol() == Symbol.functionRW) {
-            parseProcedureDecl();
+            parseFunctionDecl();
         } else {
             throw new InternalError("Invalid subprogram decl.");
         }
@@ -351,11 +351,12 @@ public class Parser {
      * procedureDecl = "procedure" procId ( formalParameters )? "is" initialDecls statementPart procId ";" .
      */
     public void parseProcedureDecl() throws IOException {
+        //Implementado por fernanda
         try {
             match(Symbol.procedureRW);
-            Token procId = scanner.getToken();
+            Token procToken = scanner.getToken();
             match(Symbol.identifier);
-            idTable.add(procId, IdType.procedureId);
+            idTable.add(procToken, IdType.procedureId);
             idTable.openScope();
 
             if (scanner.getSymbol() == Symbol.leftParen) {
@@ -366,14 +367,14 @@ public class Parser {
             parseInitialDecls();
             parseStatementPart();
             idTable.closeScope();
-
-            Token procId2 = scanner.getToken();
+            
+            Token procToken2 = scanner.getToken();
             match(Symbol.identifier);
 
-            if (!procId.getText().equals(procId2.getText())) {
-                throw error(procId2.getPosition(), "Procedure name mismatch.");
+            if (!procToken.getText().equals(procToken2.getText())) {
+                throw error(procToken2.getPosition(), "Procedura name mismatch.");
             }
-
+            
             match(Symbol.semicolon);
         } catch (ParserException e) {
             ErrorHandler.getInstance().reportError(e);
@@ -387,12 +388,38 @@ public class Parser {
      * functionDecl = "function" funcId ( formalParameters )? "return" typeName "is" initialDecls statementPart funcId ";" .
      */
     public void parseFunctionDecl() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
+        //Implementado por fernanda
+        try {
+            match(Symbol.functionRW);
+            Token funcToken = scanner.getToken();
+            match(Symbol.identifier);
+            idTable.add(funcToken, IdType.procedureId);
+            idTable.openScope();
 
-        // sua implementação aqui
+            if (scanner.getSymbol() == Symbol.leftParen) {
+                parseFormalParameters();
+            }
 
-        // </editor-fold>
+            match(Symbol.returnRW);
+            parseTypeName();
+            match(Symbol.isRW);
+            parseInitialDecls();
+            parseStatementPart();
+            idTable.closeScope();
 
+            Token funcToken2 = scanner.getToken();
+            match(Symbol.identifier);
+            idTable.add(funcToken2, IdType.procedureId);
+
+            if (!funcToken.getText().equals(funcToken2.getText())) {
+                throw error(funcToken2.getPosition(), "Function name mismatch.");
+            }
+            
+            match(Symbol.semicolon);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            exit();
+        }
     }
 
     /**
@@ -401,12 +428,24 @@ public class Parser {
      * formalParameters = "(" parameterDecl ( "," parameterDecl )* ")" .
      */
     public void parseFormalParameters() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
+        //Implementado por fernanda
+        try {
+            match(Symbol.leftParen);
 
-        // sua implementação aqui
+            if (scanner.getSymbol() != Symbol.rightParen) {
+                parseParameterDecl();
 
-        // </editor-fold>
+                while (scanner.getSymbol() == Symbol.comma) {
+                    matchCurrentSymbol();
+                    parseParameterDecl();
+                }
+            }
 
+            match(Symbol.rightParen);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            exit();
+        }
     }
 
     /**
@@ -415,12 +454,27 @@ public class Parser {
      * parameterDecl = ( "var" )? paramId ":" typeName .
      */
     public void parseParameterDecl() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
+        //Implementado por Fernanda
+        try {
+            Symbol symbol = scanner.getSymbol();
 
-        // sua implementação aqui
+            if (symbol == Symbol.varRW) {
+                matchCurrentSymbol();
+                symbol = scanner.getSymbol();
+            }
 
-        // </editor-fold>
+            Token paramId = scanner.getToken();
+            match(Symbol.identifier);
 
+            idTable.add(paramId, IdType.variableId);
+
+            match(Symbol.colon);
+
+            parseTypeName();
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            exit();
+        }
     }
 
     /**

@@ -49,14 +49,14 @@ public class TestParser {
         //executar( "../examples/Incorrect/CPRL0/Incorrect_122.cprl" );  // 22
         //executar( "../examples/Incorrect/CPRL0/Incorrect_123.cprl" );  // 23
         //executar( "../examples/Incorrect/CPRL0/Incorrect_124.cprl" );  // 24
-        executar( "../examples/Incorrect/CPRL0/Incorrect_125.cprl" );  // 25
+        //executar( "../examples/Incorrect/CPRL0/Incorrect_125.cprl" );  // 25
         //executar( "../examples/Incorrect/CPRL0/Incorrect_126.cprl" );  // 26
         //executar( "../examples/Incorrect/CPRL0/Incorrect_127.cprl" );  // 27
         //executar( "../examples/Incorrect/CPRL0/Incorrect_128.cprl" );  // 28
         //executar( "../examples/Incorrect/CPRL0/Incorrect_129.cprl" );  // 29
         
         // testes subprogramas
-        //executar( "../examples/Incorrect/Subprograms/Incorrect_201.cprl" );  // 30
+        executar( "../examples/Incorrect/Subprograms/Incorrect_201.cprl" );  // 30
         //executar( "../examples/Incorrect/Subprograms/Incorrect_202.cprl" );  // 31
         //executar( "../examples/Incorrect/Subprograms/Incorrect_203.cprl" );  // 32
         //executar( "../examples/Incorrect/Subprograms/Incorrect_204.cprl" );  // 33
