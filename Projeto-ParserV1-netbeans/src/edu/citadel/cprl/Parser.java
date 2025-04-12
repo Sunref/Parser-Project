@@ -367,14 +367,17 @@ public class Parser {
             parseInitialDecls();
             parseStatementPart();
             idTable.closeScope();
-            
+
             Token procToken2 = scanner.getToken();
             match(Symbol.identifier);
 
             if (!procToken.getText().equals(procToken2.getText())) {
-                throw error(procToken2.getPosition(), "Procedura name mismatch.");
+                throw error(
+                    procToken2.getPosition(),
+                    "Procedura name mismatch."
+                );
             }
-            
+
             match(Symbol.semicolon);
         } catch (ParserException e) {
             ErrorHandler.getInstance().reportError(e);
@@ -393,7 +396,7 @@ public class Parser {
             match(Symbol.functionRW);
             Token funcToken = scanner.getToken();
             match(Symbol.identifier);
-            idTable.add(funcToken, IdType.procedureId);
+            idTable.add(funcToken, IdType.functionId);
             idTable.openScope();
 
             if (scanner.getSymbol() == Symbol.leftParen) {
@@ -409,12 +412,14 @@ public class Parser {
 
             Token funcToken2 = scanner.getToken();
             match(Symbol.identifier);
-            idTable.add(funcToken2, IdType.procedureId);
 
             if (!funcToken.getText().equals(funcToken2.getText())) {
-                throw error(funcToken2.getPosition(), "Function name mismatch.");
+                throw error(
+                    funcToken2.getPosition(),
+                    "Function name mismatch."
+                );
             }
-            
+
             match(Symbol.semicolon);
         } catch (ParserException e) {
             ErrorHandler.getInstance().reportError(e);
@@ -999,12 +1004,17 @@ public class Parser {
      * functionCall = funcId ( actualParameters )? .
      */
     public void parseFunctionCall() throws IOException {
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
+        //Implementação por Fernanda
+        try {
+            match(Symbol.identifier);
 
-        // sua implementação aqui
-
-        // </editor-fold>
-
+            if (scanner.getSymbol() == Symbol.leftParen) {
+                parseActualParameters();
+            }
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            exit();
+        }
     }
 
     /***************************************************************************

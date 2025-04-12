@@ -5,12 +5,12 @@
             <url>src/edu/citadel/cprl/Parser.java</url>
             <bookmark id="11">
                 <name/>
-                <line>259</line>
+                <line>258</line>
                 <key/>
             </bookmark>
             <bookmark id="12">
                 <name/>
-                <line>496</line>
+                <line>489</line>
                 <key/>
             </bookmark>
         </file>
@@ -20,7 +20,8 @@
             <file>file:/home/fernanda/Documentos/GitHub/Computer-Science/2025/5th%20semester/Compiler%20Construction/Parser/Projeto-ParserV1-netbeans/src/edu/citadel/cprl/Parser.java</file>
             <file>file:/home/fernanda/Documentos/GitHub/Computer-Science/2025/5th%20semester/Compiler%20Construction/Parser/Projeto-ParserV1-netbeans/src/Gramática%20CPRL.txt</file>
             <file>file:/home/fernanda/Documentos/GitHub/Computer-Science/2025/5th%20semester/Compiler%20Construction/Parser/Projeto-ParserV1-netbeans/src/edu/citadel/cprl/Symbol.java</file>
-            <file>file:/home/fernanda/Documentos/GitHub/Computer-Science/2025/5th%20semester/Compiler%20Construction/Parser/Projeto-ParserV1-netbeans/src/edu/citadel/cprl/ParserV0.java</file>
+            <file>file:/home/fernanda/Documentos/GitHub/Computer-Science/2025/5th%20semester/Compiler%20Construction/Parser/Projeto-ParserV1-netbeans/src/test/cprl/TestParser.java</file>
+            <file>file:/home/fernanda/Documentos/GitHub/Computer-Science/2025/5th%20semester/Compiler%20Construction/Parser/Projeto-ParserV1-netbeans/src/edu/citadel/cprl/IdTable.java</file>
         </group>
     </open-files>
 </project-private>
