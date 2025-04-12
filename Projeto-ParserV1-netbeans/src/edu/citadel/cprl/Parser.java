@@ -142,7 +142,6 @@ public class Parser {
          * nem varRW. Use a mensagem "Invalid initial decl.".
          */
 
-        //Implementação por Fernanda
         if (scanner.getSymbol() == Symbol.constRW) {
             parseConstDecl();
         } else if (scanner.getSymbol() == Symbol.varRW) {
@@ -160,7 +159,6 @@ public class Parser {
      * constDecl = "const" constId ":=" literal ";" .
      */
     public void parseConstDecl() throws IOException {
-        //Implementação por Fernanda
         try {
             match(Symbol.constRW);
             Token constIdToken = scanner.getToken();
@@ -252,16 +250,24 @@ public class Parser {
      * arrayTypeDecl = "type" typeId "=" "array" "[" intConstValue "]" "of" typeName ";" .
      */
     public void parseArrayTypeDecl() throws IOException {
-        //Implementação por Fernanda
         try {
             match(Symbol.typeRW);
+            Token arrayToken = scanner.getToken();
+            idTable.add(arrayToken, IdType.arrayTypeId);
+            match(Symbol.identifier);
             match(Symbol.equals);
             match(Symbol.arrayRW);
             match(Symbol.leftBracket);
-            match(Symbol.IntegerRW);
+
+            if (scanner.getSymbol() == Symbol.intLiteral) {
+                matchCurrentSymbol();
+            } else {
+                throw error("Invalid constant.");
+            }
+
             match(Symbol.rightBracket);
             match(Symbol.ofRW);
-            match(Symbol.intLiteral);
+            parseTypeName();
             match(Symbol.semicolon);
         } catch (ParserException e) {
             ErrorHandler.getInstance().reportError(e);
@@ -317,7 +323,6 @@ public class Parser {
      * subprogramDecls = ( subprogramDecl )* .
      */
     public void parseSubprogramDecls() throws IOException {
-        //Implementação por Fernanda
         while (scanner.getSymbol().isSubprogramDeclStarter()) {
             parseSubprogramDecl();
         }
@@ -335,7 +340,6 @@ public class Parser {
          * functionRW. Use a mensagem "Invalid subprogram decl.".
          */
 
-        //Implementação por Fernanda
         if (scanner.getSymbol() == Symbol.procedureRW) {
             parseProcedureDecl();
         } else if (scanner.getSymbol() == Symbol.functionRW) {
@@ -504,7 +508,6 @@ public class Parser {
      * statements = ( statement )* .
      */
     public void parseStatements() throws IOException {
-        //Implementação por Fernanda
         while (scanner.getSymbol().isStmtStarter()) {
             parseStatement();
         }
@@ -527,7 +530,6 @@ public class Parser {
          * Dica: usar a tabela de identificadores.
          */
 
-        //Implementação por Fernanda
         Symbol symbol = scanner.getSymbol();
 
         try {
@@ -579,10 +581,8 @@ public class Parser {
      * assignmentStmt = variable ":=" expression ";" .
      */
     public void parseAssignmentStmt() throws IOException {
-        //Implementação por Fernanda
         try {
-            Token identifierToken = scanner.getToken();
-            match(Symbol.identifier);
+            parseVariable();
             match(Symbol.assign);
             parseExpression();
             match(Symbol.semicolon);
@@ -600,7 +600,6 @@ public class Parser {
      *          ( "else" statements )? "end" "if" ";" .
      */
     public void parseIfStmt() throws IOException {
-        //Implementação por Fernanda
         try {
             match(Symbol.ifRW);
             parseRelation();
@@ -634,7 +633,6 @@ public class Parser {
      * loopStmt = ( "while" booleanExpr )? "loop" statements "end" "loop" ";" .
      */
     public void parseLoopStmt() throws IOException {
-        //Implementação por Fernanda
         try {
             if (scanner.getSymbol() == Symbol.whileRW) {
                 matchCurrentSymbol();
@@ -658,7 +656,6 @@ public class Parser {
      * exitStmt = "exit" ( "when" booleanExpr )? ";" .
      */
     public void parseExitStmt() throws IOException {
-        //Implementação por Fernanda
         try {
             match(Symbol.exitRW);
 
@@ -680,7 +677,6 @@ public class Parser {
      * readStmt = "read" variable ";" .
      */
     public void parseReadStmt() throws IOException {
-        //Implementação por Fernanda
         try {
             match(Symbol.readRW);
             parseVariable();
@@ -697,7 +693,6 @@ public class Parser {
      * writeStmt = "write" expressions ";" .
      */
     public void parseWriteStmt() throws IOException {
-        //Implementação por Fernanda
         try {
             match(Symbol.writeRW);
             parseExpressions();
@@ -714,7 +709,6 @@ public class Parser {
      * expressions = expression ( "," expression )* .
      */
     public void parseExpressions() throws IOException {
-        //Implementação por Fernanda
         parseExpression();
 
         while (scanner.getSymbol() == Symbol.comma) {
@@ -749,7 +743,6 @@ public class Parser {
      * procedureCallStmt = procId ( actualParameters )? ";" .
      */
     public void parseProcedureCallStmt() throws IOException {
-        //Implementação por Fernanda
         try {
             Token procIdToken = scanner.getToken();
             match(Symbol.identifier);
@@ -769,7 +762,6 @@ public class Parser {
      * actualParameters = "(" expressions ")" .
      */
     public void parseActualParameters() throws IOException {
-        //Implementação por Fernanda
         try {
             match(Symbol.leftParen);
             parseExpressions();
@@ -871,7 +863,6 @@ public class Parser {
      * relationalOp = "=" | "!=" | "<" | "<=" | ">" | ">=" .
      */
     public void parseRelation() throws IOException {
-        //Implementação por Fernanda
         parseSimpleExpr();
         if (scanner.getSymbol().isRelationalOperator()) {
             matchCurrentSymbol();
@@ -886,7 +877,6 @@ public class Parser {
      *   addingOp = "+" | "-" .
      */
     public void parseSimpleExpr() throws IOException {
-        //Implementação por Fernanda
         if (scanner.getSymbol().isAddingOperator()) {
             matchCurrentSymbol();
         }
@@ -906,7 +896,6 @@ public class Parser {
      * multiplyingOp = "*" | "/" | "mod" .
      */
     public void parseTerm() throws IOException {
-        //Implementação por Fernanda
         parseFactor();
 
         while (scanner.getSymbol().isMultiplyingOperator()) {
@@ -976,7 +965,6 @@ public class Parser {
      * constValue = literal | constId .
      */
     public void parseConstValue() throws IOException {
-        //Implementação por Fernanda
         if (scanner.getSymbol().isLiteral()) {
             matchCurrentSymbol();
         } else {
@@ -1004,7 +992,6 @@ public class Parser {
      * functionCall = funcId ( actualParameters )? .
      */
     public void parseFunctionCall() throws IOException {
-        //Implementação por Fernanda
         try {
             match(Symbol.identifier);
 
