@@ -778,7 +778,6 @@ public class Parser {
      * returnStmt = "return" ( expression )? ";" .
      */
     public void parseReturnStmt() throws IOException {
-        //Implementaçao por Fernanda
         try {
             match(Symbol.returnRW);
             if (scanner.getSymbol() != Symbol.semicolon) {
