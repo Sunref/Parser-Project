@@ -93,4 +93,29 @@
         <antcall target="compile-single"/>
         <antcall target="run-single"/>
     </target>
+    <!-- Run Corretor.java: compile and run Corretor.java -->
+    <target name="run-corretor" description="Compile and run Corretor.java">
+        <antcall target="compile-single">
+            <param name="javac.includes" value="test/cprl/Corretor.java"/>
+        </antcall>
+        <antcall target="run-single">
+            <param name="run.class" value="cprl.Corretor"/>
+        </antcall>
+    </target>
+    <!-- Run TestParser.java: compile and run TestParser.java -->
+    <target name="run-testparser" description="Compile and run TestParser.java">
+        <antcall target="compile-single">
+            <param name="javac.includes" value="test/cprl/TestParser.java"/>
+        </antcall>
+        <antcall target="run-single">
+            <param name="run.class" value="cprl.TestParser"/>
+        </antcall>
+    </target>
+    <!-- Run Selected: compile and run a selected file/class -->
+    <target name="run-selected" description="Compile and run a selected file/class (set -Djavac.includes=path/to/File.java -Drun.class=fully.qualified.ClassName)">
+        <fail unless="javac.includes">You must set -Djavac.includes=path/to/File.java</fail>
+        <fail unless="run.class">You must set -Drun.class=fully.qualified.ClassName</fail>
+        <antcall target="compile-single"/>
+        <antcall target="run-single"/>
+    </target>
 </project>

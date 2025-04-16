@@ -149,6 +149,50 @@
                 "panel": "new"
             },
             "problemMatcher": "$ant"
+        },
+        {
+            "label": "Run Corretor.java",
+            "type": "shell",
+            "command": "ant",
+            "args": [
+                "run-corretor"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": "$ant"
+        },
+        {
+            "label": "Run TestParser.java",
+            "type": "shell",
+            "command": "ant",
+            "args": [
+                "run-testparser"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": "$ant"
+        },
+        {
+            "label": "Run Selected",
+            "type": "shell",
+            "command": "ant",
+            "args": [
+                "run-selected"
+            ],
+            "options": {
+                "env": {
+                    "ANT_OPTS": "-Djavac.includes=${input:javacIncludes} -Drun.class=${input:runClass}"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": "$ant"
         }
     ],
     "inputs": [
