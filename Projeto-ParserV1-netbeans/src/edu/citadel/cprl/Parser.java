@@ -142,6 +142,7 @@ public class Parser {
          * nem varRW. Use a mensagem "Invalid initial decl.".
          */
 
+        //Implementação
         if (scanner.getSymbol() == Symbol.constRW) {
             parseConstDecl();
         } else if (scanner.getSymbol() == Symbol.varRW) {
@@ -159,6 +160,7 @@ public class Parser {
      * constDecl = "const" constId ":=" literal ";" .
      */
     public void parseConstDecl() throws IOException {
+        //Implementação
         try {
             match(Symbol.constRW);
             Token constIdToken = scanner.getToken();
@@ -250,6 +252,7 @@ public class Parser {
      * arrayTypeDecl = "type" typeId "=" "array" "[" intConstValue "]" "of" typeName ";" .
      */
     public void parseArrayTypeDecl() throws IOException {
+        //Implementação
         try {
             match(Symbol.typeRW);
             Token arrayToken = scanner.getToken();
@@ -323,6 +326,7 @@ public class Parser {
      * subprogramDecls = ( subprogramDecl )* .
      */
     public void parseSubprogramDecls() throws IOException {
+        //Implementação
         while (scanner.getSymbol().isSubprogramDeclStarter()) {
             parseSubprogramDecl();
         }
@@ -340,6 +344,7 @@ public class Parser {
          * functionRW. Use a mensagem "Invalid subprogram decl.".
          */
 
+        //Implementação
         if (scanner.getSymbol() == Symbol.procedureRW) {
             parseProcedureDecl();
         } else if (scanner.getSymbol() == Symbol.functionRW) {
@@ -395,7 +400,7 @@ public class Parser {
      * functionDecl = "function" funcId ( formalParameters )? "return" typeName "is" initialDecls statementPart funcId ";" .
      */
     public void parseFunctionDecl() throws IOException {
-        //Implementado por fernanda
+        //Implementação
         try {
             match(Symbol.functionRW);
             Token funcToken = scanner.getToken();
@@ -437,7 +442,7 @@ public class Parser {
      * formalParameters = "(" parameterDecl ( "," parameterDecl )* ")" .
      */
     public void parseFormalParameters() throws IOException {
-        //Implementado por fernanda
+        //Implementação
         try {
             match(Symbol.leftParen);
 
@@ -463,7 +468,7 @@ public class Parser {
      * parameterDecl = ( "var" )? paramId ":" typeName .
      */
     public void parseParameterDecl() throws IOException {
-        //Implementado por Fernanda
+        //Implementação
         try {
             Symbol symbol = scanner.getSymbol();
 
@@ -508,6 +513,7 @@ public class Parser {
      * statements = ( statement )* .
      */
     public void parseStatements() throws IOException {
+        //Implementação
         while (scanner.getSymbol().isStmtStarter()) {
             parseStatement();
         }
@@ -530,6 +536,7 @@ public class Parser {
          * Dica: usar a tabela de identificadores.
          */
 
+        //Implementação
         Symbol symbol = scanner.getSymbol();
 
         try {
@@ -581,6 +588,7 @@ public class Parser {
      * assignmentStmt = variable ":=" expression ";" .
      */
     public void parseAssignmentStmt() throws IOException {
+        //Implementação
         try {
             parseVariable();
             match(Symbol.assign);
@@ -600,6 +608,7 @@ public class Parser {
      *          ( "else" statements )? "end" "if" ";" .
      */
     public void parseIfStmt() throws IOException {
+        //Implementação
         try {
             match(Symbol.ifRW);
             parseRelation();
@@ -633,6 +642,7 @@ public class Parser {
      * loopStmt = ( "while" booleanExpr )? "loop" statements "end" "loop" ";" .
      */
     public void parseLoopStmt() throws IOException {
+        //Implementação
         try {
             if (scanner.getSymbol() == Symbol.whileRW) {
                 matchCurrentSymbol();
@@ -656,6 +666,7 @@ public class Parser {
      * exitStmt = "exit" ( "when" booleanExpr )? ";" .
      */
     public void parseExitStmt() throws IOException {
+        //Implementação
         try {
             match(Symbol.exitRW);
 
@@ -677,6 +688,7 @@ public class Parser {
      * readStmt = "read" variable ";" .
      */
     public void parseReadStmt() throws IOException {
+        //Implementação
         try {
             match(Symbol.readRW);
             parseVariable();
@@ -693,6 +705,7 @@ public class Parser {
      * writeStmt = "write" expressions ";" .
      */
     public void parseWriteStmt() throws IOException {
+        //Implementação
         try {
             match(Symbol.writeRW);
             parseExpressions();
@@ -709,6 +722,7 @@ public class Parser {
      * expressions = expression ( "," expression )* .
      */
     public void parseExpressions() throws IOException {
+        //Implementação
         parseExpression();
 
         while (scanner.getSymbol() == Symbol.comma) {
@@ -743,6 +757,7 @@ public class Parser {
      * procedureCallStmt = procId ( actualParameters )? ";" .
      */
     public void parseProcedureCallStmt() throws IOException {
+        //Implementação
         try {
             Token procIdToken = scanner.getToken();
             match(Symbol.identifier);
@@ -762,6 +777,7 @@ public class Parser {
      * actualParameters = "(" expressions ")" .
      */
     public void parseActualParameters() throws IOException {
+        //Implementação
         try {
             match(Symbol.leftParen);
             parseExpressions();
@@ -778,6 +794,7 @@ public class Parser {
      * returnStmt = "return" ( expression )? ";" .
      */
     public void parseReturnStmt() throws IOException {
+        //Implementação
         try {
             match(Symbol.returnRW);
             if (scanner.getSymbol() != Symbol.semicolon) {
