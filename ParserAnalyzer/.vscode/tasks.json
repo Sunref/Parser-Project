@@ -1,0 +1,79 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Project",
+            "type": "shell",
+            "command": "ant",
+            "args": [
+                "build"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": "$ant"
+        },
+        {
+            "label": "Clean Project",
+            "type": "shell",
+            "command": "ant",
+            "args": [
+                "clean"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": "$ant"
+        },
+        {
+            "label": "Run Project",
+            "type": "shell",
+            "command": "ant",
+            "args": [
+                "run"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": "$ant",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Clean and Build Project",
+            "type": "shell",
+            "command": "ant",
+            "args": [
+                "clean",
+                "build"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": "$ant"
+        },
+        {
+            "label": "Debug Project",
+            "type": "shell",
+            "command": "ant",
+            "args": [
+                "debug"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": "$ant"
+        }
+    ]
+}
