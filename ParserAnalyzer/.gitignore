@@ -1,19 +1,9 @@
-# Arquivos específicos do Netbeans
-nbproject/
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
-build.xml
-manifest.mf
-
 # Arquivos de compilação
 *.class
 
 # Arquivos de pacote
 *.jar
-!lib/**/*.jar  # Mantém os JARs de biblioteca
+!lib/**/*.jar # Mantém os JARs de biblioteca
 
 # Arquivos de log
 *.log
