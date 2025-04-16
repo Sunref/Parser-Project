@@ -9,16 +9,54 @@ This project contains a compiler for the CPRL (Compiler Programming Language) la
 ## Project Structure
 
 ```
-├── src                   # Source code
-│   ├── edu/citadel       # Main packages
-│   │   ├── compiler      # Compiler components
-│   │   └── cprl          # CPRL-specific implementation
-│   └── Gramática CPRL.txt # CPRL Grammar documentation
-├── test                  # Compiler tests
-├── lib                   # External libraries
-│   ├── CopyLibs          # Netbeans libraries
-│   └── junit_4           # JUnit for testing
-├── .zed                  # Zed configurations
+├── examples              # Example programs and test cases
+│   ├── Correct           # Examples with correct syntax and semantics
+│   │   ├── Arrays        # Examples using array data structures
+│   │   ├── ArraysAndProcedures  # Examples combining arrays with procedures
+│   │   ├── CPRL0         # Basic CPRL language examples
+│   │   └── Subprograms   # Examples using subprograms
+│   ├── Incorrect         # Examples with deliberate errors for testing
+│   │   ├── Arrays        # Array-related error examples
+│   │   ├── CPRL0         # Basic CPRL error examples
+│   │   └── Subprograms   # Subprogram error examples
+│   └── ScannerTests      # Tests specifically for the scanner component
+│       ├── Correct       # Valid scanner test cases
+│       └── Incorrect     # Invalid scanner test cases
+├─── ParserAnalyzer        # Main compiler project directory
+│   ├── build             # Compiled output and build artifacts
+│   │   ├── classes       # Compiled Java class files
+│   │   │   ├── edu
+│   │   │   │   └── citadel
+│   │   │   │       ├── compiler   # Compiled compiler framework classes
+│   │   │   │       │   └── util   # Compiler utilities
+│   │   │   │       └── cprl       # Compiled CPRL language classes
+│   │   │   └── test              # Compiled test classes
+│   │   │       ├── compiler      # Compiler framework tests
+│   │   │       └── cprl          # CPRL language tests
+│   │   ├── empty            # Directory for temporary build files
+│   │   ├── generated-sources # Auto-generated source code
+│   │   │   └── ap-source-output  # Annotation processor output
+│   │   └── test             # Test build directory
+│   │       └── classes      # Compiled test classes
+│   │           └── test
+│   │               └── cprl # CPRL test classes
+│   ├── lib                  # External libraries
+│   │   ├── CopyLibs         # NetBeans copy libraries
+│   │   └── junit_4          # JUnit testing framework
+│   ├── nbproject            # NetBeans project configuration
+│   │   └── private          # User-specific NetBeans settings
+│   ├── src                  # Source code directory
+│   │   ├── edu              # Package hierarchy root
+│   │   │   └── citadel      # Organization package
+│   │   │       ├── compiler # Generic compiler components
+│   │   │       │   └── util # Utility classes for compilation
+│   │   │       └── cprl     # CPRL language implementation
+│   │   └── test             # Test source code
+│   │       ├── compiler     # Tests for compiler framework
+│   │       └── cprl         # Tests for CPRL implementation
+│   └── test                 # Additional test resources
+│       └── test             # Test hierarchy
+│           └── cprl         # CPRL-specific tests
 └── README.md             # This file
 ```
 
