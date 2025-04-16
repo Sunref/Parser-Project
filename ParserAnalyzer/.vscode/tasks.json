@@ -74,6 +74,93 @@
                 "panel": "new"
             },
             "problemMatcher": "$ant"
+        },
+        {
+            "label": "Build Default",
+            "type": "shell",
+            "command": "ant",
+            "args": [
+                "build-default"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": "$ant"
+        },
+        {
+            "label": "Build Corretor.java",
+            "type": "shell",
+            "command": "ant",
+            "args": [
+                "build-corretor"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": "$ant"
+        },
+        {
+            "label": "Build TestParser.java",
+            "type": "shell",
+            "command": "ant",
+            "args": [
+                "build-testparser"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": "$ant"
+        },
+        {
+            "label": "Build Selected",
+            "type": "shell",
+            "command": "ant",
+            "args": [
+                "build-selected"
+            ],
+            "options": {
+                "env": {
+                    "ANT_OPTS": "-Djavac.includes=${input:javacIncludes}"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": "$ant"
+        },
+        {
+            "label": "Build and Run Open Window",
+            "type": "shell",
+            "command": "ant",
+            "args": [
+                "build-and-run-open-window"
+            ],
+            "options": {
+                "env": {
+                    "ANT_OPTS": "-Djavac.includes=${input:javacIncludes} -Drun.class=${input:runClass}"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": "$ant"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "javacIncludes",
+            "type": "promptString",
+            "description": "Enter the relative path to the .java file (e.g. test/cprl/Corretor.java)"
+        },
+        {
+            "id": "runClass",
+            "type": "promptString",
+            "description": "Enter the fully qualified class name to run (e.g. cprl.Corretor)"
         }
     ]
 }
