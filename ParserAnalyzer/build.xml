@@ -70,4 +70,48 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <!-- Custom build targets for VS Code integration -->
+    <target name="build" depends="jar" description="Builds the project (default NetBeans build)"/>
+    <target name="build-default" depends="build" description="Alias for build target"/>
+    <target name="build-corretor" description="Compile only Corretor.java">
+        <antcall target="compile-single">
+            <param name="javac.includes" value="test/cprl/Corretor.java"/>
+        </antcall>
+    </target>
+    <target name="build-testparser" description="Compile only TestParser.java">
+        <antcall target="compile-single">
+            <param name="javac.includes" value="test/cprl/TestParser.java"/>
+        </antcall>
+    </target>
+    <target name="build-selected" description="Compile a selected file (set -Djavac.includes=path/to/File.java)">
+        <fail unless="javac.includes">You must set -Djavac.includes=path/to/File.java</fail>
+        <antcall target="compile-single"/>
+    </target>
+    <target name="build-and-run-open-window" description="Compile and run a selected file (set -Djavac.includes=path/to/File.java -Drun.class=fully.qualified.ClassName)">
+        <fail unless="javac.includes">You must set -Djavac.includes=path/to/File.java</fail>
+        <fail unless="run.class">You must set -Drun.class=fully.qualified.ClassName</fail>
+        <antcall target="compile-single"/>
+        <antcall target="run-single"/>
+    </target>
+    <!-- Run Corretor.java: compile and run Corretor.java -->
+    <target name="run-corretor" description="Compile and run Corretor.java">
+        <property name="javac.includes" value="test/cprl/Corretor.java"/>
+        <property name="run.class" value="test.cprl.Corretor"/>
+        <antcall target="compile-test-single"/>
+        <antcall target="run-test-with-main"/>
+    </target>
+    <!-- Run TestParser.java: compile and run TestParser.java -->
+    <target name="run-testparser" description="Compile and run TestParser.java">
+        <property name="javac.includes" value="test/cprl/TestParser.java"/>
+        <property name="run.class" value="test.cprl.TestParser"/>
+        <antcall target="compile-test-single"/>
+        <antcall target="run-test-with-main"/>
+    </target>
+    <!-- Run Selected: compile and run a selected file/class -->
+    <target name="run-selected" description="Compile and run a selected file/class (set -Djavac.includes=path/to/File.java -Drun.class=fully.qualified.ClassName)">
+        <fail unless="javac.includes">You must set -Djavac.includes=path/to/File.java</fail>
+        <fail unless="run.class">You must set -Drun.class=fully.qualified.ClassName</fail>
+        <antcall target="compile-single"/>
+        <antcall target="run-single"/>
+    </target>
 </project>
