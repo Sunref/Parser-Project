@@ -5,12 +5,13 @@ import static test.cprl.TestUtils.executar;
 /**
  * Modificação da classe de testes original, facilitando a implementação do
  * Parser por parte dos alunos.
- *
+ * 
  * @author Prof. Dr. David Buzatto
  */
 public class TestParser {
 
-    public static void main(String args[]) throws Exception {
+    public static void main( String args[] ) throws Exception {
+        
         /* Atenção!
          *
          * Cada linha abaixo executa o Parser para um arquivo de código fonte
@@ -22,9 +23,9 @@ public class TestParser {
          *
          * Para conferir todo o processo, faça os testes em lote.
          */
-
+        
         // testes CPRL0
-        executar("../examples/Incorrect/CPRL0/Incorrect_101.cprl"); // 01
+        executar( "../examples/Incorrect/CPRL0/Incorrect_101.cprl" );  // 01
         //executar( "../examples/Incorrect/CPRL0/Incorrect_102.cprl" );  // 02
         //executar( "../examples/Incorrect/CPRL0/Incorrect_103.cprl" );  // 03
         //executar( "../examples/Incorrect/CPRL0/Incorrect_104.cprl" );  // 04
@@ -53,7 +54,7 @@ public class TestParser {
         //executar( "../examples/Incorrect/CPRL0/Incorrect_127.cprl" );  // 27
         //executar( "../examples/Incorrect/CPRL0/Incorrect_128.cprl" );  // 28
         //executar( "../examples/Incorrect/CPRL0/Incorrect_129.cprl" );  // 29
-
+        
         // testes subprogramas
         //executar( "../examples/Incorrect/Subprograms/Incorrect_201.cprl" );  // 30
         //executar( "../examples/Incorrect/Subprograms/Incorrect_202.cprl" );  // 31
@@ -77,13 +78,14 @@ public class TestParser {
         //executar( "../examples/Incorrect/Subprograms/Incorrect_220.cprl" );  // 49
         //executar( "../examples/Incorrect/Subprograms/Incorrect_221.cprl" );  // 50
         //executar( "../examples/Incorrect/Subprograms/Incorrect_222.cprl" );  // 51
-
+        
         // testes arrays
         //executar( "../examples/Incorrect/Arrays/Incorrect_301.cprl" );  // 52
         //executar( "../examples/Incorrect/Arrays/Incorrect_302.cprl" );  // 53
         //executar( "../examples/Incorrect/Arrays/Incorrect_303.cprl" );  // 54
         //executar( "../examples/Incorrect/Arrays/Incorrect_304.cprl" );  // 55
         //executar( "../examples/Incorrect/Arrays/Incorrect_305.cprl" );  // 56
-
+        
     }
+    
 }

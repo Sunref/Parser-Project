@@ -21,7 +21,7 @@ public class TesteIncorrect118 {
         
         testar( "TesteIncorrect_118",
                 "../examples/Incorrect/CPRL0/Incorrect_118.cprl",
-                "../examples/Incorrect/CPRL0/Incorrect_118-ParserV1-Results.txt" );
+                "../examples/Incorrect/CPRL0/Incorrect_118-ParserV2-Results.txt" );
         
     }
     

@@ -1,0 +1,114 @@
+Conjuntos Follow:
+ 
+   Follow(program)           = { EOF }
+   Follow(declarativePart)   = { begin }
+   Follow(initialDecls)      = { procedure, function, begin }
+   Follow(initialDecl)       = { const, type, var, procedure, function, 
+                                 begin
+                               }
+   Follow(constDecl)         = Follow(initialDecl)
+   Follow(arrayTypeDecl)     = Follow(initialDecl)
+   Follow(varDecl)           = Follow(initialDecl)
+   Follow(literal)           = { 
+                                 ;, =, ], identifier, ,, (, ), then, loop, 
+                                 and, or, !=, <, <=, >, >=, +, -, *, /, mod, 
+                                 not
+                               }
+   Follow(booleanLiteral)    = Follow(literal)
+   Follow(identifiers)       = { : }
+   Follow(typeName)          = { ;, ,, is, ) }
+   Follow(subprogramDecls)   = { begin }
+   Follow(subprogramDecl)    = { procedure, function, begin }
+   Follow(procedureDecl)     = Follow(subprogramDecl)
+   Follow(functionDecl)      = Follow(subprogramDecl)
+   Follow(formalParameters)  = { is, return }
+   Follow(parameterDecl)     = { ,, ) }
+   Follow(statementPart)     = { dot, identifier }
+   Follow(statements)        = { end, else, elsif }
+   Follow(statement)         = { 
+                                 identifier, return, end, if, else, elsif, 
+                                 while, loop, exit, read, write, writeln 
+                               }
+   Follow(assignmentStmt)    = Follow(statement)
+   Follow(ifStmt)            = Follow(statement)
+   Follow(loopStmt)          = Follow(statement)
+   Follow(exitStmt)          = Follow(statement)
+   Follow(readStmt)          = Follow(statement)
+   Follow(writeStmt)         = Follow(statement)
+   Follow(writelnStmt)       = Follow(statement)
+   Follow(procedureCallStmt) = Follow(statement)
+   Follow(returnStmt)        = Follow(statement)
+   Follow(variable)          = { 
+                                 :=, ;, intLiteral, charLiteral, 
+                                 stringLiteral, true, false, =, ], 
+                                 identifier, ,, (, ), then, loop, and, or, 
+                                 !=, <, <=, >, >=, +, -, *, /, mod, not 
+                               }
+   Follow(expressions)       = { ;, ) }
+   Follow(actualParameters)  = { 
+                                 ;, intLiteral, charLiteral, stringLiteral, 
+                                 true, false, =, ], identifier, ,, (, ), 
+                                 then, loop, and, or, !=, <, <=, >, >=, +, -, 
+                                 *, /, mod, not 
+                               }
+   Follow(expression)        = { ;, ], ,, ), then, loop }
+   Follow(logicalOp)         = { 
+                                 intLiteral, charLiteral, stringLiteral, 
+                                 true, false, identifier, (, +, -, not 
+                               }
+   Follow(relation)          = { 
+                                 ;, intLiteral, charLiteral, stringLiteral, 
+                                 true, false, ], identifier, ,, (, ), then, 
+                                 loop, and, or, +, -, not 
+                               }
+   Follow(relationalOp)      = { 
+                                 intLiteral, charLiteral, stringLiteral, 
+                                 true, false, identifier, (, +, -, not 
+                               }
+   Follow(simpleExpr)        = { 
+                                 ;, intLiteral, charLiteral, stringLiteral, 
+                                 true, false, =, ], identifier, ,, (, ), 
+                                 then, loop, and, or, !=, <, <=, >, >=, +, -, 
+                                 not
+                               }
+   Follow(term)              = Follow(simpleExpr)
+   Follow(addingOp)          = { 
+                                 intLiteral, charLiteral, stringLiteral, 
+                                 true, false, identifier, (, not 
+                               }
+   Follow(multiplyingOp)     = Follow(addingOp)
+   Follow(factor)            = { 
+                                 ;, true, false, =, ], ,, ), then, loop, and, 
+                                 or, !=, <, <=, >, >=, +, -, *, /, mod, not
+                               }
+   Follow(constValue)        = Follow(factor)
+   Follow(namedValue)        = Follow(factor)
+   Follow(functionCall)      = Follow(factor)
+   Follow(booleanExpr)       = { ;, then, loop }
+   Follow(intConstValue)     = { ] }
+   Follow(constId)           = { 
+                                 :=, ;, intLiteral, charLiteral, 
+                                 stringLiteral, true, false, =, ], 
+                                 identifier, ,, (, ), then, loop, and, or, 
+                                 !=, <, <=, >, >=, +, -, *, /, mod, not
+                               }
+   Follow(varId)             = { 
+                                 :=, ;, intLiteral, charLiteral, 
+                                 stringLiteral, true, false, =, [, ], 
+                                 identifier, ,, (, ), then, loop, and, or, 
+                                 !=, <, <=, >, >=, +, -, *, /, mod, not
+                               }
+   Follow(paramId)           = { 
+                                 :=, ;, intLiteral, charLiteral, 
+                                 stringLiteral, true, false, =, [, ], :, 
+                                 identifier, ,, (, ), then, loop, and, or, 
+                                 !=, <, <=, >, >=, +, -, *, /, mod, not
+                               }
+   Follow(typeId)            = { ;, =, ,, is, ) }
+   Follow(procId)            = { ;, is }
+   Follow(funcId)            = { 
+                                 ;, intLiteral, charLiteral, stringLiteral, 
+                                 true, false, =, ], identifier, ,, return, (, 
+                                 ), then, loop, and, or, !=, <, <=, >, >=, +, 
+                                 -, *, /, mod, not
+                               }

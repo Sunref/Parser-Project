@@ -21,7 +21,7 @@ public class TesteIncorrect216 {
         
         testar( "TesteIncorrect_216",
                 "../examples/Incorrect/Subprograms/Incorrect_216.cprl",
-                "../examples/Incorrect/Subprograms/Incorrect_216-ParserV1-Results.txt" );
+                "../examples/Incorrect/Subprograms/Incorrect_216-ParserV2-Results.txt" );
         
     }
     

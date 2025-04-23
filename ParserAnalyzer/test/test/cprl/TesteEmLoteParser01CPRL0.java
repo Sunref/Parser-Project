@@ -19,7 +19,7 @@ public class TesteEmLoteParser01CPRL0 {
     public void testeEmLoteParser01CPRL0() throws IOException, FileNotFoundException {
         
         // testes CPRL0 => 1..29
-        int[] intervalos = { 
+        int[] intervalos = {  
             1, 29
         };
         

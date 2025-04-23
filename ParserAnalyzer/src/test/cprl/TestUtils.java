@@ -251,13 +251,13 @@ public class TestUtils {
                 i++;
                 
             }
-            
+        
             if ( !executarTestesDeUnidade ) {
                 System.out.println( "   Total: " + total );
                 System.out.println( "Corretos: " + corretos );
                 System.out.println( "    Nota: " + (double) corretos / total * 10.0 );
             }
-        
+            
         }
         
     }
@@ -285,7 +285,7 @@ public class TestUtils {
         
         StringBuilder expResultBuilder = new StringBuilder();
         
-        try ( Scanner s = new Scanner( new File( "../examples/testParser1_all Results - projeto.txt" ), StandardCharsets.UTF_8 ) ) {
+        try ( Scanner s = new Scanner( new File( "../examples/testParser2_all Results - projeto.txt" ), StandardCharsets.UTF_8 ) ) {
             while ( s.hasNextLine() ) {
                 expResultBuilder.append( s.nextLine() ).append( "\n" );
             }
