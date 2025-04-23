@@ -10,7 +10,7 @@ _[Read in English](Readme.md)_
 
 Este é um projeto atribuído por <a href="https://github.com/davidbuzatto">David Buzatto</a> e desenvolvido por <a href="https://github.com/Sunref">Sunref</a> e <a href="https://github.com/gm64x">gm64x</a> para a disciplina de Construção de Compiladores.
 
-> [!INFO]  
+> [!NOTE]  
 > Este repositório contém uma implementação de um compilador para CPRL (Compiler PRogramming Language) com foco nos conjuntos First e Follow, que são componentes essenciais para a construção de analisadores sintáticos.
 
 ## Estrutura do Projeto
