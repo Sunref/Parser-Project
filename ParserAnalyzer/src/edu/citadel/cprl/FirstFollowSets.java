@@ -678,7 +678,7 @@ public abstract class FirstFollowSets {
                 Symbol.semicolon,
                         Symbol.rightBracket,
                         Symbol.comma,
-                        Symbol.leftParen,
+                        Symbol.rightParen,
                         Symbol.thenRW,
                         Symbol.loopRW
         });
@@ -703,18 +703,18 @@ public abstract class FirstFollowSets {
                         Symbol.stringLiteral,
                         Symbol.trueRW,
                         Symbol.falseRW,
-                        Symbol.equals,
-                        Symbol.rightBracket,
+                        Symbol.rightBracket, 
                         Symbol.identifier,
                         Symbol.comma,
-                        Symbol.leftParen,
-                        Symbol.rightParen,
+                        Symbol.leftParen, 
+                        Symbol.rightParen, 
                         Symbol.thenRW,
                         Symbol.loopRW,
                         Symbol.andRW,
                         Symbol.orRW,
+                        Symbol.plus, 
                         Symbol.minus,
-                                                                Symbol.notRW
+                        Symbol.notRW
         });
 
         FOLLOW_SETS.put( "relationalOp", new Symbol[]{ 
@@ -781,7 +781,7 @@ public abstract class FirstFollowSets {
                         Symbol.equals,
                         Symbol.rightBracket,
                         Symbol.comma,
-                        Symbol.leftParen,
+                        Symbol.rightParen,
                         Symbol.thenRW,
                         Symbol.loopRW,
                         Symbol.andRW,
@@ -867,7 +867,6 @@ public abstract class FirstFollowSets {
                 Symbol.loopRW,
                 Symbol.andRW,
                 Symbol.orRW,
-                Symbol.notRW,
                 Symbol.notEqual,
                 Symbol.lessThan,
                 Symbol.lessOrEqual,
