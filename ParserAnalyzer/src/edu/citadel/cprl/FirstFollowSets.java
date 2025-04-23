@@ -517,7 +517,6 @@ public abstract class FirstFollowSets {
                         Symbol.loopRW,
                         Symbol.andRW,
                         Symbol.orRW,
-                        Symbol.notRW,
                         Symbol.notEqual,
                         Symbol.lessThan,
                         Symbol.lessOrEqual,
@@ -527,7 +526,9 @@ public abstract class FirstFollowSets {
                         Symbol.minus,
                         Symbol.times,
                         Symbol.divide,
-                        Symbol.modRW
+                        Symbol.modRW,
+                        Symbol.notRW,
+
         });
 
         // não precisa mexer...
@@ -570,18 +571,29 @@ public abstract class FirstFollowSets {
         });
 
         FOLLOW_SETS.put( "statementPart", new Symbol[]{ 
-                Symbol.semicolon,
-                Symbol.beginRW
+                Symbol.dot,
+                Symbol.identifier
         });
 
         FOLLOW_SETS.put( "statements", new Symbol[]{ 
-                Symbol.semicolon,
-                Symbol.beginRW
+                Symbol.endRW,
+                        Symbol.elseRW,
+                                Symbol.elsifRW
         });
 
         FOLLOW_SETS.put( "statement", new Symbol[]{ 
-                Symbol.semicolon,
-                Symbol.beginRW
+                        Symbol.identifier,
+                        Symbol.returnRW,
+                        Symbol.endRW,
+                        Symbol.ifRW,
+                        Symbol.elseRW,
+                        Symbol.elsifRW,
+                        Symbol.whileRW,
+                        Symbol.loopRW,
+                        Symbol.exitRW,
+                        Symbol.readRW,
+                        Symbol.writeRW,
+                        Symbol.writelnRW
         });
 
         // não precisa mexer...
@@ -595,7 +607,35 @@ public abstract class FirstFollowSets {
         FOLLOW_SETS.put( "procedureCallStmt", FOLLOW_SETS.get( "statement" ) );
         FOLLOW_SETS.put( "returnStmt", FOLLOW_SETS.get( "statement" ) );
         
-        FOLLOW_SETS.put( "variable", new Symbol[]{Symbol.assign, 
+        FOLLOW_SETS.put("variable", new Symbol[] {
+                Symbol.assign,
+                        Symbol.semicolon,
+                        Symbol.intLiteral,
+                        Symbol.charLiteral,
+                        Symbol.stringLiteral,
+                        Symbol.trueRW,
+                        Symbol.falseRW,
+                        Symbol.equals,
+                        Symbol.rightBracket,
+                        Symbol.identifier,
+                        Symbol.comma,
+                        Symbol.leftParen,
+                        Symbol.rightParen,
+                        Symbol.thenRW,
+                        Symbol.loopRW,
+                        Symbol.andRW,
+                        Symbol.orRW,
+                        Symbol.notEqual,
+                        Symbol.lessThan,
+                        Symbol.lessOrEqual,
+                        Symbol.greaterThan,
+                        Symbol.greaterOrEqual,
+                        Symbol.plus,
+                        Symbol.minus,
+                        Symbol.times,
+                        Symbol.divide,
+                        Symbol.modRW,
+                        Symbol.notRW
         });
         
         FOLLOW_SETS.put("expressions", new Symbol[] {
@@ -620,7 +660,6 @@ public abstract class FirstFollowSets {
                         Symbol.loopRW,
                         Symbol.andRW,
                         Symbol.orRW,
-                        Symbol.notRW,
                         Symbol.notEqual,
                         Symbol.lessThan,
                         Symbol.lessOrEqual,
@@ -630,7 +669,9 @@ public abstract class FirstFollowSets {
                         Symbol.minus,
                         Symbol.times,
                         Symbol.divide,
-                        Symbol.modRW
+                        Symbol.modRW,
+                        Symbol.notRW
+
         });
 
         FOLLOW_SETS.put("expression", new Symbol[] {
@@ -638,34 +679,55 @@ public abstract class FirstFollowSets {
                         Symbol.rightBracket,
                         Symbol.comma,
                         Symbol.leftParen,
-                        Symbol.rightParen,
                         Symbol.thenRW,
                         Symbol.loopRW
         });
 
         FOLLOW_SETS.put( "logicalOp", new Symbol[]{ 
-                Symbol.andRW,
-                Symbol.orRW,
+                Symbol.intLiteral,
+                        Symbol.charLiteral,
+                        Symbol.stringLiteral,
+                        Symbol.trueRW,
+                        Symbol.falseRW,
+                        Symbol.identifier,
+                        Symbol.leftParen,
+                        Symbol.plus,
+                        Symbol.minus,
                 Symbol.notRW
         });
 
         FOLLOW_SETS.put("relation", new Symbol[] {
-                
-                Symbol.equals,
-                Symbol.notEqual,
-                Symbol.lessThan,
-                Symbol.lessOrEqual,
-                Symbol.greaterThan,
-                Symbol.greaterOrEqual
+                Symbol.semicolon,
+                        Symbol.intLiteral,
+                        Symbol.charLiteral,
+                        Symbol.stringLiteral,
+                        Symbol.trueRW,
+                        Symbol.falseRW,
+                        Symbol.equals,
+                        Symbol.rightBracket,
+                        Symbol.identifier,
+                        Symbol.comma,
+                        Symbol.leftParen,
+                        Symbol.rightParen,
+                        Symbol.thenRW,
+                        Symbol.loopRW,
+                        Symbol.andRW,
+                        Symbol.orRW,
+                        Symbol.minus,
+                                                                Symbol.notRW
         });
 
         FOLLOW_SETS.put( "relationalOp", new Symbol[]{ 
-                Symbol.equals,
-                Symbol.notEqual,
-                Symbol.lessThan,
-                Symbol.lessOrEqual,
-                Symbol.greaterThan,
-                Symbol.greaterOrEqual
+                        Symbol.intLiteral,
+                        Symbol.charLiteral,
+                        Symbol.stringLiteral,
+                        Symbol.trueRW,
+                        Symbol.falseRW,
+                        Symbol.identifier,
+                        Symbol.leftParen,
+                        Symbol.plus,
+                        Symbol.minus,
+                        Symbol.notRW
         });
 
         FOLLOW_SETS.put("simpleExpr", new Symbol[] {
@@ -685,14 +747,14 @@ public abstract class FirstFollowSets {
                         Symbol.loopRW,
                         Symbol.andRW,
                         Symbol.orRW,
-                        Symbol.notRW,
                         Symbol.notEqual,
                         Symbol.lessThan,
                         Symbol.lessOrEqual,
                         Symbol.greaterThan,
                         Symbol.greaterOrEqual,
                         Symbol.plus,
-                        Symbol.minus
+                        Symbol.minus,
+                                                                Symbol.notRW
         });
 
         // não precisa mexer...
@@ -714,22 +776,16 @@ public abstract class FirstFollowSets {
 
         FOLLOW_SETS.put("factor", new Symbol[] {
                 Symbol.semicolon,
-                        Symbol.intLiteral,
-                        Symbol.charLiteral,
-                        Symbol.stringLiteral,
                         Symbol.trueRW,
                         Symbol.falseRW,
                         Symbol.equals,
                         Symbol.rightBracket,
-                        Symbol.identifier,
                         Symbol.comma,
                         Symbol.leftParen,
-                        Symbol.rightParen,
                         Symbol.thenRW,
                         Symbol.loopRW,
                         Symbol.andRW,
                         Symbol.orRW,
-                        Symbol.notRW,
                         Symbol.notEqual,
                         Symbol.lessThan,
                         Symbol.lessOrEqual,
@@ -739,7 +795,10 @@ public abstract class FirstFollowSets {
                         Symbol.minus,
                         Symbol.times,
                         Symbol.divide,
-                        Symbol.modRW
+                        Symbol.modRW,
+                        Symbol.notRW
+                                        
+                        
                 
         });
 
@@ -755,8 +814,7 @@ public abstract class FirstFollowSets {
         });
 
         FOLLOW_SETS.put( "intConstValue", new Symbol[]{ 
-                Symbol.intLiteral,
-                Symbol.identifier
+                Symbol.rightBracket
         });
 
         FOLLOW_SETS.put( "constId", new Symbol[]{ 
@@ -777,14 +835,17 @@ public abstract class FirstFollowSets {
                 Symbol.loopRW,
                 Symbol.andRW,
                 Symbol.orRW,
-                Symbol.notRW,
                 Symbol.notEqual,
                 Symbol.lessThan,
                 Symbol.lessOrEqual,
                 Symbol.greaterThan,
                 Symbol.greaterOrEqual,
                 Symbol.plus,
-                Symbol.minus,
+                        Symbol.minus,
+                        Symbol.times,
+                        Symbol.divide,
+                        Symbol.modRW,
+                        Symbol.notRW
         });
 
         FOLLOW_SETS.put("varId", new Symbol[] {
@@ -813,7 +874,11 @@ public abstract class FirstFollowSets {
                 Symbol.greaterThan,
                 Symbol.greaterOrEqual,
                 Symbol.plus,
-                Symbol.minus
+                        Symbol.minus,
+                        Symbol.times,
+                        Symbol.divide,
+                        Symbol.modRW,
+                        Symbol.notRW
         });
         
         FOLLOW_SETS.put("paramId", new Symbol[] {
@@ -836,14 +901,18 @@ public abstract class FirstFollowSets {
                 Symbol.loopRW,
                 Symbol.andRW,
                 Symbol.orRW,
-                Symbol.notRW,
                 Symbol.notEqual,
                 Symbol.lessThan,
                 Symbol.lessOrEqual,
                 Symbol.greaterThan,
                 Symbol.greaterOrEqual,
                 Symbol.plus,
-                Symbol.minus
+                        Symbol.minus,
+                        Symbol.times,
+                        Symbol.divide,
+                        Symbol.modRW,
+                        Symbol.notRW
+
         });
 
         FOLLOW_SETS.put("typeId", new Symbol[] {
@@ -877,14 +946,17 @@ public abstract class FirstFollowSets {
                         Symbol.loopRW,
                         Symbol.andRW,
                         Symbol.orRW,
-                        Symbol.notRW,
                         Symbol.notEqual,
                         Symbol.lessThan,
                         Symbol.lessOrEqual,
                         Symbol.greaterThan,
                         Symbol.greaterOrEqual,
                         Symbol.plus,
-                        Symbol.minus
+                        Symbol.minus,
+                        Symbol.times,
+                        Symbol.divide,
+                        Symbol.modRW,
+                        Symbol.notRW
         });
         
         // </editor-fold>
