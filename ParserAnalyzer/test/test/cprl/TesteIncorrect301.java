@@ -21,7 +21,7 @@ public class TesteIncorrect301 {
         
         testar( "TesteIncorrect_301",
                 "../examples/Incorrect/Arrays/Incorrect_301.cprl",
-                "../examples/Incorrect/Arrays/Incorrect_301-ParserV2-Results.txt" );
+                "../examples/Incorrect/Arrays/Incorrect_301-ParserV3-Results.txt" );
         
     }
     
