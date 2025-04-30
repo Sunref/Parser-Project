@@ -2,7 +2,7 @@
 
 ![Made with](https://img.shields.io/badge/Made%20with-Java-EC4134?labelColor=black&style=flat-square&logo=openjdk)
 ![Made with](https://img.shields.io/badge/Made%20with-Netbeans-0751CF?labelColor=black&style=flat-square&logo=apachenetbeanside)
-![Made with](https://img.shields.io/badge/Made%20with-ZED-grey?labelColor=black&style=flat&logo=zedindustries)
+![Made with](https://img.shields.io/badge/Made%20with-ZED-grey?labelColor=black&style=flat-square&logo=zedindustries)
 
 *[Leia em Português](readme-ptbr.md)*
 
