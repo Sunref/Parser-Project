@@ -1,101 +1,106 @@
 package edu.citadel.cprl;
 
 import edu.citadel.compiler.ParserException;
+import edu.citadel.cprl.ast.Declaration;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Uma versão simplificada de uma tabela de identificadores, também conhecida
- * como tabela de símbolos, usada para armazenar os atributos dos
- * identificadores na linguagem de programação CPRL.
- * 
- * A classe IdTable é implementada como uma pilha de mapas,
- * onde cada mapa associa a string dos identificadores com seu IdType. A
- * pilha é implementada usando uma Lista. Quando um novo escopo é aberto,
- * um novo mapa é empilhado. A busca por uma declaração envolve pesquisar
- * dentro do nível atual, contidas no mapa no topo da pilha, e então dentro
- * de escopos mais externos, ou seja, em mapas abaixo do topo da pilha.
+ * The identifier table (also known as a symbol table) is used to hold
+ * attributes of identifiers in the programming language CPRL.
  */
 public final class IdTable {
+    
+    // NOTE: IdTable is implemented as a stack of maps, where each map associates
+    // the identifier string with its declaration.  The stack is implemented using an
+    // array list.  When a when a new scope is opened, a new map is pushed onto the
+    // stack.  Searching for a declaration involves searching at the current level
+    // (top map in the stack) and then at enclosing scopes (maps under the top)
 
-    private List<Map<String, IdType>> table;
+    private static final int INITIAL_SCOPE_LEVELS = 2;
+    private static final int INITIAL_MAP_SIZE = 50;
+
+    private ArrayList<Map<String, Declaration>> table;
     private int currentLevel;
 
     /**
-     * Constrói uma tabela de identificadores vazia com o nível de escopo 
-     * iniciando em zero.
+     * Construct an empty identifier table with scope level initialized to 0.
      */
     public IdTable() {
-        table = new ArrayList<Map<String, IdType>>();
+        table = new ArrayList<Map<String, Declaration>>( INITIAL_SCOPE_LEVELS );
         currentLevel = 0;
-        table.add( currentLevel, new HashMap<>() );
+        table.add( currentLevel, new HashMap<>( INITIAL_MAP_SIZE ) );
     }
 
     /**
-     * Abre um novo escopo para identificadores.
+     * Returns the current scope level.
+     */
+    public ScopeLevel getScopeLevel() {
+        return currentLevel == 0 ? ScopeLevel.PROGRAM : ScopeLevel.SUBPROGRAM;
+    }
+
+    /**
+     * Opens a new scope for identifiers.
      */
     public void openScope() {
-        currentLevel++;
-        table.add( currentLevel, new HashMap<>() );
+        ++currentLevel;
+        table.add( currentLevel, new HashMap<String, Declaration>( INITIAL_MAP_SIZE ) );
     }
 
     /**
-     * Fecha o escopo mais interno.
+     * Closes the outermost scope.
      */
     public void closeScope() {
         table.remove( currentLevel );
-        currentLevel--;
+        --currentLevel;
     }
 
     /**
-     * Insere um token e seu tipo no nível de escopo atual.
+     * Add a declaration at the current scope level.
      *
-     * @throws ParserException se o identificador do token já estiver definido
-     * dentro do escopo atual.
+     * @throws ParserException if the identifier token associated with the
+     * declaration is already defined in the current scope.
      */
-    public void add( Token idToken, IdType idType ) throws ParserException {
-        
-        // assume que idToken é um token de identificador
+    public void add( Declaration decl ) throws ParserException {
+        Token idToken = decl.getIdToken();
+
+        // assumes that idToken is an identifier token
         assert idToken.getSymbol() == Symbol.identifier :
                 "IdTable.add(): The symbol for idToken is not an identifier.";
 
-        Map<String, IdType> idMap = table.get( currentLevel );
-        IdType oldDecl = idMap.put( idToken.getText(), idType );
+        Map<String, Declaration> idMap = table.get( currentLevel );
+        Declaration oldDecl = idMap.put( idToken.getText(), decl );
 
-        // verifica se o idendificador não foi definido previamente
+        // check that the identifier has not been defined previously
         if ( oldDecl != null ) {
-            String errorMsg = "Identifier \"" + idToken.getText() +
-                              "\" is already defined in the current scope.";
+            String errorMsg = "Identifier \"" + idToken.getText()
+                    + "\" is already defined in the current scope.";
             throw new ParserException( idToken.getPosition(), errorMsg );
         }
-        
     }
 
     /**
-     * Retorna o IdType associado com o texto do token do identificador.
-     * Retorna null se o identificador não for encontrado. Esse método busca em
-     * escopos mais externos caso necessário.
+     * Returns the Declaration associated with the identifier token's text.
+     * Returns null if the idenfifier is not found. Searches enclosing scopes if
+     * necessary.
      */
-    public IdType get( Token idToken ) {
-        
-        // assume que idToken é um token de identificador
+    public Declaration get( Token idToken ) {
+        // assumes that idToken is an identifier token
         assert idToken.getSymbol() == Symbol.identifier :
                 "IdTable.get(): The symbol for idToken is not an identifier.";
 
-        IdType idType = null;
+        Declaration decl = null;
         int level = currentLevel;
 
-        while ( level >= 0 && idType == null ) {
-            Map<String, IdType> idMap = table.get( level );
-            idType = idMap.get( idToken.getText() );
-            level--;
+        while ( level >= 0 && decl == null ) {
+            Map<String, Declaration> idMap = table.get( level );
+            decl = idMap.get( idToken.getText() );
+            --level;
         }
 
-        return idType;
-        
+        return decl;
     }
     
 }

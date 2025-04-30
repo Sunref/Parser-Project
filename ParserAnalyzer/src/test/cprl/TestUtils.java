@@ -6,10 +6,18 @@
 package test.cprl;
 
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.compiler.InternalCompilerException;
 import edu.citadel.compiler.Source;
 import edu.citadel.cprl.Parser;
+import edu.citadel.cprl.ast.AST;
+import edu.citadel.cprl.ast.ExitStmt;
+import edu.citadel.cprl.ast.Program;
+import edu.citadel.cprl.ast.ReturnStmt;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -150,7 +158,35 @@ public class TestUtils {
             "../examples/Incorrect/Arrays/Incorrect_304.cprl",
             "../examples/Incorrect/Arrays/Incorrect_305.cprl"
     };// </editor-fold>
-        
+    
+    private static final Gson gson = new GsonBuilder().
+            setPrettyPrinting().
+            serializeNulls().
+            setExclusionStrategies( new ExclusionStrategy(){
+                @Override
+                public boolean shouldSkipField( FieldAttributes fa ) {
+                    return fa.getDeclaringClass() == ExitStmt.class &&
+                           fa.getName().equals( "loopStmt" );
+                }
+
+                @Override
+                public boolean shouldSkipClass( Class<?> type ) {
+                    return false;
+                }
+            }, new ExclusionStrategy(){
+                @Override
+                public boolean shouldSkipField( FieldAttributes fa ) {
+                    return fa.getDeclaringClass() == ReturnStmt.class &&
+                           fa.getName().equals( "subprogramDecl" );
+                }
+
+                @Override
+                public boolean shouldSkipClass( Class<?> type ) {
+                    return false;
+                }
+            }).
+            create();
+    
     /*
      * Executa um teste comparando a saída do escaneamento de um arquivo de
      * código fonte e um arquivo de resultado.
@@ -251,13 +287,13 @@ public class TestUtils {
                 i++;
                 
             }
-        
+            
             if ( !executarTestesDeUnidade ) {
                 System.out.println( "   Total: " + total );
                 System.out.println( "Corretos: " + corretos );
                 System.out.println( "    Nota: " + (double) corretos / total * 10.0 );
             }
-            
+        
         }
         
     }
@@ -285,7 +321,7 @@ public class TestUtils {
         
         StringBuilder expResultBuilder = new StringBuilder();
         
-        try ( Scanner s = new Scanner( new File( "../examples/testParser2_all Results - projeto.txt" ), StandardCharsets.UTF_8 ) ) {
+        try ( Scanner s = new Scanner( new File( "../examples/testParser3_all Results - projeto.txt" ), StandardCharsets.UTF_8 ) ) {
             while ( s.hasNextLine() ) {
                 expResultBuilder.append( s.nextLine() ).append( "\n" );
             }
@@ -340,9 +376,11 @@ public class TestUtils {
         Parser parser = new Parser( scanner );
         boolean ok = true;
         
+        Program program = null;
+        
         try {
             
-            parser.parseProgram();
+            program = parser.parseProgram();
             
             if ( ErrorHandler.getInstance().errorsExist() ) {
                 System.out.println( "Errors detected in " + f.getName() + " -- parsing terminated." );
@@ -358,8 +396,22 @@ public class TestUtils {
         if ( ok ) {
             System.out.println( "Parsing complete." );
         }
+                
+        System.out.println( "\n*** AST Dump ***" );
+        if ( program != null ) {
+            System.out.println( "Program: " + gson.toJson( program ) );
+        } else {
+            System.out.println( "The AST could not be built." );
+        }
+        
+        /*if ( program != null ) {
+            XMLArvoreVisitor xav = new XMLArvoreVisitor();
+            program.accept( xav );
+            System.out.println( xav.getXMLArvore() );
+        }*/
         
         ErrorHandler.getInstance().resetErrorCount();
+        AST.resetCurrentLabelNum();
         fileReader.close();
         
     }
