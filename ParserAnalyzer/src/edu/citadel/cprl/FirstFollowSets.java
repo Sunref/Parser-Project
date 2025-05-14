@@ -505,95 +505,93 @@ public abstract class FirstFollowSets {
         FOLLOW_SETS.put( "arrayTypeDecl", FOLLOW_SETS.get( "initialDecl" ) );
         FOLLOW_SETS.put( "varDecl", FOLLOW_SETS.get( "initialDecl" ) );
         
-        FOLLOW_SETS.put("literal", new Symbol[] {
+        FOLLOW_SETS.put( "literal", new Symbol[]{ 
                 Symbol.semicolon,
-                        Symbol.equals,
-                        Symbol.rightBracket,
-                        Symbol.identifier,
-                        Symbol.comma,
-                        Symbol.leftParen,
-                        Symbol.rightParen,
-                        Symbol.thenRW,
-                        Symbol.loopRW,
-                        Symbol.andRW,
-                        Symbol.orRW,
-                        Symbol.notEqual,
-                        Symbol.lessThan,
-                        Symbol.lessOrEqual,
-                        Symbol.greaterThan,
-                        Symbol.greaterOrEqual,
-                        Symbol.plus,
-                        Symbol.minus,
-                        Symbol.times,
-                        Symbol.divide,
-                        Symbol.modRW,
-                        Symbol.notRW,
-
+                Symbol.equals, 
+                Symbol.rightBracket, 
+                Symbol.identifier, 
+                Symbol.comma, 
+                Symbol.leftParen,
+                Symbol.rightParen, 
+                Symbol.thenRW, 
+                Symbol.loopRW, 
+                Symbol.andRW, 
+                Symbol.orRW, 
+                Symbol.notEqual, 
+                Symbol.lessThan, 
+                Symbol.lessOrEqual, 
+                Symbol.greaterThan, 
+                Symbol.greaterOrEqual, 
+                Symbol.plus, 
+                Symbol.minus, 
+                Symbol.times, 
+                Symbol.divide, 
+                Symbol.modRW,
+                Symbol.notRW
         });
 
         // não precisa mexer...
         FOLLOW_SETS.put( "booleanLiteral", FOLLOW_SETS.get( "literal" ) );
 
-        FOLLOW_SETS.put("identifiers", new Symbol[] {
-                Symbol.colon
+        FOLLOW_SETS.put( "identifiers", new Symbol[]{ 
+                Symbol.colon 
         });
 
-        FOLLOW_SETS.put("typeName", new Symbol[] {
-                Symbol.semicolon,
-                        Symbol.comma,
-                        Symbol.isRW,
-                        Symbol.rightParen
+        FOLLOW_SETS.put( "typeName", new Symbol[]{ 
+                Symbol.semicolon, 
+                Symbol.comma, 
+                Symbol.isRW, 
+                Symbol.rightParen 
         });
 
-        FOLLOW_SETS.put("subprogramDecls", new Symbol[] {
-                Symbol.beginRW
+        FOLLOW_SETS.put( "subprogramDecls", new Symbol[]{ 
+                Symbol.beginRW 
         });
 
-        FOLLOW_SETS.put("subprogramDecl", new Symbol[] {
-                Symbol.procedureRW,
-                        Symbol.functionRW,
-                        Symbol.beginRW
+        FOLLOW_SETS.put( "subprogramDecl", new Symbol[]{ 
+                Symbol.procedureRW, 
+                Symbol.functionRW, 
+                Symbol.beginRW 
         });
         
         // não precisa mexer...
         FOLLOW_SETS.put( "procedureDecl", FOLLOW_SETS.get( "subprogramDecl" ) );
         FOLLOW_SETS.put( "functionDecl", FOLLOW_SETS.get( "subprogramDecl" ) );
 
-        FOLLOW_SETS.put("formalParameters", new Symbol[] {
-                Symbol.isRW,
-                        Symbol.returnRW
-
+        FOLLOW_SETS.put( "formalParameters", new Symbol[]{ 
+                Symbol.isRW, 
+                Symbol.returnRW 
         });
 
-        FOLLOW_SETS.put("parameterDecl", new Symbol[] {
-                Symbol.comma,
-                        Symbol.rightParen
+        FOLLOW_SETS.put( "parameterDecl", new Symbol[]{ 
+                Symbol.comma, 
+                Symbol.rightParen 
         });
 
         FOLLOW_SETS.put( "statementPart", new Symbol[]{ 
-                Symbol.dot,
-                Symbol.identifier
+                Symbol.dot, 
+                Symbol.identifier 
         });
 
         FOLLOW_SETS.put( "statements", new Symbol[]{ 
-                Symbol.endRW,
-                        Symbol.elseRW,
-                                Symbol.elsifRW
+                Symbol.endRW, 
+                Symbol.elseRW, 
+                Symbol.elsifRW 
         });
 
         FOLLOW_SETS.put( "statement", new Symbol[]{ 
-                        Symbol.identifier,
-                        Symbol.returnRW,
-                        Symbol.endRW,
-                        Symbol.ifRW,
-                        Symbol.elseRW,
-                        Symbol.elsifRW,
-                        Symbol.whileRW,
-                        Symbol.loopRW,
-                        Symbol.exitRW,
-                        Symbol.readRW,
-                        Symbol.writeRW,
-                        Symbol.writelnRW
+                Symbol.identifier, 
+                Symbol.returnRW, 
+                Symbol.endRW, 
+                Symbol.ifRW, 
+                Symbol.elseRW, 
+                Symbol.elsifRW, 
+                Symbol.whileRW, 
+                Symbol.loopRW, 
+                Symbol.exitRW, 
+                Symbol.readRW, 
+                Symbol.writeRW, 
+                Symbol.writelnRW 
         });
 
         // não precisa mexer...
@@ -607,198 +605,194 @@ public abstract class FirstFollowSets {
         FOLLOW_SETS.put( "procedureCallStmt", FOLLOW_SETS.get( "statement" ) );
         FOLLOW_SETS.put( "returnStmt", FOLLOW_SETS.get( "statement" ) );
         
-        FOLLOW_SETS.put("variable", new Symbol[] {
-                Symbol.assign,
-                        Symbol.semicolon,
-                        Symbol.intLiteral,
-                        Symbol.charLiteral,
-                        Symbol.stringLiteral,
-                        Symbol.trueRW,
-                        Symbol.falseRW,
-                        Symbol.equals,
-                        Symbol.rightBracket,
-                        Symbol.identifier,
-                        Symbol.comma,
-                        Symbol.leftParen,
-                        Symbol.rightParen,
-                        Symbol.thenRW,
-                        Symbol.loopRW,
-                        Symbol.andRW,
-                        Symbol.orRW,
-                        Symbol.notEqual,
-                        Symbol.lessThan,
-                        Symbol.lessOrEqual,
-                        Symbol.greaterThan,
-                        Symbol.greaterOrEqual,
-                        Symbol.plus,
-                        Symbol.minus,
-                        Symbol.times,
-                        Symbol.divide,
-                        Symbol.modRW,
-                        Symbol.notRW
-        });
-        
-        FOLLOW_SETS.put("expressions", new Symbol[] {
+        FOLLOW_SETS.put( "variable", new Symbol[]{Symbol.assign, 
                 Symbol.semicolon,
-                        Symbol.rightParen
-        });
-        
-        FOLLOW_SETS.put("actualParameters", new Symbol[] {
-                Symbol.semicolon,
-                        Symbol.intLiteral,
-                        Symbol.charLiteral,
-                        Symbol.stringLiteral,
-                        Symbol.trueRW,
-                        Symbol.falseRW,
-                        Symbol.equals,
-                        Symbol.rightBracket,
-                        Symbol.identifier,
-                        Symbol.comma,
-                        Symbol.leftParen,
-                        Symbol.rightParen,
-                        Symbol.thenRW,
-                        Symbol.loopRW,
-                        Symbol.andRW,
-                        Symbol.orRW,
-                        Symbol.notEqual,
-                        Symbol.lessThan,
-                        Symbol.lessOrEqual,
-                        Symbol.greaterThan,
-                        Symbol.greaterOrEqual,
-                        Symbol.plus,
-                        Symbol.minus,
-                        Symbol.times,
-                        Symbol.divide,
-                        Symbol.modRW,
-                        Symbol.notRW
-
-        });
-
-        FOLLOW_SETS.put("expression", new Symbol[] {
-                Symbol.semicolon,
-                        Symbol.rightBracket,
-                        Symbol.comma,
-                        Symbol.rightParen,
-                        Symbol.thenRW,
-                        Symbol.loopRW
-        });
-
-        FOLLOW_SETS.put( "logicalOp", new Symbol[]{ 
                 Symbol.intLiteral,
-                        Symbol.charLiteral,
-                        Symbol.stringLiteral,
-                        Symbol.trueRW,
-                        Symbol.falseRW,
-                        Symbol.identifier,
-                        Symbol.leftParen,
-                        Symbol.plus,
-                        Symbol.minus,
+                Symbol.charLiteral,
+                Symbol.stringLiteral,
+                Symbol.trueRW,
+                Symbol.falseRW,
+                Symbol.equals,
+                Symbol.rightBracket,
+                Symbol.identifier,
+                Symbol.comma,
+                Symbol.leftParen,
+                Symbol.rightParen,
+                Symbol.thenRW,
+                Symbol.loopRW,
+                Symbol.andRW,
+                Symbol.orRW,
+                Symbol.notEqual, 
+                Symbol.lessThan, 
+                Symbol.lessOrEqual, 
+                Symbol.greaterThan, 
+                Symbol.greaterOrEqual, 
+                Symbol.plus, 
+                Symbol.minus, 
+                Symbol.times, 
+                Symbol.divide, 
+                Symbol.modRW,
+                Symbol.notRW
+        });
+        
+        FOLLOW_SETS.put( "expressions", new Symbol[]{ 
+                Symbol.semicolon, 
+                Symbol.rightParen 
+        });
+        
+        FOLLOW_SETS.put( "actualParameters", new Symbol[]{ 
+                Symbol.semicolon, 
+                Symbol.intLiteral,
+                Symbol.charLiteral,
+                Symbol.stringLiteral,
+                Symbol.trueRW,
+                Symbol.falseRW,
+                Symbol.equals, 
+                Symbol.rightBracket, 
+                Symbol.identifier,
+                Symbol.comma, 
+                Symbol.leftParen,
+                Symbol.rightParen, 
+                Symbol.thenRW, 
+                Symbol.loopRW, 
+                Symbol.andRW, 
+                Symbol.orRW, 
+                Symbol.notEqual, 
+                Symbol.lessThan, 
+                Symbol.lessOrEqual, 
+                Symbol.greaterThan, 
+                Symbol.greaterOrEqual, 
+                Symbol.plus, 
+                Symbol.minus, 
+                Symbol.times, 
+                Symbol.divide, 
+                Symbol.modRW,
                 Symbol.notRW
         });
 
-        FOLLOW_SETS.put("relation", new Symbol[] {
-                Symbol.semicolon,
-                        Symbol.intLiteral,
-                        Symbol.charLiteral,
-                        Symbol.stringLiteral,
-                        Symbol.trueRW,
-                        Symbol.falseRW,
-                        Symbol.rightBracket, 
-                        Symbol.identifier,
-                        Symbol.comma,
-                        Symbol.leftParen, 
-                        Symbol.rightParen, 
-                        Symbol.thenRW,
-                        Symbol.loopRW,
-                        Symbol.andRW,
-                        Symbol.orRW,
-                        Symbol.plus, 
-                        Symbol.minus,
-                        Symbol.notRW
+        FOLLOW_SETS.put( "expression", new Symbol[]{ 
+                Symbol.semicolon, 
+                Symbol.rightBracket, 
+                Symbol.comma, 
+                Symbol.rightParen, 
+                Symbol.thenRW, 
+                Symbol.loopRW 
+        });
+
+        FOLLOW_SETS.put( "logicalOp", new Symbol[]{ 
+                Symbol.intLiteral, 
+                Symbol.charLiteral,
+                Symbol.stringLiteral,
+                Symbol.trueRW,
+                Symbol.falseRW,
+                Symbol.identifier,
+                Symbol.leftParen,
+                Symbol.plus, 
+                Symbol.minus,
+                Symbol.notRW
+        });
+
+        FOLLOW_SETS.put( "relation", new Symbol[]{ 
+                Symbol.semicolon, 
+                Symbol.intLiteral, 
+                Symbol.charLiteral,
+                Symbol.stringLiteral,
+                Symbol.trueRW,
+                Symbol.falseRW,
+                Symbol.rightBracket, 
+                Symbol.identifier, 
+                Symbol.comma, 
+                Symbol.leftParen,
+                Symbol.rightParen, 
+                Symbol.thenRW, 
+                Symbol.loopRW, 
+                Symbol.andRW, 
+                Symbol.orRW, 
+                Symbol.plus, 
+                Symbol.minus,
+                Symbol.notRW
         });
 
         FOLLOW_SETS.put( "relationalOp", new Symbol[]{ 
-                        Symbol.intLiteral,
-                        Symbol.charLiteral,
-                        Symbol.stringLiteral,
-                        Symbol.trueRW,
-                        Symbol.falseRW,
-                        Symbol.identifier,
-                        Symbol.leftParen,
-                        Symbol.plus,
-                        Symbol.minus,
-                        Symbol.notRW
+                Symbol.intLiteral, 
+                Symbol.charLiteral,
+                Symbol.stringLiteral,
+                Symbol.trueRW,
+                Symbol.falseRW,
+                Symbol.identifier, 
+                Symbol.leftParen,
+                Symbol.plus, 
+                Symbol.minus,
+                Symbol.notRW
         });
 
-        FOLLOW_SETS.put("simpleExpr", new Symbol[] {
-                Symbol.semicolon,
-                        Symbol.intLiteral,
-                        Symbol.charLiteral,
-                        Symbol.stringLiteral,
-                        Symbol.trueRW,
-                        Symbol.falseRW,
-                        Symbol.equals,
-                        Symbol.rightBracket,
-                        Symbol.identifier,
-                        Symbol.comma,
-                        Symbol.leftParen,
-                        Symbol.rightParen,
-                        Symbol.thenRW,
-                        Symbol.loopRW,
-                        Symbol.andRW,
-                        Symbol.orRW,
-                        Symbol.notEqual,
-                        Symbol.lessThan,
-                        Symbol.lessOrEqual,
-                        Symbol.greaterThan,
-                        Symbol.greaterOrEqual,
-                        Symbol.plus,
-                        Symbol.minus,
-                                                                Symbol.notRW
+        FOLLOW_SETS.put( "simpleExpr", new Symbol[]{ 
+                Symbol.semicolon, 
+                Symbol.intLiteral, 
+                Symbol.charLiteral,
+                Symbol.stringLiteral,
+                Symbol.trueRW,
+                Symbol.falseRW,
+                Symbol.equals, 
+                Symbol.rightBracket, 
+                Symbol.identifier, 
+                Symbol.comma, 
+                Symbol.leftParen,
+                Symbol.rightParen, 
+                Symbol.thenRW, 
+                Symbol.loopRW, 
+                Symbol.andRW, 
+                Symbol.orRW, 
+                Symbol.notEqual, 
+                Symbol.lessThan, 
+                Symbol.lessOrEqual, 
+                Symbol.greaterThan, 
+                Symbol.greaterOrEqual, 
+                Symbol.plus, 
+                Symbol.minus,
+                Symbol.notRW
         });
 
         // não precisa mexer...
         FOLLOW_SETS.put( "term", FOLLOW_SETS.get( "simpleExpr" ) );
         
-        FOLLOW_SETS.put("addingOp", new Symbol[] {
-                Symbol.intLiteral,
-                        Symbol.charLiteral,
-                        Symbol.stringLiteral,
-                        Symbol.trueRW,
-                        Symbol.falseRW,
-                        Symbol.identifier,
-                        Symbol.leftParen,
-                        Symbol.notRW
+        FOLLOW_SETS.put( "addingOp", new Symbol[]{ 
+                Symbol.intLiteral, 
+                Symbol.charLiteral,
+                Symbol.stringLiteral,
+                Symbol.trueRW,
+                Symbol.falseRW,
+                Symbol.identifier,
+                Symbol.leftParen,
+                Symbol.notRW
         });
         
         // não precisa mexer...
         FOLLOW_SETS.put( "multiplyingOp", FOLLOW_SETS.get( "addingOp" ) );
 
-        FOLLOW_SETS.put("factor", new Symbol[] {
+        FOLLOW_SETS.put( "factor", new Symbol[]{ 
                 Symbol.semicolon,
-                        Symbol.trueRW,
-                        Symbol.falseRW,
-                        Symbol.equals,
-                        Symbol.rightBracket,
-                        Symbol.comma,
-                        Symbol.rightParen,
-                        Symbol.thenRW,
-                        Symbol.loopRW,
-                        Symbol.andRW,
-                        Symbol.orRW,
-                        Symbol.notEqual,
-                        Symbol.lessThan,
-                        Symbol.lessOrEqual,
-                        Symbol.greaterThan,
-                        Symbol.greaterOrEqual,
-                        Symbol.plus,
-                        Symbol.minus,
-                        Symbol.times,
-                        Symbol.divide,
-                        Symbol.modRW,
-                        Symbol.notRW
-                                        
-                        
+                Symbol.trueRW,
+                Symbol.falseRW,
+                Symbol.equals,
+                Symbol.rightBracket,
+                Symbol.comma,
+                Symbol.rightParen,
+                Symbol.thenRW,
+                Symbol.loopRW,
+                Symbol.andRW,
+                Symbol.orRW,
+                Symbol.notEqual,
+                Symbol.lessThan,
+                Symbol.lessOrEqual,
+                Symbol.greaterThan,
+                Symbol.greaterOrEqual,
+                Symbol.plus,
+                Symbol.minus,
+                Symbol.times,
+                Symbol.divide,
+                Symbol.modRW,
+                Symbol.notRW
                 
         });
 
@@ -807,155 +801,154 @@ public abstract class FirstFollowSets {
         FOLLOW_SETS.put( "namedValue", FOLLOW_SETS.get( "factor" ) );
         FOLLOW_SETS.put( "functionCall", FOLLOW_SETS.get( "factor" ) );
 
-        FOLLOW_SETS.put("booleanExpr", new Symbol[] {
-                Symbol.semicolon,
-                        Symbol.thenRW,
-                        Symbol.loopRW
+        FOLLOW_SETS.put( "booleanExpr", new Symbol[]{ 
+                Symbol.semicolon, 
+                Symbol.thenRW, 
+                Symbol.loopRW 
         });
 
         FOLLOW_SETS.put( "intConstValue", new Symbol[]{ 
-                Symbol.rightBracket
+                Symbol.rightBracket 
         });
 
         FOLLOW_SETS.put( "constId", new Symbol[]{ 
-                Symbol.assign,
+                Symbol.assign, 
                 Symbol.semicolon,
-                Symbol.intLiteral,
+                Symbol.intLiteral, 
                 Symbol.charLiteral,
                 Symbol.stringLiteral,
                 Symbol.trueRW,
                 Symbol.falseRW,
-                Symbol.equals,
-                Symbol.rightBracket,
-                Symbol.identifier,
-                Symbol.comma,
+                Symbol.equals, 
+                Symbol.rightBracket, 
+                Symbol.identifier, 
+                Symbol.comma, 
                 Symbol.leftParen,
-                Symbol.rightParen,
-                Symbol.thenRW,
-                Symbol.loopRW,
-                Symbol.andRW,
-                Symbol.orRW,
-                Symbol.notEqual,
-                Symbol.lessThan,
-                Symbol.lessOrEqual,
-                Symbol.greaterThan,
-                Symbol.greaterOrEqual,
-                Symbol.plus,
-                        Symbol.minus,
-                        Symbol.times,
-                        Symbol.divide,
-                        Symbol.modRW,
-                        Symbol.notRW
+                Symbol.rightParen, 
+                Symbol.thenRW, 
+                Symbol.loopRW, 
+                Symbol.andRW, 
+                Symbol.orRW, 
+                Symbol.notEqual, 
+                Symbol.lessThan, 
+                Symbol.lessOrEqual, 
+                Symbol.greaterThan, 
+                Symbol.greaterOrEqual, 
+                Symbol.plus, 
+                Symbol.minus, 
+                Symbol.times, 
+                Symbol.divide, 
+                Symbol.modRW,
+                Symbol.notRW
         });
 
-        FOLLOW_SETS.put("varId", new Symbol[] {
-                Symbol.assign,
+        FOLLOW_SETS.put( "varId", new Symbol[]{ 
+                Symbol.assign, 
                 Symbol.semicolon,
-                Symbol.intLiteral,
+                Symbol.intLiteral, 
                 Symbol.charLiteral,
                 Symbol.stringLiteral,
                 Symbol.trueRW,
                 Symbol.falseRW,
-                Symbol.equals,
-                Symbol.leftBracket,
-                Symbol.rightBracket,
-                Symbol.identifier,
-                Symbol.comma,
+                Symbol.equals, 
+                Symbol.leftBracket, 
+                Symbol.rightBracket, 
+                Symbol.identifier, 
+                Symbol.comma, 
                 Symbol.leftParen,
-                Symbol.rightParen,
-                Symbol.thenRW,
-                Symbol.loopRW,
-                Symbol.andRW,
-                Symbol.orRW,
-                Symbol.notEqual,
-                Symbol.lessThan,
-                Symbol.lessOrEqual,
-                Symbol.greaterThan,
-                Symbol.greaterOrEqual,
-                Symbol.plus,
-                        Symbol.minus,
-                        Symbol.times,
-                        Symbol.divide,
-                        Symbol.modRW,
-                        Symbol.notRW
+                Symbol.rightParen, 
+                Symbol.thenRW, 
+                Symbol.loopRW, 
+                Symbol.andRW, 
+                Symbol.orRW, 
+                Symbol.notEqual, 
+                Symbol.lessThan, 
+                Symbol.lessOrEqual, 
+                Symbol.greaterThan, 
+                Symbol.greaterOrEqual, 
+                Symbol.plus, 
+                Symbol.minus, 
+                Symbol.times, 
+                Symbol.divide, 
+                Symbol.modRW,
+                Symbol.notRW
         });
         
-        FOLLOW_SETS.put("paramId", new Symbol[] {
-                Symbol.assign,
+        FOLLOW_SETS.put( "paramId", new Symbol[]{ 
+                Symbol.assign, 
                 Symbol.semicolon,
-                Symbol.intLiteral,
+                Symbol.intLiteral, 
                 Symbol.charLiteral,
                 Symbol.stringLiteral,
                 Symbol.trueRW,
                 Symbol.falseRW,
-                Symbol.equals,
-                Symbol.leftBracket,
-                Symbol.rightBracket,
+                Symbol.equals, 
+                Symbol.leftBracket, 
+                Symbol.rightBracket, 
                 Symbol.colon,
-                Symbol.identifier,
-                Symbol.comma,
+                Symbol.identifier, 
+                Symbol.comma, 
                 Symbol.leftParen,
-                Symbol.rightParen,
-                Symbol.thenRW,
-                Symbol.loopRW,
-                Symbol.andRW,
-                Symbol.orRW,
-                Symbol.notEqual,
-                Symbol.lessThan,
-                Symbol.lessOrEqual,
-                Symbol.greaterThan,
-                Symbol.greaterOrEqual,
-                Symbol.plus,
-                        Symbol.minus,
-                        Symbol.times,
-                        Symbol.divide,
-                        Symbol.modRW,
-                        Symbol.notRW
-
+                Symbol.rightParen, 
+                Symbol.thenRW, 
+                Symbol.loopRW, 
+                Symbol.andRW, 
+                Symbol.orRW, 
+                Symbol.notEqual, 
+                Symbol.lessThan, 
+                Symbol.lessOrEqual, 
+                Symbol.greaterThan, 
+                Symbol.greaterOrEqual, 
+                Symbol.plus, 
+                Symbol.minus, 
+                Symbol.times, 
+                Symbol.divide, 
+                Symbol.modRW,
+                Symbol.notRW
         });
 
-        FOLLOW_SETS.put("typeId", new Symbol[] {
-                Symbol.semicolon,
-                        Symbol.equals,
-                        Symbol.comma,
-                        Symbol.isRW,
-                        Symbol.rightParen
+        FOLLOW_SETS.put( "typeId", new Symbol[]{ 
+                Symbol.semicolon, 
+                Symbol.equals, 
+                Symbol.comma, 
+                Symbol.isRW, 
+                Symbol.rightParen 
         });
 
-        FOLLOW_SETS.put("procId", new Symbol[] {
-                Symbol.semicolon,
-                        Symbol.isRW
+        FOLLOW_SETS.put( "procId", new Symbol[]{ 
+                Symbol.semicolon, 
+                Symbol.isRW
         });
 
-        FOLLOW_SETS.put("funcId", new Symbol[] {
+        FOLLOW_SETS.put( "funcId", new Symbol[]{ 
                 Symbol.semicolon,
-                        Symbol.intLiteral,
-                        Symbol.charLiteral,
-                        Symbol.stringLiteral,
-                        Symbol.trueRW,
-                        Symbol.falseRW,
-                        Symbol.equals,
-                        Symbol.rightBracket,
-                        Symbol.identifier,
-                        Symbol.comma,
-                        Symbol.returnRW,
-                        Symbol.leftParen,
-                        Symbol.rightParen,
-                        Symbol.thenRW,
-                        Symbol.loopRW,
-                        Symbol.andRW,
-                        Symbol.orRW,
-                        Symbol.notEqual,
-                        Symbol.lessThan,
-                        Symbol.lessOrEqual,
-                        Symbol.greaterThan,
-                        Symbol.greaterOrEqual,
-                        Symbol.plus,
-                        Symbol.minus,
-                        Symbol.times,
-                        Symbol.divide,
-                        Symbol.modRW,
-                        Symbol.notRW
+                Symbol.intLiteral, 
+                Symbol.charLiteral,
+                Symbol.stringLiteral,
+                Symbol.trueRW,
+                Symbol.falseRW,
+                Symbol.equals, 
+                Symbol.rightBracket, 
+                Symbol.identifier, 
+                Symbol.comma, 
+                Symbol.returnRW, 
+                Symbol.leftParen, 
+                Symbol.rightParen, 
+                Symbol.thenRW, 
+                Symbol.loopRW, 
+                Symbol.andRW, 
+                Symbol.orRW, 
+                Symbol.notEqual, 
+                Symbol.lessThan, 
+                Symbol.lessOrEqual, 
+                Symbol.greaterThan, 
+                Symbol.greaterOrEqual, 
+                Symbol.plus, 
+                Symbol.minus, 
+                Symbol.times, 
+                Symbol.divide, 
+                Symbol.modRW,
+                Symbol.notRW
         });
         
         // </editor-fold>

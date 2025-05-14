@@ -1,15 +1,16 @@
 package edu.citadel.cprl;
 
-import edu.citadel.compiler.Position;
-import edu.citadel.compiler.ParserException;
-import edu.citadel.compiler.InternalCompilerException;
-import edu.citadel.compiler.ErrorHandler;
+import static edu.citadel.cprl.FirstFollowSets.*;
 
-import java.util.List;
+import edu.citadel.compiler.ErrorHandler;
+import edu.citadel.compiler.InternalCompilerException;
+import edu.citadel.compiler.ParserException;
+import edu.citadel.compiler.Position;
+import edu.citadel.cprl.ast.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.io.IOException;
-import static edu.citadel.cprl.FirstFollowSets.*;
+import java.util.List;
 
 /**
  * This class uses recursive descent to perform syntax analysis of the CPRL
@@ -19,858 +20,929 @@ public class Parser {
 
     private Scanner scanner;
     private IdTable idTable;
+    private LoopContext loopContext;
+    private SubprogramContext subprogramContext;
 
     /**
      * Constrói um analisador sintático (parser) com um scanner especificado.
      */
-    public Parser( Scanner scanner ) {
-        
+    public Parser(Scanner scanner) {
         this.scanner = scanner;
         this.idTable = new IdTable();
-        
+        this.loopContext = new LoopContext();
+        this.subprogramContext = new SubprogramContext();
     }
-    
+
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * program = declarativePart statementPart "." .
      */
-    public void parseProgram() throws IOException {
-        
+    public Program parseProgram() throws IOException {
         try {
-            
-            parseDeclarativePart();
-            parseStatementPart();
-            match( Symbol.dot );
-            match( Symbol.EOF );
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "program" ) );
+            DeclarativePart declPart = parseDeclarativePart();
+            StatementPart stmtPart = parseStatementPart();
+            match(Symbol.dot);
+            match(Symbol.EOF);
+            return new Program(declPart, stmtPart);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("program"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * declarativePart = initialDecls subprogramDecls .
      */
-    public void parseDeclarativePart() throws IOException {
-        
-        parseInitialDecls();
-        parseSubprogramDecls();
-        
+    public DeclarativePart parseDeclarativePart() throws IOException {
+        List<InitialDecl> initialDecls = parseInitialDecls();
+        List<SubprogramDecl> subprogDecls = parseSubprogramDecls();
+
+        return new DeclarativePart(initialDecls, subprogDecls);
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * initialDecls = ( initialDecl )* .
      */
-    public void parseInitialDecls() throws IOException {
-        
-        while ( scanner.getSymbol().isInitialDeclStarter() ) {
-            parseInitialDecl();
+    public List<InitialDecl> parseInitialDecls() throws IOException {
+        List<InitialDecl> initialDecls = new ArrayList<>();
+
+        while (scanner.getSymbol().isInitialDeclStarter()) {
+            InitialDecl decl = parseInitialDecl();
+
+            if (decl instanceof VarDecl) {
+                VarDecl varDecl = (VarDecl) decl;
+                for (SingleVarDecl singleVarDecl : varDecl.getSingleVarDecls()) {
+                    initialDecls.add(singleVarDecl);
+                }
+            } else {
+                initialDecls.add(decl);
+            }
         }
-        
+
+        return initialDecls;
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * initialDecl = constDecl | arrayTypeDecl | varDecl .
      */
-    public void parseInitialDecl() throws IOException {
-        
-        /* Atenção!
-         *
-         * Deve-se lançar um internalError se o símbolo não for constRW, typeRW
-         * nem varRW. Use a mensagem "Invalid initial decl.".
-         */
-                    
-        if ( scanner.getSymbol() == Symbol.constRW ) {
-            parseConstDecl();
-        } else if ( scanner.getSymbol() == Symbol.typeRW ) {
-            parseArrayTypeDecl();
-        } else if ( scanner.getSymbol() == Symbol.varRW ) {
-            parseVarDecl();
+    public InitialDecl parseInitialDecl() throws IOException {
+        // Implementação:
+        if (scanner.getSymbol() == Symbol.constRW) {
+            return parseConstDecl();
+        } else if (scanner.getSymbol() == Symbol.typeRW) {
+            return parseArrayTypeDecl();
+        } else if (scanner.getSymbol() == Symbol.varRW) {
+            return parseVarDecl();
         } else {
-            throw internalError( "Invalid initial decl." );
+            throw internalError("Invalid initial decl.");
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * constDecl = "const" constId ":=" literal ";" .
      */
-    public void parseConstDecl() throws IOException {
-                 
+    public ConstDecl parseConstDecl() throws IOException {
+        // Implementação:
         try {
-            
-            match( Symbol.constRW );
-            
-            if ( scanner.getSymbol() == Symbol.identifier ) {
-                idTable.add( scanner.getToken(), IdType.constantId );
-                match( Symbol.identifier );
+            match(Symbol.constRW);
+
+            Token constId = scanner.getToken();
+
+            match(Symbol.identifier);
+            match(Symbol.assign);
+
+            Token literal = parseLiteral();
+
+            match(Symbol.semicolon);
+
+            Type constType = Type.UNKNOWN;
+            if (literal != null) {
+                constType = Type.getTypeOf(literal.getSymbol());
             }
-            
-            match( Symbol.assign );
-            
-            if ( scanner.getSymbol().isLiteral() ) {
-                matchCurrentSymbol();
-            } else {
-                throw error( "Invalid literal expression." );
-            }
-            
-            match( Symbol.semicolon );
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "constDecl" ) );
+
+            ConstDecl constDecl = new ConstDecl(constId, constType, literal);
+            idTable.add(constDecl);
+            return constDecl;
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("constDecl"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa as regras gramaticais abaixo:
-     * 
-     *        literal = intLiteral | charLiteral | stringLiteral | booleanLiteral .
+     *
+     * literal = intLiteral | charLiteral | stringLiteral | booleanLiteral .
      * booleanLiteral = "true" | "false" .
      */
-    public void parseLiteral() throws IOException {
-        
+    public Token parseLiteral() throws IOException {
         try {
-            
-            if ( scanner.getSymbol().isLiteral() ) {
+            if (scanner.getSymbol().isLiteral()) {
+                Token literal = scanner.getToken();
                 matchCurrentSymbol();
+                return literal;
             } else {
-                throw error( "Invalid literal expression." );
+                throw error("Invalid literal expression.");
             }
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "literal" ) );
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("literal"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * varDecl = "var" identifiers ":" typeName ";" .
      */
-    public void parseVarDecl() throws IOException {
-        
+    public VarDecl parseVarDecl() throws IOException {
         try {
-            
-            match( Symbol.varRW );
+            match(Symbol.varRW);
             List<Token> identifiers = parseIdentifiers();
-            match( Symbol.colon );
-            parseTypeName();
-            match( Symbol.semicolon );
+            match(Symbol.colon);
+            Type typeName = parseTypeName();
+            match(Symbol.semicolon);
 
-            for ( Token identifier : identifiers ) {
-                idTable.add( identifier, IdType.variableId );
+            VarDecl varDecl = new VarDecl(
+                identifiers,
+                typeName,
+                idTable.getScopeLevel()
+            );
+
+            for (SingleVarDecl decl : varDecl.getSingleVarDecls()) {
+                idTable.add(decl);
             }
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "varDecl" ) );
+
+            return varDecl;
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("varDecl"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * identifiers = identifier ( "," identifier )* .
      *
      * @return uma lista de tokens do tipo identificador. Retorna uma lista
      * vazia caso a análise falhe.
      */
     public List<Token> parseIdentifiers() throws IOException {
-        
         try {
-            
             List<Token> identifiers = new ArrayList<>();
             Token idToken = scanner.getToken();
-            match( Symbol.identifier );
-            identifiers.add( idToken );
+            match(Symbol.identifier);
+            identifiers.add(idToken);
 
-            while ( scanner.getSymbol() == Symbol.comma ) {
+            while (scanner.getSymbol() == Symbol.comma) {
                 matchCurrentSymbol();
                 idToken = scanner.getToken();
-                match( Symbol.identifier );
-                identifiers.add( idToken );
+                match(Symbol.identifier);
+                identifiers.add(idToken);
             }
 
             return identifiers;
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "identifiers" ) );
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("identifiers"));
             return Collections.emptyList();
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
-     * arrayTypeDecl = "type" typeId "=" "array" "[" intConstValue "]" "of" typeName ";" .
+     *
+     * arrayTypeDecl = "type" typeId "=" "array" "[" intConstValue "]" "of"
+     * typeName ";" .
      */
-    public void parseArrayTypeDecl() throws IOException {
-        
+    public ArrayTypeDecl parseArrayTypeDecl() throws IOException {
+        // Implementação:
         try {
-            
-            match( Symbol.typeRW );
-            
-            Token typeId = scanner.getToken();
-            match( Symbol.identifier );
-            idTable.add( typeId, IdType.arrayTypeId );
-            
-            match( Symbol.equals );
-            match( Symbol.arrayRW );
-            match( Symbol.leftBracket );
-            
-            if ( scanner.getSymbol() == Symbol.intLiteral ) {
-                matchCurrentSymbol();
-            } else {
-                throw error( "Invalid constant." );
+            Token arrayTypeId = null;
+            Type elemType = null;
+            match(Symbol.typeRW);
+            arrayTypeId = scanner.getToken();
+            match(Symbol.identifier);
+            match(Symbol.equals);
+            match(Symbol.arrayRW);
+            match(Symbol.leftBracket);
+
+            ConstValue numElem = parseConstValue();
+
+            if (numElem == null) {
+                numElem = new ConstValue(
+                    new Token(Symbol.intLiteral, scanner.getPosition(), "0")
+                );
             }
-            
-            match( Symbol.rightBracket );
-            match( Symbol.ofRW );
-            parseTypeName();
-            match( Symbol.semicolon );
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "arrayTypeDecl" ) );
+
+            match(Symbol.rightBracket);
+            match(Symbol.ofRW);
+            elemType = parseTypeName();
+            match(Symbol.semicolon);
+
+            ArrayTypeDecl arrayTypeDecl = new ArrayTypeDecl(
+                arrayTypeId,
+                elemType,
+                numElem
+            );
+            idTable.add(arrayTypeDecl);
+            return arrayTypeDecl;
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("arrayTypeDecl"));
+
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * typeName = "Integer" | "Boolean" | "Char" | typeId .
      */
-    public void parseTypeName() throws IOException {
-        
+    public Type parseTypeName() throws IOException {
+        Type type = Type.UNKNOWN;
+
         try {
-            
-            if ( scanner.getSymbol() == Symbol.IntegerRW ) {
+            if (scanner.getSymbol() == Symbol.IntegerRW) {
+                type = Type.Integer;
                 matchCurrentSymbol();
-            } else if ( scanner.getSymbol() == Symbol.BooleanRW ) {
+            } else if (scanner.getSymbol() == Symbol.BooleanRW) {
+                type = Type.Boolean;
                 matchCurrentSymbol();
-            } else if ( scanner.getSymbol() == Symbol.CharRW ) {
+            } else if (scanner.getSymbol() == Symbol.CharRW) {
+                type = Type.Char;
                 matchCurrentSymbol();
-            } else if ( scanner.getSymbol() == Symbol.identifier ) {
-                
+            } else if (scanner.getSymbol() == Symbol.identifier) {
                 Token typeId = scanner.getToken();
                 matchCurrentSymbol();
-                IdType idType = idTable.get( typeId );
+                Declaration decl = idTable.get(typeId);
 
-                if ( idType != null ) {
-                    if ( idType != IdType.arrayTypeId ) {
-                        throw error( typeId.getPosition(), "Identifier \"" +
-                                     typeId + "\" is not a valid type name." );
+                if (decl != null) {
+                    if (decl instanceof ArrayTypeDecl) {
+                        type = decl.getType();
+                    } else {
+                        throw error(
+                            typeId.getPosition(),
+                            "Identifier \"" +
+                            typeId +
+                            "\" is not a valid type name."
+                        );
                     }
                 } else {
-                    throw error( typeId.getPosition(), "Identifier \"" +
-                                 typeId + "\" has not been declared." );
+                    throw error(
+                        typeId.getPosition(),
+                        "Identifier \"" + typeId + "\" has not been declared."
+                    );
                 }
-                
             } else {
-                throw error( "Invalid type name." );
+                throw error("Invalid type name.");
             }
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "typeName" ) );
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("typeName"));
         }
-        
+
+        return type;
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * subprogramDecls = ( subprogramDecl )* .
      */
-    public void parseSubprogramDecls() throws IOException {
-        
-        while ( scanner.getSymbol().isSubprogramDeclStarter() ) {
-            parseSubprogramDecl();
+    public List<SubprogramDecl> parseSubprogramDecls() throws IOException {
+        // Implementação:
+        List<SubprogramDecl> listSubprogramDecls = new ArrayList<>();
+        while (scanner.getSymbol().isSubprogramDeclStarter()) {
+            listSubprogramDecls.add(parseSubprogramDecl());
         }
-        
+        return listSubprogramDecls;
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * subprogramDecl = procedureDecl | functionDecl .
      */
-    public void parseSubprogramDecl() throws IOException {
-        
-        /* Atenção!
-         *
-         * Deve-se lançar um internalError se o símbolo não for procedureRW nem
-         * functionRW. Use a mensagem "Invalid subprogram decl.".
-         */
-                    
-        if ( scanner.getSymbol() == Symbol.procedureRW ) {
-            parseProcedureDecl();
-        } else if ( scanner.getSymbol() == Symbol.functionRW ) {
-            parseFunctionDecl();
+    public SubprogramDecl parseSubprogramDecl() throws IOException {
+        /// Implementação:
+        if (scanner.getSymbol() == Symbol.procedureRW) {
+            return parseProcedureDecl();
+        } else if (scanner.getSymbol() == Symbol.functionRW) {
+            return parseFunctionDecl();
         } else {
-            throw internalError( "Invalid subprogram decl." );
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
-     * procedureDecl = "procedure" procId ( formalParameters )? "is" initialDecls statementPart procId ";" .
+     *
+     * procedureDecl = "procedure" procId ( formalParameters )? "is"
+     * initialDecls statementPart procId ";" .
      */
-    public void parseProcedureDecl() throws IOException {
-        
+    public ProcedureDecl parseProcedureDecl() throws IOException {
         try {
-            
-            match( Symbol.procedureRW );
+            match(Symbol.procedureRW);
             Token procId = scanner.getToken();
-            match( Symbol.identifier );
-            idTable.add( procId, IdType.procedureId );
+            match(Symbol.identifier);
+            ProcedureDecl procDecl = new ProcedureDecl(procId);
+            idTable.add(procDecl);
             idTable.openScope();
 
-            if ( scanner.getSymbol() == Symbol.leftParen ) {
-                parseFormalParameters();
+            if (scanner.getSymbol() == Symbol.leftParen) {
+                procDecl.setFormalParams(parseFormalParameters());
             }
 
-            match( Symbol.isRW );
-            parseInitialDecls();
-            parseStatementPart();
+            match(Symbol.isRW);
+            procDecl.setInitialDecls(parseInitialDecls());
+
+            subprogramContext.beginSubprogramDecl(procDecl);
+            procDecl.setStatementPart(parseStatementPart());
+            subprogramContext.endSubprogramDecl();
             idTable.closeScope();
 
             Token procId2 = scanner.getToken();
-            match( Symbol.identifier );
+            match(Symbol.identifier);
 
-            if ( !procId.getText().equals( procId2.getText() ) ) {
-                throw error( procId2.getPosition(), "Procedure name mismatch." );
+            if (!procId.getText().equals(procId2.getText())) {
+                throw error(procId2.getPosition(), "Procedure name mismatch.");
             }
 
-            match( Symbol.semicolon );
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "procedureDecl" ) );
+            match(Symbol.semicolon);
+
+            return procDecl;
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("procedureDecl"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
-     * functionDecl = "function" funcId ( formalParameters )? "return" typeName "is" initialDecls statementPart funcId ";" .
+     *
+     * functionDecl = "function" funcId ( formalParameters )? "return" typeName
+     * "is" initialDecls statementPart funcId ";" .
      */
-    public void parseFunctionDecl() throws IOException {
-        
+    public FunctionDecl parseFunctionDecl() throws IOException {
+        // Implementação:
         try {
-            
-            match( Symbol.functionRW );
+            match(Symbol.functionRW);
             Token funcId = scanner.getToken();
-            match( Symbol.identifier );
-            idTable.add( funcId, IdType.functionId );
+            match(Symbol.identifier);
+            FunctionDecl funcDecl = new FunctionDecl(funcId);
+            idTable.add(funcDecl);
             idTable.openScope();
-            
-            if ( scanner.getSymbol() == Symbol.leftParen ) {
-                parseFormalParameters();
+
+            if (scanner.getSymbol() == Symbol.leftParen) {
+                funcDecl.setFormalParams(parseFormalParameters());
             }
-            
-            match( Symbol.returnRW );
-            
-            parseTypeName();
-            
-            match( Symbol.isRW );
-            parseInitialDecls();
-            parseStatementPart();
+
+            match(Symbol.returnRW);
+
+            funcDecl.setType(parseTypeName());
+
+            match(Symbol.isRW);
+            funcDecl.setInitialDecls(parseInitialDecls());
+
+            subprogramContext.beginSubprogramDecl(funcDecl);
+
+            funcDecl.setStatementPart(parseStatementPart());
+            subprogramContext.endSubprogramDecl();
             idTable.closeScope();
 
             Token procId2 = scanner.getToken();
-            match( Symbol.identifier );
+            match(Symbol.identifier);
 
-            if ( !funcId.getText().equals( procId2.getText() ) ) {
-                throw error( procId2.getPosition(), "Function name mismatch." );
+            if (!funcId.getText().equals(procId2.getText())) {
+                throw error(procId2.getPosition(), "Function name mismatch.");
             }
 
-            match( Symbol.semicolon );
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "functionDecl" ) );
+            match(Symbol.semicolon);
+
+            return funcDecl;
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("functionDecl"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * formalParameters = "(" parameterDecl ( "," parameterDecl )* ")" .
      */
-    public void parseFormalParameters() throws IOException {
-        
+    public List<ParameterDecl> parseFormalParameters() throws IOException {
+        // Implementação:
         try {
-            
-            match( Symbol.leftParen );
-            
-            parseParameterDecl();
-            
-            while ( scanner.getSymbol() == Symbol.comma ) {
+            ArrayList<ParameterDecl> parameterDecls = new ArrayList<>();
+
+            match(Symbol.leftParen);
+
+            parameterDecls.add(parseParameterDecl());
+
+            while (scanner.getSymbol() == Symbol.comma) {
                 matchCurrentSymbol();
-                parseParameterDecl();
+                parameterDecls.add(parseParameterDecl());
             }
-            
-            match( Symbol.rightParen );
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "formalParameters" ) );
+
+            match(Symbol.rightParen);
+            return parameterDecls;
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("formalParameters"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * parameterDecl = ( "var" )? paramId ":" typeName .
      */
-    public void parseParameterDecl() throws IOException {
-        
+    public ParameterDecl parseParameterDecl() throws IOException {
+        // Implementação:
         try {
-            
-            if ( scanner.getSymbol() == Symbol.varRW ) {
+            Token paramId = null;
+            Type type = null;
+            boolean isVar = false;
+            if (scanner.getSymbol() == Symbol.varRW) {
                 matchCurrentSymbol();
+                isVar = true;
             }
-            
-            Token paramId = scanner.getToken();
-            match( Symbol.identifier );
-            idTable.add( paramId, IdType.variableId );
-            
-            match( Symbol.colon );
-            
-            parseTypeName();
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "parameterDecl" ) );
+
+            paramId = scanner.getToken();
+            match(Symbol.identifier);
+
+            match(Symbol.colon);
+
+            type = parseTypeName();
+
+            ParameterDecl parameterDecl = new ParameterDecl(
+                paramId,
+                type,
+                isVar
+            );
+            idTable.add(parameterDecl);
+            return parameterDecl;
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("parameterDecl"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * statementPart = "begin" statements "end" .
      */
-    public void parseStatementPart() throws IOException {
-        
+    public StatementPart parseStatementPart() throws IOException {
         try {
-            match( Symbol.beginRW );
-            parseStatements();
-            match( Symbol.endRW );
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "statementPart" ) );
+            match(Symbol.beginRW);
+            List<Statement> statements = parseStatements();
+            match(Symbol.endRW);
+            return new StatementPart(statements);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("statementPart"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * statements = ( statement )* .
      */
-    public void parseStatements() throws IOException {
-        
-        while ( scanner.getSymbol().isStmtStarter() ) {
-            parseStatement();
+    public List<Statement> parseStatements() throws IOException {
+        // Implementação:
+        List<Statement> statements = new ArrayList<>();
+
+        while (scanner.getSymbol().isStmtStarter()) {
+            Statement statement = parseStatement();
+            statements.add(statement);
         }
-        
+
+        return statements;
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
-     * statement = assignmentStmt | ifStmt | loopStmt | exitStmt | readStmt
-     *           | writeStmt | writelnStmt | procedureCallStmt | returnStmt .
+     *
+     * statement = assignmentStmt | ifStmt | loopStmt | exitStmt | readStmt |
+     * writeStmt | writelnStmt | procedureCallStmt | returnStmt .
      */
-    public void parseStatement() throws IOException {
-        
-        // assume que scanner.getSymbol() pode iniciar uma instrução
+    public Statement parseStatement() throws IOException {
+        // Implementação:
         assert scanner.getSymbol().isStmtStarter() : "Invalid statement.";
 
-        /**
-         * Como analisar um assignmentStmt e um procCallStmt dado que ambos
-         * iniciam com um identificador?
-         * 
-         * Dica: usar a tabela de identificadores.
-         */
-        
-        /**
-         * A recuperação de erros para o método parseStatement() requere atenção
-         * especial quando o símbolo é um identificador, visto que um
-         * identificador pode não somente iniciar uma instrução, mas também pode
-         * aparecer em qualquer lugar desse tipo de construção.
-         * 
-         * Considere, por exemplo, uma instrução de atribuição ou uma instrução
-         * de chamada de procedimento. Se avançarmos a um identificador, podemos
-         * estar no meio de uma instrução ao invés de estar no início da próxima
-         * instrução.
-         * 
-         * Dado que a maioria dos erros relacionados aos identificadores
-         * estão relacionados à declarar ou referenciar um identificador de
-         * forma incorreta, assumiremos que esse é o caso e avançaremos ao
-         * próximo ponto e vírgula antes de implementar a recuperação de erros.
-         * 
-         * O objetivo é que avançando ao próximo ponto e vírgula, com sorte,
-         * moveremos o scanner até o fim da instrução que contém o erro.
-         */
-        
         try {
-            
-            if ( scanner.getSymbol() == Symbol.exitRW ) {
-                parseExitStmt();
-            } else if ( scanner.getSymbol() == Symbol.identifier ) {
-                
-                IdType idType = idTable.get( scanner.getToken() );
-                
-                if ( idType == null ) {
-                    String errorMsg = "Identifier \"" + scanner.getToken() + 
-                                      "\" has not been declared.";
-                    throw error( scanner.getToken().getPosition(), errorMsg );
-                } else if ( idType == IdType.variableId ) {
-                    parseAssignmentStmt();
-                } else if ( idType == IdType.procedureId ) {
-                    parseProcedureCallStmt();
-                } else if ( idType == IdType.constantId ) {
-                    String errorMsg = "Identifier \"" + scanner.getToken() + 
-                                      "\" cannot start a statement.";
-                    throw error( scanner.getToken().getPosition(), errorMsg );
+            if (scanner.getSymbol() == Symbol.exitRW) {
+                return parseExitStmt();
+            } else if (scanner.getSymbol() == Symbol.identifier) {
+                Declaration idType = idTable.get(scanner.getToken());
+
+                if (idType == null) {
+                    String errorMsg =
+                        "Identifier \"" +
+                        scanner.getToken() +
+                        "\" has not been declared.";
+                    throw error(scanner.getToken().getPosition(), errorMsg);
+                } else if (idType instanceof NamedDecl) {
+                    return parseAssignmentStmt();
+                } else if (idType instanceof ProcedureDecl) {
+                    return parseProcedureCallStmt();
+                } else {
+                    String errorMsg =
+                        ("Identifier \"" +
+                            scanner.getToken() +
+                            "\" cannot start a statement.");
+                    throw error(scanner.getToken().getPosition(), errorMsg);
                 }
-
-            } else if ( scanner.getSymbol() == Symbol.ifRW ) {
-                parseIfStmt();
-            } else if ( scanner.getSymbol() == Symbol.loopRW ) {
-                parseLoopStmt();
-            } else if ( scanner.getSymbol() == Symbol.whileRW ) {
-                parseLoopStmt();
-            } else if ( scanner.getSymbol() == Symbol.readRW ) {
-                parseReadStmt();
-            } else if ( scanner.getSymbol() == Symbol.writeRW ) {
-                parseWriteStmt();
-            } else if ( scanner.getSymbol() == Symbol.writelnRW ) {
-                parseWritelnStmt();
-            } else if ( scanner.getSymbol() == Symbol.returnRW ) {
-                parseReturnStmt();
+            } else if (scanner.getSymbol() == Symbol.ifRW) {
+                return parseIfStmt();
+            } else if (
+                scanner.getSymbol() == Symbol.loopRW ||
+                scanner.getSymbol() == Symbol.whileRW
+            ) {
+                return parseLoopStmt();
+            } else if (scanner.getSymbol() == Symbol.readRW) {
+                return parseReadStmt();
+            } else if (scanner.getSymbol() == Symbol.writeRW) {
+                return parseWriteStmt();
+            } else if (scanner.getSymbol() == Symbol.writelnRW) {
+                return parseWritelnStmt();
+            } else if (scanner.getSymbol() == Symbol.returnRW) {
+                return parseReturnStmt();
             } else {
-                throw internalError( "Invalid statement." );
+                throw internalError("Invalid statement.");
             }
-        
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            scanner.advanceTo( Symbol.semicolon );
-            recover( FOLLOW_SETS.get( "statement" ) );
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            scanner.advanceTo(Symbol.semicolon);
+            recover(FOLLOW_SETS.get("statement"));
+            return null;
         }
-
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * assignmentStmt = variable ":=" expression ";" .
      */
-    public void parseAssignmentStmt() throws IOException {
-        
+    public AssignmentStmt parseAssignmentStmt() throws IOException {
+        // Implementação:
+        Expression expression = null;
+        Position position = null;
+
         try {
-            
-            parseVariable();
-            
+            Variable variable = parseVariable();
+            position = scanner.getPosition();
             try {
-                
-                match( Symbol.assign );
-                
-            } catch ( ParserException e ) {
-                
-                if ( scanner.getSymbol() == Symbol.equals ) {
-                    ErrorHandler.getInstance().reportError( e );
-                    matchCurrentSymbol();  // tratar "=" como ":="
-                                           // nesse contexto
+                match(Symbol.assign);
+            } catch (ParserException e) {
+                if (scanner.getSymbol() == Symbol.equals) {
+                    ErrorHandler.getInstance().reportError(e);
+                    matchCurrentSymbol();
                 } else {
                     throw e;
                 }
-                
             }
-            
-            parseExpression();
-            match( Symbol.semicolon );
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "assignmentStmt" ) );
+
+            expression = parseExpression();
+            match(Symbol.semicolon);
+
+            AssignmentStmt assignmentStmt = new AssignmentStmt(
+                variable,
+                expression,
+                position
+            );
+
+            return assignmentStmt;
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("assignmentStmt"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
-     * ifStmt = "if" booleanExpr "then" statements
-     *          ( "elsif" booleanExpr "then" statements )*
-     *          ( "else" statements )? "end" "if" ";" .
+     *
+     * ifStmt = "if" booleanExpr "then" statements ( "elsif" booleanExpr "then"
+     * statements )* ( "else" statements )? "end" "if" ";" .
      */
-    public void parseIfStmt() throws IOException {
-        
+    public IfStmt parseIfStmt() throws IOException {
+        // Implementação:
         try {
-            
-            match( Symbol.ifRW );
-            parseExpression();
-            match( Symbol.thenRW );
-            
-            parseStatements();
-            
-            while ( scanner.getSymbol() == Symbol.elsifRW ) {
-                match( Symbol.elsifRW );
-                parseExpression();
-                match( Symbol.thenRW );
-                parseStatements();
+            match(Symbol.ifRW);
+
+            Expression booleanExpr = parseExpression();
+
+            match(Symbol.thenRW);
+
+            List<Statement> stmts = parseStatements();
+            List<ElsifPart> elseIfPart = new ArrayList<>();
+            List<Statement> elseStmts = new ArrayList<>();
+
+            while (scanner.getSymbol() == Symbol.elsifRW) {
+                match(Symbol.elsifRW);
+
+                Expression elseIfExpr = parseExpression();
+
+                match(Symbol.thenRW);
+                List<Statement> elseIfStmt = parseStatements();
+
+                elseIfPart.add(new ElsifPart(elseIfExpr, elseIfStmt));
             }
-            
-            if ( scanner.getSymbol() == Symbol.elseRW ) {
-                match( Symbol.elseRW );
-                parseStatements();
+
+            if (scanner.getSymbol() == Symbol.elseRW) {
+                match(Symbol.elseRW);
+                elseStmts = parseStatements();
             }
-        
-            match( Symbol.endRW );
-            match( Symbol.ifRW );
-            match( Symbol.semicolon );
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "ifStmt" ) );
+
+            match(Symbol.endRW);
+            match(Symbol.ifRW);
+            match(Symbol.semicolon);
+
+            return new IfStmt(booleanExpr, stmts, elseIfPart, elseStmts);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("ifStmt"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * loopStmt = ( "while" booleanExpr )? "loop" statements "end" "loop" ";" .
      */
-    public void parseLoopStmt() throws IOException {
-        
+    public LoopStmt parseLoopStmt() throws IOException {
+        // Implementação:
         try {
-            
-            if ( scanner.getSymbol() == Symbol.whileRW ) {
+            LoopStmt loopStmt = new LoopStmt();
+            if (scanner.getSymbol() == Symbol.whileRW) {
                 matchCurrentSymbol();
-                parseExpression();
+                Expression whileExpr = parseExpression();
+                loopStmt.setWhileExpr(whileExpr);
             }
 
-            match( Symbol.loopRW );
-            parseStatements();
+            match(Symbol.loopRW);
+            loopContext.beginLoop(loopStmt);
+            loopStmt.setStatements(parseStatements());
+            loopContext.endLoop();
 
-            match( Symbol.endRW );
-            match( Symbol.loopRW );
-            match( Symbol.semicolon );
-        
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "loopStmt" ) );
+            match(Symbol.endRW);
+            match(Symbol.loopRW);
+            match(Symbol.semicolon);
+            return loopStmt;
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("loopStmt"));
         }
-        
+        return null;
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * exitStmt = "exit" ( "when" booleanExpr )? ";" .
      */
-    public void parseExitStmt() throws IOException {
-        
+    public ExitStmt parseExitStmt() throws IOException {
+        // Implementação:
         try {
-            
-            match( Symbol.exitRW );
-            
-            if ( scanner.getSymbol() == Symbol.whenRW ) {
+            Expression booleanExpr = null;
+            Position exitPosition = scanner.getPosition();
+
+            match(Symbol.exitRW);
+
+            if (scanner.getSymbol() == Symbol.whenRW) {
                 matchCurrentSymbol();
-                parseExpression();
+                booleanExpr = parseExpression();
             }
-            
-            match( Symbol.semicolon );
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "exitStmt" ) );
+
+            match(Symbol.semicolon);
+
+            LoopStmt loopStmt = loopContext.getLoopStmt();
+            if (loopStmt == null) {
+                throw error(
+                    exitPosition,
+                    "Exit statement is not nested within a loop."
+                );
+            }
+
+            return new ExitStmt(booleanExpr, loopStmt);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("exitStmt"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * readStmt = "read" variable ";" .
      */
-    public void parseReadStmt() throws IOException {
-        
+    public ReadStmt parseReadStmt() throws IOException {
+        // Implementação:
         try {
-            
-            match( Symbol.readRW );
-            parseVariableExpr();
-            match( Symbol.semicolon );
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "readStmt" ) );
+            Variable variable = null;
+            match(Symbol.readRW);
+            variable = parseVariableExpr();
+            match(Symbol.semicolon);
+            ReadStmt readStmt = new ReadStmt(variable);
+            return readStmt;
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("readStmt"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * writeStmt = "write" expressions ";" .
      */
-    public void parseWriteStmt() throws IOException {
-        
+    public WriteStmt parseWriteStmt() throws IOException {
+        // Implementação:
         try {
-            
-            match( Symbol.writeRW );
-            parseExpressions();
-            match( Symbol.semicolon );
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "writeStmt" ) );
+            match(Symbol.writeRW);
+
+            List<Expression> expressions = parseExpressions();
+
+            match(Symbol.semicolon);
+
+            return new WriteStmt(expressions);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("writeStmt"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * expressions = expression ( "," expression )* .
      */
-    public void parseExpressions() throws IOException {
-        
-        parseExpression();
-        
-        while ( scanner.getSymbol() == Symbol.comma ) {
+    public List<Expression> parseExpressions() throws IOException {
+        // Implementação:
+        List<Expression> expressions = new ArrayList<>();
+        expressions.add(parseExpression());
+
+        while (scanner.getSymbol() == Symbol.comma) {
             matchCurrentSymbol();
-            parseExpression();
+            expressions.add(parseExpression());
         }
-        
+
+        return expressions;
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * writelnStmt = "writeln" ( expressions )? ";" .
      */
-    public void parseWritelnStmt() throws IOException {
-        
+    public WritelnStmt parseWritelnStmt() throws IOException {
         try {
-            
-            match( Symbol.writelnRW );
+            match(Symbol.writelnRW);
 
-            if ( scanner.getSymbol().isExprStarter() ) {
-                parseExpressions();
+            List<Expression> expressions;
+            if (scanner.getSymbol().isExprStarter()) {
+                expressions = parseExpressions();
+            } else {
+                expressions = Collections.emptyList();
             }
-            
-            match( Symbol.semicolon );
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "writelnStmt" ) );
+
+            match(Symbol.semicolon);
+
+            return new WritelnStmt(expressions);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("writelnStmt"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * procedureCallStmt = procId ( actualParameters )? ";" .
      */
-    public void parseProcedureCallStmt() throws IOException {
-        
+    public ProcedureCallStmt parseProcedureCallStmt() throws IOException {
+        // Implementação:
         try {
-            
-            match( Symbol.identifier );
-            
-            if ( scanner.getSymbol().isExprStarter() ) {
-                parseActualParameters();
+            Token procId = scanner.getToken();
+            List<Expression> actualParams = new ArrayList<>();
+            ProcedureDecl procedureDecl = null;
+            match(Symbol.identifier);
+
+            if (scanner.getSymbol().isExprStarter()) {
+                actualParams = parseActualParameters();
             }
-            
-            match( Symbol.semicolon );
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "procedureCallStmt" ) );
+
+            match(Symbol.semicolon);
+
+            procedureDecl = (ProcedureDecl) idTable.get(procId);
+
+            ProcedureCallStmt procedureCallStmt = new ProcedureCallStmt(
+                procId,
+                actualParams,
+                procedureDecl
+            );
+            return procedureCallStmt;
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("procedureCallStmt"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * actualParameters = "(" expressions ")" .
      */
-    public void parseActualParameters() throws IOException {
-        
+    public List<Expression> parseActualParameters() throws IOException {
+        // Implementação:
         try {
-            
-            match( Symbol.leftParen );
-            parseExpressions();
-            match( Symbol.rightParen );
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "actualParameters" ) );
+            List<Expression> actualParameters = new ArrayList<>();
+            match(Symbol.leftParen);
+            actualParameters = parseExpressions();
+            match(Symbol.rightParen);
+            return actualParameters;
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("actualParameters"));
         }
-        
+        return null;
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * returnStmt = "return" ( expression )? ";" .
      */
-    public void parseReturnStmt() throws IOException {
-        
+    public ReturnStmt parseReturnStmt() throws IOException {
+        // Implementação:
         try {
-            
-            match( Symbol.returnRW );
-            
-            if ( scanner.getSymbol().isExprStarter() ) {
-                parseExpression();
+            Position position = scanner.getPosition();
+            Expression returnExpr = null;
+            match(Symbol.returnRW);
+
+            if (scanner.getSymbol().isExprStarter()) {
+                returnExpr = parseExpression();
             }
-            
-            match( Symbol.semicolon );
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "returnStmt" ) );
+
+            match(Symbol.semicolon);
+
+            SubprogramDecl subDecl = subprogramContext.getSubprogramDecl();
+            if (subDecl == null) {
+                throw error(
+                    position,
+                    "Return statement is not nested within a subprogram."
+                );
+            }
+
+            ReturnStmt returnStmt = new ReturnStmt(
+                subDecl,
+                returnExpr,
+                position
+            );
+            return returnStmt;
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("returnStmt"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * variable = ( varId | paramId ) ( "[" expression "]" )* .
-     * 
+     *
      * Esse método auxiliar provê uma lógica comum aos métodos parseVariable() e
      * parseNamedValue(). Esse método não lida com quaisquer exceções geradas
      * pelo parser (ParseException), lançando-as ao método chamador para que
@@ -880,264 +952,305 @@ public class Parser {
      * @see #parseVariable()
      * @see #parseNamedValue()
      */
-    public void parseVariableExpr() throws IOException, ParserException {
-        
+    public Variable parseVariableExpr() throws IOException, ParserException {
         Token idToken = scanner.getToken();
-        match( Symbol.identifier );
-        IdType idType = idTable.get( idToken );
-        
-        if ( idType == null ) {
-            
-            String errorMsg = "Identifier \"" + idToken + 
-                              "\" has not been declared.";
-            throw error( idToken.getPosition(), errorMsg );
-            
-        } else if ( idType != IdType.variableId ) {
-            
-            String errorMsg = "Identifier \"" + idToken + 
-                              "\" is not a variable.";
-            throw error( idToken.getPosition(), errorMsg );
-            
+
+        match(Symbol.identifier);
+
+        Declaration decl = idTable.get(idToken);
+
+        if (decl == null) {
+            String errorMsg =
+                "Identifier \"" + idToken + "\" has not been declared.";
+            throw error(idToken.getPosition(), errorMsg);
+        } else if (!(decl instanceof NamedDecl)) {
+            String errorMsg =
+                "Identifier \"" + idToken + "\" is not a variable.";
+            throw error(idToken.getPosition(), errorMsg);
         }
 
-        while ( scanner.getSymbol() == Symbol.leftBracket ) {
+        NamedDecl namedDecl = (NamedDecl) decl;
+        List<Expression> indexExprs = new ArrayList<>();
+
+        while (scanner.getSymbol() == Symbol.leftBracket) {
             matchCurrentSymbol();
-            parseExpression();
-            match( Symbol.rightBracket );
+            indexExprs.add(parseExpression());
+            match(Symbol.rightBracket);
         }
-        
+
+        return new Variable(namedDecl, idToken.getPosition(), indexExprs);
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * variable = ( varId | paramId ) ( "[" expression "]" )* .
      */
-    public void parseVariable() throws IOException {
-        
+    public Variable parseVariable() throws IOException {
         try {
-            parseVariableExpr();
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "variable" ) );
+            return parseVariableExpr();
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("variable"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa as regras gramaticais abaixo:
-     * 
-     * expression = relation ( logicalOp relation )* .
-     *  logicalOp = "and" | "or" .
+     *
+     * expression = relation ( logicalOp relation )* . logicalOp = "and" | "or"
+     * .
      */
-    public void parseExpression() throws IOException {
-        
-        parseRelation();
-        
-        while ( scanner.getSymbol().isLogicalOperator() ) {
+    public Expression parseExpression() throws IOException {
+        Expression relation = parseRelation();
+        Expression relation2 = null;
+        Token operator = null;
+
+        while (scanner.getSymbol().isLogicalOperator()) {
+            operator = scanner.getToken();
             matchCurrentSymbol();
-            parseRelation();
+            relation2 = parseRelation();
+            relation = new LogicalExpr(relation, operator, relation2);
         }
-        
+
+        return relation;
     }
 
     /**
      * Analisa as regras gramaticais abaixo:
-     * 
-     *     relation = simpleExpr ( relationalOp simpleExpr )? .
-     * relationalOp = "=" | "!=" | "<" | "<=" | ">" | ">=" .
+     *
+     * relation = simpleExpr ( relationalOp simpleExpr )? . relationalOp = "=" |
+     * "!=" | "<" | "<=" | ">" | ">=" .
      */
-    public void parseRelation() throws IOException {
-        
-        parseSimpleExpr();
-        
-        if ( scanner.getSymbol().isRelationalOperator() ) {
+    public Expression parseRelation() throws IOException {
+        // Implementação:
+        Expression LeftOp = null;
+        LeftOp = parseSimpleExpr();
+
+        if (scanner.getSymbol().isRelationalOperator()) {
+            Token operator = scanner.getToken();
             matchCurrentSymbol();
-            parseSimpleExpr();
+            Expression rightOp = parseSimpleExpr();
+            return new RelationalExpr(LeftOp, operator, rightOp);
+        } else {
+            return LeftOp;
         }
-        
     }
 
     /**
      * Analisa as regras gramaticais abaixo:
-     * 
-     * simpleExpr = ( addingOp )? term ( addingOp term )* .
-     *   addingOp = "+" | "-" .
+     *
+     * simpleExpr = ( addingOp )? term ( addingOp term )* . addingOp = "+" | "-"
+     * .
      */
-    public void parseSimpleExpr() throws IOException {
-        
-        if ( scanner.getSymbol().isAddingOperator() ) {
+    public Expression parseSimpleExpr() throws IOException {
+        // Implementação:
+        Token operator = null;
+
+        if (scanner.getSymbol().isAddingOperator()) {
+            operator = scanner.getToken();
             matchCurrentSymbol();
         }
-        
-        parseTerm();
-        
-        while ( scanner.getSymbol().isAddingOperator() ) {
-            matchCurrentSymbol();
-            parseTerm();
+
+        Expression leftExpr = parseTerm();
+
+        if (operator != null) {
+            leftExpr = new NegationExpr(operator, leftExpr);
         }
-        
+
+        while (scanner.getSymbol().isAddingOperator()) {
+            operator = scanner.getToken();
+            matchCurrentSymbol();
+            Expression rightExpr = parseTerm();
+
+            leftExpr = new AddingExpr(leftExpr, operator, rightExpr);
+        }
+
+        return leftExpr;
     }
 
     /**
      * Analisa as regras gramaticais abaixo:
-     * 
-     *          term = factor ( multiplyingOp factor )* .
-     * multiplyingOp = "*" | "/" | "mod" .
+     *
+     * term = factor ( multiplyingOp factor )* . multiplyingOp = "*" | "/" |
+     * "mod" .
      */
-    public void parseTerm() throws IOException {
-        
-        parseFactor();
-        
-        while ( scanner.getSymbol().isMultiplyingOperator() ) {
-            matchCurrentSymbol();
-            parseFactor();
+    public Expression parseTerm() throws IOException {
+        // Implementação:
+        Expression leftFactor = parseFactor();
+
+        Token operator = null;
+        if (scanner.getSymbol().isMultiplyingOperator()) {
+            while (scanner.getSymbol().isMultiplyingOperator()) {
+                operator = scanner.getToken();
+                matchCurrentSymbol();
+                Expression rightFactor = parseFactor();
+
+                leftFactor = new MultiplyingExpr(
+                    leftFactor,
+                    operator,
+                    rightFactor
+                );
+            }
+
+            return leftFactor;
         }
-        
+
+        return leftFactor;
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
-     * factor = "not" factor | constValue | namedValue | functionCall
-     *        | "(" expression ")" .
+     *
+     * factor = "not" factor | constValue | namedValue | functionCall | "("
+     * expression ")" .
      */
-    public void parseFactor() throws IOException {
-        
+    public Expression parseFactor() throws IOException {
         try {
-            
-            if ( scanner.getSymbol() == Symbol.notRW ) {
-                
-                matchCurrentSymbol();
-                parseFactor();
-                
-            } else if ( scanner.getSymbol().isLiteral() ) {
-                
-                // lida com literais de constantes separadamente dos
-                // identificadores de constantes
-                parseConstValue();
-                
-            } else if ( scanner.getSymbol() == Symbol.identifier ) {
-                
-                // lida com os identificadores baseando-se se eles foram
-                // declarados como variáveis, constantes ou funções.
-                Token idToken = scanner.getToken();
-                IdType idType = idTable.get( idToken );
+            Expression expr;
 
-                if ( idType != null ) {
-                    if ( idType == IdType.constantId ) {
-                        parseConstValue();
-                    } else if ( idType == IdType.variableId ) {
-                        parseNamedValue();
-                    } else if ( idType == IdType.functionId ) {
-                        parseFunctionCall();
+            if (scanner.getSymbol() == Symbol.notRW) {
+                Token operator = scanner.getToken();
+                matchCurrentSymbol();
+                Expression factorExpr = parseFactor();
+                expr = new NotExpr(operator, factorExpr);
+            } else if (scanner.getSymbol().isLiteral()) {
+                expr = parseConstValue();
+            } else if (scanner.getSymbol() == Symbol.identifier) {
+                Token idToken = scanner.getToken();
+                Declaration decl = idTable.get(idToken);
+
+                if (decl != null) {
+                    if (decl instanceof ConstDecl) {
+                        expr = parseConstValue();
+                    } else if (decl instanceof NamedDecl) {
+                        expr = parseNamedValue();
+                    } else if (decl instanceof FunctionDecl) {
+                        expr = parseFunctionCall();
                     } else {
-                        throw error( "Identifier \"" + scanner.getToken() +
-                                     "\" is not valid as an expression." );
+                        throw error(
+                            "Identifier \"" +
+                            scanner.getToken() +
+                            "\" is not valid as an expression."
+                        );
                     }
                 } else {
-                    throw error( "Identifier \"" + scanner.getToken() +
-                                 "\" has not been declared." );
+                    throw error(
+                        "Identifier \"" +
+                        scanner.getToken() +
+                        "\" has not been declared."
+                    );
                 }
-                
-            } else if ( scanner.getSymbol() == Symbol.leftParen ) {
+            } else if (scanner.getSymbol() == Symbol.leftParen) {
                 matchCurrentSymbol();
-                parseExpression();
-                match( Symbol.rightParen );
+                expr = parseExpression();
+                match(Symbol.rightParen);
             } else {
-                throw error( "Invalid expression." );
+                throw error("Invalid expression.");
             }
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "factor" ) );
+
+            return expr;
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("factor"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * constValue = literal | constId .
      */
-    public void parseConstValue() throws IOException {
-        
+    public ConstValue parseConstValue() throws IOException {
+        // Implementação:
         try {
-            
-            if ( scanner.getSymbol().isLiteral() ) {
-                parseLiteral();
-            } else if ( scanner.getSymbol() == Symbol.identifier ) {
+            if (scanner.getSymbol().isLiteral()) {
+                return new ConstValue(parseLiteral());
+            } else if (scanner.getSymbol() == Symbol.identifier) {
+                Token Id = scanner.getToken();
                 matchCurrentSymbol();
+                return new ConstValue(Id, (ConstDecl) idTable.get(Id));
             } else {
-                throw error( "Invalid constant." );
+                throw error("Invalid constant.");
             }
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "constValue" ) );
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("constValue"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * namedValue = variable .
      */
-    public void parseNamedValue() throws IOException {
-        
+    public NamedValue parseNamedValue() throws IOException {
         try {
-            parseVariableExpr();
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "namedValue" ) );
+            Variable variableExpr = parseVariableExpr();
+            return new NamedValue(variableExpr);
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("namedValue"));
+            return null;
         }
-        
     }
 
     /**
      * Analisa a regra gramatical abaixo:
-     * 
+     *
      * functionCall = funcId ( actualParameters )? .
      */
-    public void parseFunctionCall() throws IOException {
-        
+    public FunctionCall parseFunctionCall() throws IOException {
+        // Implementação:
         try {
-            
-            match( Symbol.identifier );
-            
-            if ( scanner.getSymbol().isExprStarter() ) {
-                parseActualParameters();
+            Token funcId = scanner.getToken();
+            List<Expression> actualParams = new ArrayList<>();
+            match(Symbol.identifier);
+
+            if (scanner.getSymbol().isExprStarter()) {
+                actualParams = parseActualParameters();
             }
-            
-        } catch ( ParserException e ) {
-            ErrorHandler.getInstance().reportError( e );
-            recover( FOLLOW_SETS.get( "functionCall" ) );
+
+            FunctionDecl functionDecl = (FunctionDecl) idTable.get(funcId);
+
+            FunctionCall functionCall = new FunctionCall(
+                funcId,
+                actualParams,
+                functionDecl
+            );
+            return functionCall;
+        } catch (ParserException e) {
+            ErrorHandler.getInstance().reportError(e);
+            recover(FOLLOW_SETS.get("functionCall"));
+            return null;
         }
-        
     }
 
-    
-    
-    /***************************************************************************
-     *                     Métodos utilitários de análise                      *
-     **************************************************************************/
-    
+    /**
+     * *************************************************************************
+     * Métodos utilitários de análise *
+     *************************************************************************
+     */
     /**
      * Verifica se o símbolo atual do scanner é o símbolo esperado. Se for,
      * avança o scanner. Caso contrário, lança uma ParserException.
      */
-    private void match( Symbol expectedSymbol ) throws IOException, ParserException {
-        
-        if ( scanner.getSymbol() == expectedSymbol ) {
+    private void match(Symbol expectedSymbol)
+        throws IOException, ParserException {
+        if (scanner.getSymbol() == expectedSymbol) {
             scanner.advance();
         } else {
-            String errorMsg = "Expecting \"" + expectedSymbol + 
-                              "\" but found \"" + scanner.getToken() + 
-                              "\" instead.";
-            throw error( errorMsg );
+            String errorMsg =
+                "Expecting \"" +
+                expectedSymbol +
+                "\" but found \"" +
+                scanner.getToken() +
+                "\" instead.";
+            throw error(errorMsg);
         }
-        
     }
 
     /**
@@ -1149,35 +1262,34 @@ public class Parser {
     }
 
     /**
-     * Avança o scanner até que o símbolo atual seja um dos símbolos 
+     * Avança o scanner até que o símbolo atual seja um dos símbolos
      * especificados no array de símbolos seguidores (follow).
      */
-    private void recover( Symbol[] followers ) throws IOException {
-        scanner.advanceTo( followers );
+    private void recover(Symbol[] followers) throws IOException {
+        scanner.advanceTo(followers);
     }
 
     /**
      * Cria uma ParserException com a mensagem especificada e a posição corrente
      * do scanner.
      */
-    private ParserException error( String errMsg ) {
-        return new ParserException( scanner.getPosition(), errMsg );
+    private ParserException error(String errMsg) {
+        return new ParserException(scanner.getPosition(), errMsg);
     }
 
     /**
      * Cria uma ParserException especificando a posição atual do scanner e a
      * mensagem do erro.
      */
-    private ParserException error( Position errPos, String errMsg ) {
-        return new ParserException( errPos, errMsg );
+    private ParserException error(Position errPos, String errMsg) {
+        return new ParserException(errPos, errMsg);
     }
 
     /**
      * Cria uma InternalCompilerException especificando a posição atual do
      * scanner e a mensagem do erro.
      */
-    private InternalCompilerException internalError( String message ) {
-        return new InternalCompilerException( scanner.getPosition(), message );
+    private InternalCompilerException internalError(String message) {
+        return new InternalCompilerException(scanner.getPosition(), message);
     }
-    
 }
