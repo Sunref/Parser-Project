@@ -13,17 +13,17 @@ mexer!
 Implementar o método checkConstraints() nas classes abaixo, contidas no pacote
 edu.citadel.cprl.ast:
 
-  ArrayTypeDecl.java           
-  ConstDecl.java        
-  ExitStmt.java                
-  FunctionDecl.java            
-  LoopStmt.java                   
-  MultiplyingExpr.java         
-  NotExpr.java                 
-  ProcedureCallStmt.java       
-  ReadStmt.java                
-  RelationalExpr.java          
-  ReturnStmt.java              
+  ArrayTypeDecl.java -> Implementado por Fernanda;
+  ConstDecl.java
+  ExitStmt.java
+  FunctionDecl.java
+  LoopStmt.java
+  MultiplyingExpr.java
+  NotExpr.java     -> Implementado por Fernanda;
+  ProcedureCallStmt.java
+  ReadStmt.java
+  RelationalExpr.java
+  ReturnStmt.java
 
 
 Abaixo segue a listagem completa das classes:
@@ -46,39 +46,39 @@ No pacote edu.citadel.cprl.ast
   AddingExpr.java
 * ArrayTypeDecl.java         -> Implementar o método checkConstraints()
 * AssignmentStmt.java        -> Não precisa mexer por enquanto
-  BinaryExpr.java    
+  BinaryExpr.java
 * ConstDecl.java             -> Implementar o método checkConstraints()
-  ConstValue.java    
-  Declaration.java    
+  ConstValue.java
+  Declaration.java
 * DeclarativePart.java       -> Não precisa mexer por enquanto
-  ElsifPart    
+  ElsifPart
 * ExitStmt.java              -> Implementar o método checkConstraints()
-  Expression.java    
-  FunctionCall.java    
+  Expression.java
+  FunctionCall.java
 * FunctionDecl.java          -> Implementar o método checkConstraints()
-  IfStmt.java    
-  InitialDecl.java    
-  LogicalExpr.java    
+  IfStmt.java
+  InitialDecl.java
+  LogicalExpr.java
 * LoopStmt.java              -> Implementar o método checkConstraints()
 * MultiplyingExpr.java       -> Implementar o método checkConstraints()
-  NamedDecl.java             
-  NamedValue.java            
+  NamedDecl.java
+  NamedValue.java
 * NegationExpr.java          -> Não precisa mexer por enquanto
 * NotExpr.java               -> Implementar o método checkConstraints()
-  OutputStmt.java    
-  ParameterDecl.java    
+  OutputStmt.java
+  ParameterDecl.java
 * ProcedureCallStmt.java     -> Implementar o método checkConstraints()
 * ProcedureDecl.java         -> Não precisa mexer por enquanto
-  Program.java    
+  Program.java
 * ReadStmt.java              -> Implementar o método checkConstraints()
 * RelationalExpr.java        -> Implementar o método checkConstraints()
 * ReturnStmt.java            -> Implementar o método checkConstraints()
-  SingleVarDecl.java    
-  Statement.java    
+  SingleVarDecl.java
+  Statement.java
 * StatementPart.java         -> Não precisa mexer por enquanto
-  SubprogramDecl.java    
-  UnaryExpr.java    
-  VarDecl.java    
+  SubprogramDecl.java
+  UnaryExpr.java
+  VarDecl.java
 * Variable.java              -> Não precisa mexer por enquanto
-  WriteStmt.java    
+  WriteStmt.java
 * WritelnStmt.java           -> Não precisa mexer por enquanto
