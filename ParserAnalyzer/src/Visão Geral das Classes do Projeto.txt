@@ -5,6 +5,29 @@ da AST a implementação parcial contém:
     - o construtor e os métodos sobrescritos sem código em seus respectivos blocos;
     - os atributos/campos são mantidos para que possam ser usados como dica.
 
+Neste passo do projeto, será necessário implementar o método checkConstraints()
+das classes da AST descritas abaixo. Note que logo a seguir há um resumo das
+classes que precisam ter esse método implementado! É nelas que você precisará
+mexer!
+
+Implementar o método checkConstraints() nas classes abaixo, contidas no pacote
+edu.citadel.cprl.ast:
+
+  ArrayTypeDecl.java           
+  ConstDecl.java        
+  ExitStmt.java                
+  FunctionDecl.java            
+  LoopStmt.java                   
+  MultiplyingExpr.java         
+  NotExpr.java                 
+  ProcedureCallStmt.java       
+  ReadStmt.java                
+  RelationalExpr.java          
+  ReturnStmt.java              
+
+
+Abaixo segue a listagem completa das classes:
+
 No pacote edu.citadel.cprl
 
   ArrayType.java
@@ -12,7 +35,7 @@ No pacote edu.citadel.cprl
   FirstFollowSets.java
   IdTable.java
   LoopContext.java
-* Parser.java                -> Mexer só aqui e executar os testes!
+  Parser.java
   ScopeLevel.java
   SubprogramContext.java
   Type.java
@@ -21,35 +44,35 @@ No pacote edu.citadel.cprl.ast
 
   AST.java
   AddingExpr.java
-* ArrayTypeDecl.java         -> Não precisa mexer por enquanto
+* ArrayTypeDecl.java         -> Implementar o método checkConstraints()
 * AssignmentStmt.java        -> Não precisa mexer por enquanto
   BinaryExpr.java    
-* ConstDecl.java             -> Não precisa mexer por enquanto
+* ConstDecl.java             -> Implementar o método checkConstraints()
   ConstValue.java    
   Declaration.java    
 * DeclarativePart.java       -> Não precisa mexer por enquanto
   ElsifPart    
-* ExitStmt.java              -> Não precisa mexer por enquanto
+* ExitStmt.java              -> Implementar o método checkConstraints()
   Expression.java    
   FunctionCall.java    
-* FunctionDecl.java          -> Não precisa mexer por enquanto
+* FunctionDecl.java          -> Implementar o método checkConstraints()
   IfStmt.java    
   InitialDecl.java    
   LogicalExpr.java    
-* LoopStmt.java              -> Não precisa mexer por enquanto
-* MultiplyingExpr.java       -> Não precisa mexer por enquanto
+* LoopStmt.java              -> Implementar o método checkConstraints()
+* MultiplyingExpr.java       -> Implementar o método checkConstraints()
   NamedDecl.java             
   NamedValue.java            
 * NegationExpr.java          -> Não precisa mexer por enquanto
-* NotExpr.java               -> Não precisa mexer por enquanto
+* NotExpr.java               -> Implementar o método checkConstraints()
   OutputStmt.java    
   ParameterDecl.java    
-* ProcedureCallStmt.java     -> Não precisa mexer por enquanto
+* ProcedureCallStmt.java     -> Implementar o método checkConstraints()
 * ProcedureDecl.java         -> Não precisa mexer por enquanto
   Program.java    
-* ReadStmt.java              -> Não precisa mexer por enquanto
-* RelationalExpr.java        -> Não precisa mexer por enquanto
-* ReturnStmt.java            -> Não precisa mexer por enquanto
+* ReadStmt.java              -> Implementar o método checkConstraints()
+* RelationalExpr.java        -> Implementar o método checkConstraints()
+* ReturnStmt.java            -> Implementar o método checkConstraints()
   SingleVarDecl.java    
   Statement.java    
 * StatementPart.java         -> Não precisa mexer por enquanto

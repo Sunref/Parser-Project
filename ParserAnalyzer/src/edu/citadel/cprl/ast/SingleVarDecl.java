@@ -3,7 +3,6 @@ package edu.citadel.cprl.ast;
 import edu.citadel.cprl.ScopeLevel;
 import edu.citadel.cprl.Token;
 import edu.citadel.cprl.Type;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a single variable declaration. A single
@@ -53,11 +52,6 @@ public class SingleVarDecl extends InitialDecl implements NamedDecl {
      */
     public int getRelAddr() {
         return relAddr;
-    }
-    
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementSingleVarDecl( this );
     }
     
 }

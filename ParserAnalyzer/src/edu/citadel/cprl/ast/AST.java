@@ -6,12 +6,11 @@ import edu.citadel.compiler.Position;
 import edu.citadel.cprl.Type;
 
 import java.io.PrintWriter;
-import test.cprl.gui.visitor.Element;
 
 /**
  * Classe base para todas as classes da árvore sinática abstrata.
  */
-public abstract class AST implements Element {
+public abstract class AST {
     
     // número de espaços que serão impressos antes do opcode
     private static final String SPACES = "   ";

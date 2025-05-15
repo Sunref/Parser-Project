@@ -9,7 +9,6 @@ import edu.citadel.cprl.ScopeLevel;
 import edu.citadel.cprl.Type;
 
 import java.util.List;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a variable, which is any named variable
@@ -52,15 +51,18 @@ public class Variable extends Expression {
     public List<Expression> getIndexExprs() {
         return indexExprs;
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementVariable( this );
-    }
     
     @Override
     public void checkConstraints() {
         
+        // Regra de Tipo: o tipo deve ser Integer, Boolean, Char ou um tipo de 
+        // array definido pelo usuário.
+        
+        // Para tipos de arrays:
+        // Regra de Tipo: Cada expressão de índice deve ser do tipo Integer.
+        // Regra Variada: O uso de expressões nos índices são permitidas apenas
+        // em variáveis de tipos de array.
+
         try {
             
             assert decl instanceof SingleVarDecl || decl instanceof ParameterDecl :

@@ -6,7 +6,6 @@ import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Symbol;
 import edu.citadel.cprl.Token;
 import edu.citadel.cprl.Type;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a relational expression. A relational
@@ -43,15 +42,24 @@ public class RelationalExpr extends BinaryExpr {
     public String getL2() {
         return L2;
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementRelationalExpr( this );
-    }
     
     @Override
     public void checkConstraints() {
-        // ...
+        
+        // Regra de Tipo: ambos os operandos devem ter o mesmo tipo.
+        
+        // Regra de Tipo: apenas os tipos escalares, Integer, Char ou Boolean, 
+        // são permitidos como operandos. Na CPRL, não é permitido que ambos os 
+        // operandos sejam arrays ou literais de String.
+        
+        // Regra Variada: o resultado tem que ser do tipo Boolean.
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        // sua implementação aqui
+
+        // </editor-fold>
+
     }
 
     @Override

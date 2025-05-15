@@ -5,7 +5,6 @@ import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Symbol;
 import edu.citadel.cprl.Token;
 import edu.citadel.cprl.Type;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a constant declaration.
@@ -25,15 +24,24 @@ public class ConstDecl extends InitialDecl {
     public Token getLiteral() {
         return literal;
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementConstDecl( this );
-    }
     
     @Override
     public void checkConstraints() {
-        // ...
+        
+        // Regra Variada: se o valor do literal for do tipo Integer, então é 
+        // necessário que o mesmo possa ser convertido em um inteiro na CPRL 
+        // Virtual Machine. Em outras palavras, verificar se Integer.parseInt() 
+        // não falha. Se a verificação falhar para uma declaração de constante, 
+        // então configure o valor do literal como um valor válido para um 
+        // Integer de modo a prevenir mensagens de erros adicionais toda vez 
+        // que uma declaração da constante for utilizada.
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        // sua implementação aqui
+
+        // </editor-fold>
+        
     }
     
 }

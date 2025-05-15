@@ -3,7 +3,6 @@ package edu.citadel.cprl.ast;
 import edu.citadel.cprl.ScopeLevel;
 import edu.citadel.cprl.Token;
 import edu.citadel.cprl.Type;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a parameter declaration.
@@ -58,11 +57,6 @@ public class ParameterDecl extends Declaration implements NamedDecl {
      */
     public boolean isVarParam() {
         return isVarParam;
-    }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementParameterDecl( this );
     }
     
     @Override

@@ -6,7 +6,6 @@ import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Symbol;
 import edu.citadel.cprl.Token;
 import edu.citadel.cprl.Type;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a negation expression. A negation
@@ -27,15 +26,30 @@ public class NegationExpr extends UnaryExpr {
         assert operator.getSymbol() == Symbol.minus : "Operator is not \"-\" operator.";
         
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementNegationExpr( this );
-    }
     
     @Override
     public void checkConstraints() {
-        // ...
+        
+        // Regra de Tipo: o operando tem que ser do tipo Integer.
+        
+        // Regra Variada: o resultado tem que ser do tipo Integer.
+        
+        try {
+
+            Expression operand = getOperand();
+            operand.checkConstraints();
+
+            // os operadores unários +/- podem ser aplicados somente à
+            // expressões do tipo Integer
+            if ( operand.getType() != Type.Integer ) { // pode usar matchTypes também!
+                String errorMsg = "Expression following \"-\" operator is not a Integer expression.";
+                throw error( operand.getPosition(), errorMsg );
+            }
+
+        } catch ( ConstraintException e ) {
+            ErrorHandler.getInstance().reportError( e );
+        }
+        
     }
 
     @Override

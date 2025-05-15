@@ -6,7 +6,6 @@ import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Token;
 
 import java.util.List;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a function declaration.
@@ -86,15 +85,23 @@ public class FunctionDecl extends SubprogramDecl {
         return false;
         
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementFunctionDecl( this );
-    }
     
     @Override
     public void checkConstraints() {
-        // ...  dica: veja a implementação de SubprogramDecl
+        
+        // Regra Variada: não pode haver nenhuma var nos parâmetros.
+        
+        // Regra Variada: é necessário que haja pelo menos uma instrução de 
+        // retorno.
+        
+        // Dica: veja a implementação de SubprogramDecl
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        // sua implementação aqui
+
+        // </editor-fold>
+        
     }
     
     @Override

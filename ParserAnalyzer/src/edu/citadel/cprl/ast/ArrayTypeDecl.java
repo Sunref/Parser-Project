@@ -3,9 +3,9 @@ package edu.citadel.cprl.ast;
 import edu.citadel.compiler.ConstraintException;
 import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.ArrayType;
+import edu.citadel.cprl.Symbol;
 import edu.citadel.cprl.Token;
 import edu.citadel.cprl.Type;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for an array type declaration.
@@ -28,13 +28,18 @@ public class ArrayTypeDecl extends InitialDecl {
     }
     
     @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementArrayTypeDecl( this );
-    }
-    
-    @Override
     public void checkConstraints() {
-        // ...
+        
+        // Regra de Tipo: o valor da constante que especifica a quantidade de 
+        // itens de um array deve ser do tipo Integer e o valor associado deve 
+        // ser um número positivo.
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        // sua implementação aqui
+
+        // </editor-fold>
+        
     }
     
 }

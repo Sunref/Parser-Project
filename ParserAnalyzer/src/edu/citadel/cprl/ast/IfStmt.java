@@ -6,7 +6,6 @@ import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Type;
 
 import java.util.List;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for an if statement.
@@ -80,15 +79,15 @@ public class IfStmt extends Statement {
     public String getL2() {
         return L2;
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementIfStmt( this );
-    }
     
     @Override
     public void checkConstraints() {
         
+        // Regra de Tipo: a expressão deve ser do tipo Boolean.
+        
+        // Regra de Tipo: as expressões para quaisquer cláusulas elsif devem
+        // ser do tipo Boolean.
+
         try {
             
             booleanExpr.checkConstraints();

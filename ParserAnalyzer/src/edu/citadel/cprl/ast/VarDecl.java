@@ -6,7 +6,6 @@ import edu.citadel.cprl.Type;
 
 import java.util.List;
 import java.util.ArrayList;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a variable declaration. Note that a
@@ -39,11 +38,6 @@ public class VarDecl extends InitialDecl {
      */
     public List<SingleVarDecl> getSingleVarDecls() {
         return singleVarDecls;
-    }
-    
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementVarDecl( this );
     }
     
 }

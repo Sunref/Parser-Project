@@ -6,7 +6,6 @@ import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Symbol;
 import edu.citadel.cprl.Token;
 import edu.citadel.cprl.Type;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a logical expression. A logical expression
@@ -41,15 +40,14 @@ public class LogicalExpr extends BinaryExpr {
     public String getL2() {
         return L2;
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementLogicalExpr( this );
-    }
     
     @Override
     public void checkConstraints() {
         
+        // Regra de Tipo: ambos os operandos devem ser do tipo Boolean.
+        
+        // Regra Variada: o resultado tem que ser do tipo Boolean.
+
         try {
             
             Expression leftOperand = getLeftOperand();

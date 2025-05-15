@@ -3,7 +3,6 @@ package edu.citadel.cprl.ast;
 import edu.citadel.compiler.CodeGenException;
 
 import java.util.List;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for the declarative part of a program.
@@ -35,15 +34,18 @@ public class DeclarativePart extends AST {
     public List<SubprogramDecl> getSubprogramDecls() {
         return subprogDecls;
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementDeclarativePart( this );
-    }
     
     @Override
     public void checkConstraints() {
-        // ...
+        
+        for ( InitialDecl decl : initialDecls ) {
+            decl.checkConstraints();
+        }
+        
+        for ( SubprogramDecl decl : subprogDecls ) {
+            decl.checkConstraints();
+        }
+        
     }
 
     @Override

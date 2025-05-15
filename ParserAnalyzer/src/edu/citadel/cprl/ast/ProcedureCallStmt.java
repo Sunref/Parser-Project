@@ -6,7 +6,6 @@ import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Token;
 
 import java.util.List;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a procedure call statement.
@@ -43,15 +42,23 @@ public class ProcedureCallStmt extends Statement {
     public ProcedureDecl getProcDecl() {
         return procDecl;
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementProcedureCallStmt( this );
-    }
     
     @Override
     public void checkConstraints() {
-        // ...
+        
+        // Regra de Tipo: a quantidade de argumentos (actual parameters)
+        // precisa ser a mesma da quantidade de parâmetros formais e cada par
+        // deve ter o mesmo tipo.
+        
+        // Regra Variada: se um parâmetro formal é um parâmetro var, então o
+        // argumento deve ser um valor nomeado, não uma expressão arbitrária.
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        // sua implementação aqui
+
+        // </editor-fold>
+        
     }
 
     @Override

@@ -7,7 +7,6 @@ import edu.citadel.cprl.Token;
 
 import java.util.List;
 import java.util.Iterator;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a function call expression.
@@ -27,7 +26,7 @@ public class FunctionCall extends Expression {
             FunctionDecl funcDecl ) {
         
         super( funcDecl.getType(), funcId.getPosition() );
-
+        
         this.funcId = funcId;
         this.actualParams = actualParams;
         this.funcDecl = funcDecl;
@@ -45,14 +44,13 @@ public class FunctionCall extends Expression {
     public FunctionDecl getFuncDecl() {
         return funcDecl;
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementFunctionCall( this );
-    }
     
     @Override
     public void checkConstraints() {
+        
+        // Regra de Tipo: a quantidade de argumentos (actual parameters)
+        // precisa ser a mesma da quantidade de parâmetros formais e cada par
+        // deve ter o mesmo tipo.
         
         try {
             

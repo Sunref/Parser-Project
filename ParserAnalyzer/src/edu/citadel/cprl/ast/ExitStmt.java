@@ -4,7 +4,6 @@ import edu.citadel.compiler.CodeGenException;
 import edu.citadel.compiler.ConstraintException;
 import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Type;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for an exit statement.
@@ -31,15 +30,22 @@ public class ExitStmt extends Statement {
     public LoopStmt getLoopStmt() {
         return loopStmt;
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementExitStmt( this );
-    }
     
     @Override
     public void checkConstraints() {
-        // ...
+        
+        // Regra de Tipo: se uma expressão when existir, o seu tipo deve ser
+        // Boolean.
+        
+        // Regra Variada: a instrução exit deve estar aninhada dentro de uma
+        // instrução de laço, o que é tratado pelo parser usando LoopContext.
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        // sua implementação aqui
+
+        // </editor-fold>
+        
     }
 
     @Override

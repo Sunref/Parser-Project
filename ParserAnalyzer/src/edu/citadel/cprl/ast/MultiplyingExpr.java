@@ -6,7 +6,6 @@ import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Symbol;
 import edu.citadel.cprl.Token;
 import edu.citadel.cprl.Type;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a multiplying expression. A multiplying
@@ -28,15 +27,20 @@ public class MultiplyingExpr extends BinaryExpr {
                 "Operator is not a multiplying operator.";
         
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementMultiplyingExpr( this );
-    }
     
     @Override
     public void checkConstraints() {
-        // ...
+        
+        // Regra de Tipo: ambos os operandos devem ser do tipo Integer.
+        
+        // Regra Variada: o resultado tem que ser do tipo Integer.
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        // sua implementação aqui
+
+        // </editor-fold>
+        
     }
 
     @Override

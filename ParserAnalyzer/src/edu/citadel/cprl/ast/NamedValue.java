@@ -1,7 +1,6 @@
 package edu.citadel.cprl.ast;
 
 import edu.citadel.compiler.CodeGenException;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a named value. A named value is similar to
@@ -18,11 +17,6 @@ public class NamedValue extends Variable {
      */
     public NamedValue( Variable var ) {
         super( var.getDecl(), var.getPosition(), var.getIndexExprs() );
-    }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementNamedValue( this );
     }
     
     @Override
