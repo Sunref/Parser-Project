@@ -1,8 +1,6 @@
 package edu.citadel.cprl.ast;
 
 import edu.citadel.compiler.ConstraintException;
-import edu.citadel.compiler.ErrorHandler;
-import edu.citadel.cprl.Symbol;
 import edu.citadel.cprl.Token;
 import edu.citadel.cprl.Type;
 
@@ -38,7 +36,13 @@ public class ConstDecl extends InitialDecl {
         
         // <editor-fold defaultstate="collapsed" desc="Implementação">
                     
-        // sua implementação aqui
+        try { 
+            if (literal.getType() == Type.INTEGER) {
+                Integer.parseInt(literal.getValue());
+            }
+        } catch (ConstraintException e) {
+            literal = new Token(Token.Type.INTEGER, "0");
+        }
 
         // </editor-fold>
         
