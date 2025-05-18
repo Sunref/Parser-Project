@@ -4,7 +4,6 @@ import edu.citadel.compiler.CodeGenException;
 import edu.citadel.compiler.ConstraintException;
 import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Token;
-
 import java.util.List;
 
 /**
@@ -99,14 +98,25 @@ public class FunctionDecl extends SubprogramDecl {
         // <editor-fold defaultstate="collapsed" desc="Implementação">
                     
         try {
-            if (hasReturnStmt(getBody())) {
-                // Se houver uma instrução de retorno, então a função é válida.
-            } else {
-                throw new ConstraintException("A função deve ter pelo menos uma instrução de retorno.");
+            
+            super.checkConstraints();
+            
+            StatementPart stmtPart = super.getStatementPart();
+            List<Statement> statements = stmtPart.getStatements();
+            
+            assert !hasReturnStmt(statements) : "A function requires at least one return statement.";
+            
+            List<ParameterDecl> formalParams = super.getFormalParams();
+            
+            for ( ParameterDecl paramDecl : formalParams ) {
+                if(paramDecl.isVarParam()){
+                    String errorMsg = "A function cannot have var parameters.";
+                    throw error( paramDecl.getPosition(), errorMsg );
+                }
             }
-        } catch (ConstraintException e) {
-
-            ErrorHandler.reportError(e);
+            
+        } catch ( ConstraintException e ) {
+            ErrorHandler.getInstance().reportError( e );
         }
 
         // </editor-fold>

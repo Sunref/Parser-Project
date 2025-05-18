@@ -36,12 +36,22 @@ public class ConstDecl extends InitialDecl {
         
         // <editor-fold defaultstate="collapsed" desc="Implementação">
                     
-        try { 
-            if (literal.getType() == Type.INTEGER) {
-                Integer.parseInt(literal.getValue());
+        try {
+            
+            if ( literal.getSymbol() == Symbol.intLiteral ) {
+                try {
+                    Integer.parseInt( literal.getText() );
+                } catch ( NumberFormatException e1 ) {
+                    String errorMsg = "The number \"" + literal.getText()
+                            + "\" cannot be converted to an integer in CPRL.";
+                    
+                    literal.setText("1");
+                    
+                    throw error( literal.getPosition(), errorMsg );
+                }
             }
-        } catch (ConstraintException e) {
-            literal = new Token(Token.Type.INTEGER, "0");
+        } catch ( ConstraintException e ) {
+            ErrorHandler.getInstance().reportError( e );
         }
 
         // </editor-fold>
