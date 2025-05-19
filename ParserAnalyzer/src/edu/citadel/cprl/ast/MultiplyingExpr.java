@@ -18,34 +18,44 @@ public class MultiplyingExpr extends BinaryExpr {
      * Construct a multiplying expression with the operator ("*", "/", or "mod")
      * and the two operands.
      */
-    public MultiplyingExpr( Expression leftOperand, Token operator, Expression rightOperand ) {
-        
-        super( leftOperand, operator, rightOperand );
-        setType( Type.Integer );
-        
-        assert operator.getSymbol().isMultiplyingOperator() :
-                "Operator is not a multiplying operator.";
-        
+    public MultiplyingExpr(
+        Expression leftOperand,
+        Token operator,
+        Expression rightOperand
+    ) {
+        super(leftOperand, operator, rightOperand);
+        setType(Type.Integer);
+
+        assert operator
+            .getSymbol()
+            .isMultiplyingOperator() : "Operator is not a multiplying operator.";
     }
-    
+
     @Override
     public void checkConstraints() {
-        
         // Regra de Tipo: ambos os operandos devem ser do tipo Integer.
-        
-        // Regra Variada: o resultado tem que ser do tipo Integer.
-        
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-                    
-        // sua implementação aqui
 
-        // </editor-fold>
-        
+        // Regra Variada: o resultado tem que ser do tipo Integer.
+
+        // Implementação:
+        if (!getLeftOperand().getType().equals(Type.Integer)) {
+            emit("Left operand must be of type Integer");
+        }
+        if (!getRightOperand().getType().equals(Type.Integer)) {
+            emit("Right operand must be of type Integer");
+        }
+        if (getOperator().getSymbol() == Symbol.modRW) {
+            if (!getLeftOperand().getType().equals(Type.Integer)) {
+                emit("Left operand must be of type Integer");
+            }
+            if (!getRightOperand().getType().equals(Type.Integer)) {
+                emit("Right operand must be of type Integer");
+            }
+        }
     }
 
     @Override
     public void emit() throws CodeGenException {
         // ...
     }
-    
 }

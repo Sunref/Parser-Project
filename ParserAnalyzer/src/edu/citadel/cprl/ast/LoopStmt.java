@@ -5,7 +5,6 @@ import edu.citadel.compiler.ConstraintException;
 import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Type;
 import java.util.ArrayList;
-
 import java.util.List;
 
 /**
@@ -17,8 +16,8 @@ public class LoopStmt extends Statement {
     private List<Statement> statements;
 
     // labels used during code generation
-    private String L1;    // label for start of loop
-    private String L2;    // label for end of loop
+    private String L1; // label for start of loop
+    private String L2; // label for end of loop
 
     /**
      * Default constructor. Construct a loop statement with a null "while"
@@ -32,7 +31,7 @@ public class LoopStmt extends Statement {
     /**
      * Set the while expression for this loop statement.
      */
-    public void setWhileExpr( Expression whileExpr ) {
+    public void setWhileExpr(Expression whileExpr) {
         this.whileExpr = whileExpr;
     }
 
@@ -46,7 +45,7 @@ public class LoopStmt extends Statement {
     /**
      * Set the list of statements for the body of this loop statement.
      */
-    public void setStatements( List<Statement> statements ) {
+    public void setStatements(List<Statement> statements) {
         this.statements = statements;
     }
 
@@ -68,24 +67,23 @@ public class LoopStmt extends Statement {
     public String getL2() {
         return L2;
     }
-    
+
     @Override
     public void checkConstraints() {
-        
         // Regra de Tipo: se uma expressão while existir, ela tem que ser do
         // tipo Boolean.
-        
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-                    
-        // sua implementação aqui
 
-        // </editor-fold>
-        
+        // implementação:
+        if (whileExpr != null) {
+            Type type = whileExpr.getType();
+            if (!type.equals(Type.Boolean)) {
+                emit ("While expression must be of type Boolean");
+            }
+        }
     }
 
     @Override
     public void emit() throws CodeGenException {
         // ...
     }
-    
 }

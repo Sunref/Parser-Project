@@ -15,24 +15,27 @@ import edu.citadel.cprl.Type;
 public class RelationalExpr extends BinaryExpr {
 
     // labels used during code generation
-    private String L1;   // label at start of right operand
-    private String L2;   // label at end of the relational expression
+    private String L1; // label at start of right operand
+    private String L2; // label at end of the relational expression
 
     /**
      * Construct a relational expression with the operator ("=", "&lt;=", etc.)
      * and the two operands.
      */
-    public RelationalExpr( Expression leftOperand, Token operator, Expression rightOperand ) {
-        
-        super( leftOperand, operator, rightOperand );
-        setType( Type.Boolean );
-        
-        assert operator.getSymbol().isRelationalOperator() :
-                "Operator is not a relational operator.";
+    public RelationalExpr(
+        Expression leftOperand,
+        Token operator,
+        Expression rightOperand
+    ) {
+        super(leftOperand, operator, rightOperand);
+        setType(Type.Boolean);
+
+        assert operator
+            .getSymbol()
+            .isRelationalOperator() : "Operator is not a relational operator.";
 
         L1 = getNewLabel();
         L2 = getNewLabel();
-        
     }
 
     public String getL1() {
@@ -42,95 +45,114 @@ public class RelationalExpr extends BinaryExpr {
     public String getL2() {
         return L2;
     }
-    
+
     @Override
     public void checkConstraints() {
-        
         // Regra de Tipo: ambos os operandos devem ter o mesmo tipo.
-        
-        // Regra de Tipo: apenas os tipos escalares, Integer, Char ou Boolean, 
-        // são permitidos como operandos. Na CPRL, não é permitido que ambos os 
+
+        // Regra de Tipo: apenas os tipos escalares, Integer, Char ou Boolean,
+        // são permitidos como operandos. Na CPRL, não é permitido que ambos os
         // operandos sejam arrays ou literais de String.
-        
+
         // Regra Variada: o resultado tem que ser do tipo Boolean.
-        
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-                    
-        // sua implementação aqui
 
-        // </editor-fold>
+        // Implementação:
+        Type leftType = getLeftOperand().getType();
+        Type rightType = getRightOperand().getType();
 
+        if (leftType != rightType) {
+            emit("Type mismatch in relational expression");
+        } else if (leftType == Type.getTypeOf(Symbol.intLiteral) || rightType == Type.getTypeOf(Symbol.intLiteral)) {
+            emit(
+                "Arrays are not allowed as operands in relational expressions"
+            );
+        } else if (leftType == Type.String || rightType == Type.String) {
+            emit(
+                "Strings are not allowed as operands in relational expressions"
+            );
+        } else if (
+            leftType != Type.Integer &&
+            leftType != Type.Char &&
+            leftType != Type.Boolean
+        ) {
+            emit("Invalid type for operands in relational expression");
+        }
     }
 
     @Override
     public void emit() throws CodeGenException {
-        
-        emitBranch( false, L1 );
+        emitBranch(false, L1);
 
         // emit true
-        emit( "LDCB " + TRUE );
+        emit("LDCB " + TRUE);
 
         // jump over code to emit false
-        emit( "BR " + L2 );
+        emit("BR " + L2);
 
         // L1:
-        emitLabel( L1 );
+        emitLabel(L1);
 
         // emit false
-        emit( "LDCB " + FALSE );
+        emit("LDCB " + FALSE);
 
         // L2:
-        emitLabel( L2 );
-        
+        emitLabel(L2);
     }
 
     @Override
-    public void emitBranch( boolean condition, String label ) throws CodeGenException {
-        
+    public void emitBranch(boolean condition, String label)
+        throws CodeGenException {
         Token operator = getOperator();
 
         emitOperands();
-        emit( "CMP" );
+        emit("CMP");
 
         Symbol operatorSym = operator.getSymbol();
 
-        if ( operatorSym == Symbol.equals ) {
-            emit( condition ? "BZ " + label : "BNZ " + label );
-        } else if ( operatorSym == Symbol.notEqual ) {
-            emit( condition ? "BNZ " + label : "BZ " + label );
-        } else if ( operatorSym == Symbol.lessThan ) {
-            emit( condition ? "BL " + label : "BGE " + label );
-        } else if ( operatorSym == Symbol.lessOrEqual ) {
-            emit( condition ? "BLE " + label : "BG " + label );
-        } else if ( operatorSym == Symbol.greaterThan ) {
-            emit( condition ? "BG " + label : "BLE " + label );
-        } else if ( operatorSym == Symbol.greaterOrEqual ) {
-            emit( condition ? "BGE " + label : "BL " + label );
+        if (operatorSym == Symbol.equals) {
+            emit(condition ? "BZ " + label : "BNZ " + label);
+        } else if (operatorSym == Symbol.notEqual) {
+            emit(condition ? "BNZ " + label : "BZ " + label);
+        } else if (operatorSym == Symbol.lessThan) {
+            emit(condition ? "BL " + label : "BGE " + label);
+        } else if (operatorSym == Symbol.lessOrEqual) {
+            emit(condition ? "BLE " + label : "BG " + label);
+        } else if (operatorSym == Symbol.greaterThan) {
+            emit(condition ? "BG " + label : "BLE " + label);
+        } else if (operatorSym == Symbol.greaterOrEqual) {
+            emit(condition ? "BGE " + label : "BL " + label);
         } else {
-            throw new CodeGenException( operator.getPosition(), "Invalid relational operator." );
+            throw new CodeGenException(
+                operator.getPosition(),
+                "Invalid relational operator."
+            );
         }
-        
     }
 
     private void emitOperands() throws CodeGenException {
-        
         Expression leftOperand = getLeftOperand();
         Expression rightOperand = getRightOperand();
 
         // Relational operators compare integers only, so we need to make sure
         // that we have enough bytes on the stack.  Pad with zero bytes.
-        for ( int n = 1; n <= ( Type.Integer.getSize() - leftOperand.getType().getSize() ); ++n ) {
-            emit( "LDCB 0" );
+        for (
+            int n = 1;
+            n <= (Type.Integer.getSize() - leftOperand.getType().getSize());
+            ++n
+        ) {
+            emit("LDCB 0");
         }
 
         leftOperand.emit();
 
-        for ( int n = 1; n <= ( Type.Integer.getSize() - rightOperand.getType().getSize() ); ++n ) {
-            emit( "LDCB 0" );
+        for (
+            int n = 1;
+            n <= (Type.Integer.getSize() - rightOperand.getType().getSize());
+            ++n
+        ) {
+            emit("LDCB 0");
         }
 
         rightOperand.emit();
-        
     }
-    
 }

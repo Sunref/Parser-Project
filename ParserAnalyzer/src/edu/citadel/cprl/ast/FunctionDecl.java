@@ -98,16 +98,16 @@ public class FunctionDecl extends SubprogramDecl {
         
         // <editor-fold defaultstate="collapsed" desc="Implementação">
                     
-        try {
-            if (hasReturnStmt(getBody())) {
-                // Se houver uma instrução de retorno, então a função é válida.
-            } else {
-                throw new ConstraintException("A função deve ter pelo menos uma instrução de retorno.");
-            }
-        } catch (ConstraintException e) {
-
-            ErrorHandler.reportError(e);
-        }
+//        try {
+//            if (hasReturnStmt(getBody())) {
+//                // Se houver uma instrução de retorno, então a função é válida.
+//            } else {
+//                emit ("A função deve ter pelo menos uma instrução de retorno.");
+//            }
+//        } catch (ConstraintException e) {
+//
+//            ErrorHandler.getInstance().reportError(e);
+//        }
 
         // </editor-fold>
     }
