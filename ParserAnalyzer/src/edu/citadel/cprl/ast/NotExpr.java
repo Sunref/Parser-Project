@@ -18,37 +18,46 @@ public class NotExpr extends UnaryExpr {
      * Construct a not expression with the specified operator ("not") and
      * operand.
      */
-    public NotExpr(Token operator, Expression operand) {
-        super(operator, operand);
-        setType(Type.Boolean);
-
-        assert operator.getSymbol() ==
-        Symbol.notRW : "Operator is not the reserved word \"not\".";
+    public NotExpr( Token operator, Expression operand ) {
+        
+        super( operator, operand );
+        setType( Type.Boolean );
+        
+        assert operator.getSymbol() == Symbol.notRW :
+                "Operator is not the reserved word \"not\".";
+        
     }
-
+    
     @Override
     public void checkConstraints() {
+        
         // Regra de Tipo: o operando tem que ser do tipo Boolean.
-
+        
         // Regra Variada: o resultado tem que ser do tipo Boolean.
-
-        // Implementaçã:
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
         try {
+
             Expression operand = getOperand();
             operand.checkConstraints();
 
-            if (operand.getType() != Type.Boolean) {
-                String errorMsg =
-                    "Expression following \"not\" operator is not a Boolean expression.";
-                throw error(operand.getPosition(), errorMsg);
+            if ( operand.getType() != Type.Boolean ) {
+                String errorMsg = "Expression following \"not\" operator is not a Boolean expression.";
+                throw error( operand.getPosition(), errorMsg );
             }
-        } catch (ConstraintException e) {
-            ErrorHandler.getInstance().reportError(e);
+
+        } catch ( ConstraintException e ) {
+            ErrorHandler.getInstance().reportError( e );
         }
+
+        // </editor-fold>
+
     }
 
     @Override
     public void emit() throws CodeGenException {
         // ...
     }
+    
 }

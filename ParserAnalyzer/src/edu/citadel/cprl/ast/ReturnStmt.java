@@ -58,7 +58,28 @@ public class ReturnStmt extends Statement {
         
         // <editor-fold defaultstate="collapsed" desc="Implementação">
                     
-        // sua implementação aqui
+        try {
+            
+            if (returnExpr != null) {
+                returnExpr.checkConstraints();
+                
+                if (!(subprogramDecl instanceof FunctionDecl)) {
+                    String errorMsg = "Return expression allowed only within functions.";
+                    throw error(returnExpr.getPosition(), errorMsg);
+                }
+                
+                if (returnExpr.getType() != subprogramDecl.getType()) {
+                    String errorMsg = "Return expression type does not match function return type.";
+                    throw error(returnExpr.getPosition(), errorMsg);
+                }
+            } else {
+                String errorMsg = "A return statement nested within a function must return a value.";
+                throw error(returnPosition, errorMsg);
+            }
+
+        } catch ( ConstraintException e ) {
+            ErrorHandler.getInstance().reportError( e );
+        }
 
         // </editor-fold>
         

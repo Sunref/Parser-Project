@@ -5,7 +5,6 @@ import edu.citadel.compiler.ConstraintException;
 import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Type;
 import java.util.ArrayList;
-
 import java.util.List;
 
 /**
@@ -77,7 +76,20 @@ public class LoopStmt extends Statement {
         
         // <editor-fold defaultstate="collapsed" desc="Implementação">
                     
-        // sua implementação aqui
+        try {
+            
+            if(whileExpr != null){
+                whileExpr.checkConstraints();
+                
+                if ( whileExpr.getType() != Type.Boolean ) {
+                    String errorMsg = "The \"while\" expression should have type Boolean.";
+                    throw error( whileExpr.getPosition(), errorMsg );
+                }
+            }       
+            
+        } catch ( ConstraintException e ) {
+            ErrorHandler.getInstance().reportError( e );
+        }
 
         // </editor-fold>
         

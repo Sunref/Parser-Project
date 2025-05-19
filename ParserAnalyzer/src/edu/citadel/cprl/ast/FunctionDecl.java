@@ -120,8 +120,9 @@ public class FunctionDecl extends SubprogramDecl {
         }
 
         // </editor-fold>
+        
     }
-
+    
     @Override
     public void emit() throws CodeGenException {
         // ...
