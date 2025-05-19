@@ -38,20 +38,16 @@ public class MultiplyingExpr extends BinaryExpr {
         // Regra Variada: o resultado tem que ser do tipo Integer.
 
         // Implementação:
-        if (!getLeftOperand().getType().equals(Type.Integer)) {
-            emit("Left operand must be of type Integer");
+        getLeftOperand().checkConstraints();
+        getRightOperand().checkConstraints();
+
+        if (
+            !getLeftOperand().getType().equals(Type.Integer) ||
+            !getRightOperand().getType().equals(Type.Integer)
+        ) {
+            emit("Both operands of a multiplying expression must be of type Integer.");
         }
-        if (!getRightOperand().getType().equals(Type.Integer)) {
-            emit("Right operand must be of type Integer");
-        }
-        if (getOperator().getSymbol() == Symbol.modRW) {
-            if (!getLeftOperand().getType().equals(Type.Integer)) {
-                emit("Left operand must be of type Integer");
-            }
-            if (!getRightOperand().getType().equals(Type.Integer)) {
-                emit("Right operand must be of type Integer");
-            }
-        }
+        setType(Type.Integer);
     }
 
     @Override

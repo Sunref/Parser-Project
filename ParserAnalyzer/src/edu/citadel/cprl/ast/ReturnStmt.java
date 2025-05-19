@@ -59,12 +59,30 @@ public class ReturnStmt extends Statement {
         // Regra Variada: a instrução return deve estar aninhada a um
         // subprograma, o que é tratado pelo parser usando SubprogramContext.
 
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
+        // Implementação:
+        try {
+            if (returnExpr == null) {
+                String errorMsg =
+                    "A return statement nested within a function must return a value.";
+                throw error(returnPosition, errorMsg);
+            } else {
+                if (!(subprogramDecl instanceof FunctionDecl)) {
+                    String errorMsg =
+                        "A return statement with a value must be nested within a function.";
+                    throw error(returnPosition, errorMsg);
+                }
 
-        // sua implementação aqui
+                if (!returnExpr.getType().equals(subprogramDecl.getType())) {
+                    String errorMsg =
+                        "Return expression type does not match function return type.";
+                    throw error(returnPosition, errorMsg);
+                }
 
-        // </editor-fold>
-
+                returnExpr.checkConstraints();
+            }
+        } catch (ConstraintException e) {
+            ErrorHandler.getInstance().reportError(e);
+        }
     }
 
     @Override

@@ -74,11 +74,22 @@ public class LoopStmt extends Statement {
         // tipo Boolean.
 
         // implementação:
-        if (whileExpr != null) {
-            Type type = whileExpr.getType();
-            if (!type.equals(Type.Boolean)) {
-                emit ("While expression must be of type Boolean");
+        try {
+            if (whileExpr != null) {
+                whileExpr.checkConstraints();
+
+                if (!whileExpr.getType().equals(Type.Boolean)) {
+                    String errorMsg =
+                        "The \"while\" expression should have type Boolean.";
+                    throw error(whileExpr.getPosition(), errorMsg);
+                }
             }
+
+            for (Statement statement : statements) {
+                statement.checkConstraints();
+            }
+        } catch (ConstraintException e) {
+            ErrorHandler.getInstance().reportError(e);
         }
     }
 

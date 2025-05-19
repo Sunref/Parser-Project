@@ -55,8 +55,8 @@ public class ExitStmt extends Statement {
                 String errorMsg = "Exit statement must be inside a loop";
                 throw error(whenExpr.getPosition(), errorMsg);
             }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (ConstraintException e) {
+            ErrorHandler.getInstance().reportError(e);
         }
     }
 

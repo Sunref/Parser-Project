@@ -32,17 +32,16 @@ public class ReadStmt extends Statement {
         // Dica: cuidado com variáveis de tipos de arrays.
 
         // Implementação:
-        Type varType = variable.getType();
-        if (varType != Type.Integer && varType != Type.Char) {
-            emit ("Invalid type for variable in read statement");
-        } else if (varType == Type.getTypeOf(Symbol.intLiteral)) {
-            ArrayType arrayType = (ArrayType) varType;
-            if (
-                arrayType.getElementType() != Type.Integer &&
-                arrayType.getElementType() != Type.Char
-            ) {
-                emit ("Invalid element type for array in read statement");
+        try {
+            Type varType = variable.getType();
+
+            if (!varType.equals(Type.Integer) && !varType.equals(Type.Char)) {
+                String errorMsg =
+                    "Input supported only for integers and characters.";
+                throw error(variable.getPosition(), errorMsg);
             }
+        } catch (ConstraintException e) {
+            ErrorHandler.getInstance().reportError(e);
         }
     }
 

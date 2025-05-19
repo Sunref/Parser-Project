@@ -57,25 +57,25 @@ public class RelationalExpr extends BinaryExpr {
         // Regra Variada: o resultado tem que ser do tipo Boolean.
 
         // Implementação:
-        Type leftType = getLeftOperand().getType();
-        Type rightType = getRightOperand().getType();
+        Expression left = getLeftOperand();
+        Expression right = getRightOperand();
 
-        if (leftType != rightType) {
-            emit("Type mismatch in relational expression");
-        } else if (leftType == Type.getTypeOf(Symbol.intLiteral) || rightType == Type.getTypeOf(Symbol.intLiteral)) {
-            emit(
-                "Arrays are not allowed as operands in relational expressions"
-            );
-        } else if (leftType == Type.String || rightType == Type.String) {
-            emit(
-                "Strings are not allowed as operands in relational expressions"
-            );
-        } else if (
-            leftType != Type.Integer &&
-            leftType != Type.Char &&
-            leftType != Type.Boolean
+        left.checkConstraints();
+        right.checkConstraints();
+
+        Type leftType = left.getType();
+        Type rightType = right.getType();
+
+        if (!leftType.equals(rightType)) {
+            emit ("Type mismatch for left and right operands of a relational expression.");
+        }
+
+        if (
+            !(leftType == Type.Integer ||
+                leftType == Type.Char ||
+                leftType == Type.Boolean)
         ) {
-            emit("Invalid type for operands in relational expression");
+            emit ("Type of operands not permitted for a relational expression.");
         }
     }
 

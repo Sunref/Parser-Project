@@ -26,7 +26,7 @@ public class TestCompiler {
          */
         
         // testes CPRL0
-        executar( "../examples/Incorrect/CPRL0/Incorrect_101.cprl" );  // 01
+        //executar( "../examples/Incorrect/CPRL0/Incorrect_101.cprl" );  // 01
         //executar( "../examples/Incorrect/CPRL0/Incorrect_102.cprl" );  // 02
         //executar( "../examples/Incorrect/CPRL0/Incorrect_103.cprl" );  // 03
         //executar( "../examples/Incorrect/CPRL0/Incorrect_104.cprl" );  // 04
@@ -45,7 +45,7 @@ public class TestCompiler {
         //executar( "../examples/Incorrect/CPRL0/Incorrect_117.cprl" );  // 17
         //executar( "../examples/Incorrect/CPRL0/Incorrect_118.cprl" );  // 18
         //executar( "../examples/Incorrect/CPRL0/Incorrect_119.cprl" );  // 19
-        //executar( "../examples/Incorrect/CPRL0/Incorrect_120.cprl" );  // 20
+        executar( "../examples/Incorrect/CPRL0/Incorrect_120.cprl" );  // 20
         //executar( "../examples/Incorrect/CPRL0/Incorrect_121.cprl" );  // 21
         //executar( "../examples/Incorrect/CPRL0/Incorrect_122.cprl" );  // 22
         //executar( "../examples/Incorrect/CPRL0/Incorrect_123.cprl" );  // 23

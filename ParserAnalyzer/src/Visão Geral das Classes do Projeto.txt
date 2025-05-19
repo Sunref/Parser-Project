@@ -14,16 +14,16 @@ Implementar o método checkConstraints() nas classes abaixo, contidas no pacote
 edu.citadel.cprl.ast:
 
 X  ArrayTypeDecl.java
-O  ConstDecl.java -> Verificar posteriormente
+  ConstDecl.java
 X  ExitStmt.java
-O  FunctionDecl.java -> Verificar posteriormente
-X  LoopStmt.java
-X  MultiplyingExpr.java
+X  FunctionDecl.java -> Ajustado
+X  LoopStmt.java -> Ajustado
+X  MultiplyingExpr.java -> Reajustado
 X  NotExpr.java
-  ProcedureCallStmt.java
-X  ReadStmt.java
-X  RelationalExpr.java
-  ReturnStmt.java
+X  ProcedureCallStmt.java -> Ajustado
+X  ReadStmt.java -> Ajustado
+X  RelationalExpr.java > Reajustado
+  ReturnStmt.java -> Ajustado
 
 
 Abaixo segue a listagem completa das classes:
