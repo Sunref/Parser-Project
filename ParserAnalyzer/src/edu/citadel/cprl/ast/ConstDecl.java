@@ -34,12 +34,6 @@ public class ConstDecl extends InitialDecl {
         // que uma declaração da constante for utilizada.
 
         // Implementação:
-//        if (literal.equals(Type.Integer)) {
-//            try {
-//                Integer.parseInt(literal.getText());
-//            } catch (NumberFormatException e) {
-//                literal = new Token(Token.type.Integer, "0");
-//            }
-//        }
+
     }
 }

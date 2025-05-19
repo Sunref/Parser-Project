@@ -23,7 +23,7 @@ X  NotExpr.java
 X  ProcedureCallStmt.java -> Ajustado
 X  ReadStmt.java -> Ajustado
 X  RelationalExpr.java > Reajustado
-  ReturnStmt.java -> Ajustado
+X  ReturnStmt.java -> Ajustado
 
 
 Abaixo segue a listagem completa das classes:
