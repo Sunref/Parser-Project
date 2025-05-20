@@ -99,28 +99,31 @@ public class FunctionDecl extends SubprogramDecl {
                     
         try {
             
-            super.checkConstraints();
+            List<InitialDecl> initial = getInitialDecls();
+            List<ParameterDecl> formalParams = getFormalParams();
+            StatementPart stmtPart = getStatementPart();
+
+            stmtPart.checkConstraints();
             
-            StatementPart stmtPart = super.getStatementPart();
-            List<Statement> statements = stmtPart.getStatements();
-            
-            assert !hasReturnStmt(statements) : "A function requires at least one return statement.";
-            
-            List<ParameterDecl> formalParams = super.getFormalParams();
-            
-            for ( ParameterDecl paramDecl : formalParams ) {
-                if(paramDecl.isVarParam()){
+            for (InitialDecl init: initial) {
+                init.checkConstraints();
+            }
+            for (ParameterDecl decl : formalParams) {
+                if (decl.isVarParam()) {
                     String errorMsg = "A function cannot have var parameters.";
-                    throw error( paramDecl.getPosition(), errorMsg );
+                    throw error(decl.getPosition(), errorMsg);
                 }
+                decl.checkConstraints();
+
             }
-            
-            if (!hasReturnStmt(getStatementPart().getStatements())) {
-                ErrorHandler.getInstance().reportError(error(getPosition(), "A function must have at least one return statement."));
+
+            if (!hasReturnStmt(stmtPart.getStatements())) {
+                String errorMsg = "A function must have at least one return statement.";
+                throw error(getPosition(), errorMsg);
             }
-            
-        } catch ( ConstraintException e ) {
-            ErrorHandler.getInstance().reportError( e );
+
+        } catch (ConstraintException e) {
+            ErrorHandler.getInstance().reportError(e);
         }
 
         // </editor-fold>

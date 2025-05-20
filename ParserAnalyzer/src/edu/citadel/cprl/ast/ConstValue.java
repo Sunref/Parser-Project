@@ -77,11 +77,14 @@ public class ConstValue extends Expression {
             
             // check that an intLiteral can actually be converted to an integer
             if ( literal.getSymbol() == Symbol.intLiteral ) {
+                
                 try {
                     Integer.parseInt( literal.getText() );
+                    
                 } catch ( NumberFormatException e1 ) {
                     String errorMsg = "The number \"" + literal.getText()
                             + "\" cannot be converted to an integer in CPRL.";
+                    literal.setText("0");
                     throw error( literal.getPosition(), errorMsg );
                 }
             }

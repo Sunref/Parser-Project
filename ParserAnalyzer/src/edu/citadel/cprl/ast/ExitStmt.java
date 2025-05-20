@@ -18,7 +18,7 @@ public class ExitStmt extends Statement {
      * should be null if there is no "when" expression) and a reference to the
      * enclosing loop statement.
      */
-    public ExitStmt( Expression whenExpr, LoopStmt loopStmt ) {
+    public ExitStmt(Expression whenExpr, LoopStmt loopStmt) {
         this.whenExpr = whenExpr;
         this.loopStmt = loopStmt;
     }
@@ -30,42 +30,32 @@ public class ExitStmt extends Statement {
     public LoopStmt getLoopStmt() {
         return loopStmt;
     }
-    
+
     @Override
     public void checkConstraints() {
-        
         // Regra de Tipo: se uma expressão when existir, o seu tipo deve ser
         // Boolean.
-        
+
         // Regra Variada: a instrução exit deve estar aninhada dentro de uma
         // instrução de laço, o que é tratado pelo parser usando LoopContext.
-        
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-                    
-        try {
-            
-            assert loopStmt == null : "Exit statement is not nested within a loop.";
-            
-            if(whenExpr != null){
-                whenExpr.checkConstraints();
-                
-                if ( !whenExpr.getType().equals(Type.Boolean) ) {
-                    String errorMsg = "The \"when\" expression should have type Boolean.";
-                    throw error( whenExpr.getPosition(), errorMsg );
-                }
-            }       
-            
-        } catch ( ConstraintException e ) {
-            ErrorHandler.getInstance().reportError( e );
-        }
 
-        // </editor-fold>
-        
+        try {
+            Expression when = getWhenExpr();
+
+            if (when != null) {
+                if (!matchTypes(when.getExprType(), Type.Boolean)) {
+                    String errorMsg =
+                        "The \"when\" expression should have type Boolean.";
+                    throw error(when.getPosition(), errorMsg);
+                }
+            }
+        } catch (ConstraintException e) {
+            ErrorHandler.getInstance().reportError(e);
+        }
     }
 
     @Override
     public void emit() throws CodeGenException {
         // ...
     }
-    
 }
