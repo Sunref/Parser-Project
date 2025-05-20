@@ -1,6 +1,8 @@
 package edu.citadel.cprl.ast;
 
 import edu.citadel.compiler.ConstraintException;
+import edu.citadel.compiler.ErrorHandler;
+import edu.citadel.cprl.Symbol;
 import edu.citadel.cprl.Token;
 import edu.citadel.cprl.Type;
 
@@ -34,6 +36,23 @@ public class ConstDecl extends InitialDecl {
         // que uma declaração da constante for utilizada.
 
         // Implementação:
+        try {
+            if (literal.getSymbol() == Symbol.intLiteral) {
+                try {
+                    Integer.parseInt(literal.getText());
+                } catch (NumberFormatException e1) {
+                    String errorMsg =
+                        "The number \"" +
+                        literal.getText() +
+                        "\" cannot be converted to an integer in CPRL.";
 
+                    literal.setText("1");
+
+                    throw error(literal.getPosition(), errorMsg);
+                }
+            }
+        } catch (ConstraintException e) {
+            ErrorHandler.getInstance().reportError(e);
+        }
     }
 }
