@@ -85,7 +85,11 @@ public class LoopStmt extends Statement {
                     String errorMsg = "The \"while\" expression should have type Boolean.";
                     throw error( whileExpr.getPosition(), errorMsg );
                 }
-            }       
+            }
+            
+            for(Statement statement: statements){
+                statement.checkConstraints();
+            }
             
         } catch ( ConstraintException e ) {
             ErrorHandler.getInstance().reportError( e );

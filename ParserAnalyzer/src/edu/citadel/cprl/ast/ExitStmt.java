@@ -49,7 +49,7 @@ public class ExitStmt extends Statement {
             if(whenExpr != null){
                 whenExpr.checkConstraints();
                 
-                if ( whenExpr.getType() != Type.Boolean ) {
+                if ( !whenExpr.getType().equals(Type.Boolean) ) {
                     String errorMsg = "The \"when\" expression should have type Boolean.";
                     throw error( whenExpr.getPosition(), errorMsg );
                 }

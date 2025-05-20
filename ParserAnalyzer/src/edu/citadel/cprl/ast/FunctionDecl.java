@@ -115,6 +115,10 @@ public class FunctionDecl extends SubprogramDecl {
                 }
             }
             
+            if (!hasReturnStmt(getStatementPart().getStatements())) {
+                ErrorHandler.getInstance().reportError(error(getPosition(), "A function must have at least one return statement."));
+            }
+            
         } catch ( ConstraintException e ) {
             ErrorHandler.getInstance().reportError( e );
         }
