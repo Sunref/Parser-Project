@@ -1,0 +1,23 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "[!P]*/**": true,
+        "P[!a]*/**": true,
+        "Pa[!r]*/**": true,
+        "Par[!s]*/**": true,
+        "Pars[!e]*/**": true,
+        "Parse[!r]*/**": true,
+        "Parser[!A]*/**": true,
+        "ParserA[!n]*/**": true,
+        "ParserAn[!a]*/**": true,
+        "ParserAna[!l]*/**": true,
+        "ParserAnal[!y]*/**": true,
+        "ParserAnaly[!z]*/**": true,
+        "ParserAnalyz[!e]*/**": true,
+        "ParserAnalyze[!r]*/**": true
+    }
+}

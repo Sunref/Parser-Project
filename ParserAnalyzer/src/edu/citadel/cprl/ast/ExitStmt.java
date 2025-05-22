@@ -4,7 +4,6 @@ import edu.citadel.compiler.CodeGenException;
 import edu.citadel.compiler.ConstraintException;
 import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Type;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for an exit statement.
@@ -19,7 +18,7 @@ public class ExitStmt extends Statement {
      * should be null if there is no "when" expression) and a reference to the
      * enclosing loop statement.
      */
-    public ExitStmt( Expression whenExpr, LoopStmt loopStmt ) {
+    public ExitStmt(Expression whenExpr, LoopStmt loopStmt) {
         this.whenExpr = whenExpr;
         this.loopStmt = loopStmt;
     }
@@ -33,18 +32,30 @@ public class ExitStmt extends Statement {
     }
 
     @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementExitStmt( this );
-    }
-    
-    @Override
     public void checkConstraints() {
-        // ...
+        // Regra de Tipo: se uma expressão when existir, o seu tipo deve ser
+        // Boolean.
+
+        // Regra Variada: a instrução exit deve estar aninhada dentro de uma
+        // instrução de laço, o que é tratado pelo parser usando LoopContext.
+
+        try {
+            Expression when = getWhenExpr();
+
+            if (when != null) {
+                if (!matchTypes(when.getExprType(), Type.Boolean)) {
+                    String errorMsg =
+                        "The \"when\" expression should have type Boolean.";
+                    throw error(when.getPosition(), errorMsg);
+                }
+            }
+        } catch (ConstraintException e) {
+            ErrorHandler.getInstance().reportError(e);
+        }
     }
 
     @Override
     public void emit() throws CodeGenException {
         // ...
     }
-    
 }

@@ -6,7 +6,6 @@ import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Symbol;
 import edu.citadel.cprl.Token;
 import edu.citadel.cprl.Type;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a not expression. A not expression is a
@@ -28,15 +27,32 @@ public class NotExpr extends UnaryExpr {
                 "Operator is not the reserved word \"not\".";
         
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementNotExpr( this );
-    }
     
     @Override
     public void checkConstraints() {
-        // ...
+        
+        // Regra de Tipo: o operando tem que ser do tipo Boolean.
+        
+        // Regra Variada: o resultado tem que ser do tipo Boolean.
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        try {
+
+            Expression operand = getOperand();
+            operand.checkConstraints();
+
+            if ( operand.getType() != Type.Boolean ) {
+                String errorMsg = "Expression following \"not\" operator is not a Boolean expression.";
+                throw error( operand.getPosition(), errorMsg );
+            }
+
+        } catch ( ConstraintException e ) {
+            ErrorHandler.getInstance().reportError( e );
+        }
+
+        // </editor-fold>
+
     }
 
     @Override

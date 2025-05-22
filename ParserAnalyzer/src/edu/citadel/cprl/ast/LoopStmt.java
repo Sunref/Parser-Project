@@ -5,9 +5,7 @@ import edu.citadel.compiler.ConstraintException;
 import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Type;
 import java.util.ArrayList;
-
 import java.util.List;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a loop statement.
@@ -69,15 +67,36 @@ public class LoopStmt extends Statement {
     public String getL2() {
         return L2;
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementLoopStmt( this );
-    }
     
     @Override
     public void checkConstraints() {
-        // ...
+        
+        // Regra de Tipo: se uma expressão while existir, ela tem que ser do
+        // tipo Boolean.
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        try {
+            
+            if(whileExpr != null){
+                whileExpr.checkConstraints();
+                
+                if ( whileExpr.getType() != Type.Boolean ) {
+                    String errorMsg = "The \"while\" expression should have type Boolean.";
+                    throw error( whileExpr.getPosition(), errorMsg );
+                }
+            }
+            
+            for(Statement statement: statements){
+                statement.checkConstraints();
+            }
+            
+        } catch ( ConstraintException e ) {
+            ErrorHandler.getInstance().reportError( e );
+        }
+
+        // </editor-fold>
+        
     }
 
     @Override

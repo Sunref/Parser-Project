@@ -4,7 +4,6 @@ import edu.citadel.compiler.CodeGenException;
 import edu.citadel.compiler.ConstraintException;
 import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Type;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a read statement.
@@ -24,16 +23,30 @@ public class ReadStmt extends Statement {
     public Variable getVariable() {
         return variable;
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementReadStmt( this );
-    }
     
     @Override
     public void checkConstraints() {
-        // a entrada é limitada à inteiros e caracteres
-        // ...
+        
+        // Regra de Tipo: a variável deve ser do tipo Integer ou do tipo Char.
+        // Dica: cuidado com variáveis de tipos de arrays.
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        try {
+            
+            variable.checkConstraints();
+            
+            if(variable.getType() != Type.Integer && variable.getType() != Type.Char) {
+                String errorMsg = "Input supported only for integers and characters.";
+                throw error( variable.getPosition(), errorMsg );
+            }
+            
+        } catch ( ConstraintException e ) {
+            ErrorHandler.getInstance().reportError( e );
+        }
+
+        // </editor-fold>
+        
     }
 
     @Override

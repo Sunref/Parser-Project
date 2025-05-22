@@ -4,9 +4,7 @@ import edu.citadel.compiler.CodeGenException;
 import edu.citadel.compiler.ConstraintException;
 import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Token;
-
 import java.util.List;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a function declaration.
@@ -86,15 +84,50 @@ public class FunctionDecl extends SubprogramDecl {
         return false;
         
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementFunctionDecl( this );
-    }
     
     @Override
     public void checkConstraints() {
-        // ...  dica: veja a implementação de SubprogramDecl
+        
+        // Regra Variada: não pode haver nenhuma var nos parâmetros.
+        
+        // Regra Variada: é necessário que haja pelo menos uma instrução de 
+        // retorno.
+        
+        // Dica: veja a implementação de SubprogramDecl
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        try {
+            
+            List<InitialDecl> initial = getInitialDecls();
+            List<ParameterDecl> formalParams = getFormalParams();
+            StatementPart stmtPart = getStatementPart();
+
+            stmtPart.checkConstraints();
+            
+            for (InitialDecl init: initial) {
+                init.checkConstraints();
+            }
+            for (ParameterDecl decl : formalParams) {
+                if (decl.isVarParam()) {
+                    String errorMsg = "A function cannot have var parameters.";
+                    throw error(decl.getPosition(), errorMsg);
+                }
+                decl.checkConstraints();
+
+            }
+
+            if (!hasReturnStmt(stmtPart.getStatements())) {
+                String errorMsg = "A function must have at least one return statement.";
+                throw error(getPosition(), errorMsg);
+            }
+
+        } catch (ConstraintException e) {
+            ErrorHandler.getInstance().reportError(e);
+        }
+
+        // </editor-fold>
+        
     }
     
     @Override

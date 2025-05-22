@@ -1,7 +1,6 @@
 package edu.citadel.cprl.ast;
 
 import edu.citadel.compiler.CodeGenException;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a CPRL program.
@@ -43,11 +42,6 @@ public class Program extends AST {
 
     public String getL1() {
         return L1;
-    }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementProgram( this );
     }
     
     @Override

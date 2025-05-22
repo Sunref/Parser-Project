@@ -6,7 +6,6 @@ import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Type;
 
 import java.util.List;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The AST for an elsif part of an if statement.
@@ -62,11 +61,6 @@ public class ElsifPart extends AST {
 
     public String getL1() {
         return L1;
-    }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementElsifPart( this );
     }
     
     @Override

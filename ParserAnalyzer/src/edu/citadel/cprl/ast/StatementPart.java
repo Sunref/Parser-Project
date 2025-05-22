@@ -3,7 +3,6 @@ package edu.citadel.cprl.ast;
 import edu.citadel.compiler.CodeGenException;
 
 import java.util.List;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for the statement part of a program.
@@ -22,15 +21,14 @@ public class StatementPart extends AST {
     public List<Statement> getStatements() {
         return statements;
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementStatementPart( this );
-    }
     
     @Override
     public void checkConstraints() {
-        // ...
+        
+        for ( Statement stmt : statements ) {
+            stmt.checkConstraints();
+        }
+        
     }
 
     @Override

@@ -4,7 +4,6 @@ import edu.citadel.compiler.CodeGenException;
 import edu.citadel.compiler.ConstraintException;
 import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.compiler.Position;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for an assignment statement.
@@ -43,15 +42,27 @@ public class AssignmentStmt extends Statement {
     public Position getAssignPosition() {
         return assignPosition;
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementAssignmentStmt( this );
-    }
     
     @Override
     public void checkConstraints() {
-        // ...
+        
+        // Regra de Tipo: a variável (lado esquerdo do operador de atribuição)
+        // e a expressão (lado direito) devem ter o mesmo tipo.
+        
+        try {
+
+            expr.checkConstraints();
+            variable.checkConstraints();
+            
+            if ( !matchTypes( variable.getType(), expr.getType() ) ) {
+                String errorMsg = "Type mismatch for assignment statement.";
+                throw error( assignPosition, errorMsg );
+            }
+
+        } catch ( ConstraintException e ) {
+            ErrorHandler.getInstance().reportError( e );
+        }
+        
     }
 
     @Override

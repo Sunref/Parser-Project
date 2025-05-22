@@ -6,7 +6,6 @@ import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Symbol;
 import edu.citadel.cprl.Token;
 import edu.citadel.cprl.Type;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a relational expression. A relational
@@ -43,15 +42,47 @@ public class RelationalExpr extends BinaryExpr {
     public String getL2() {
         return L2;
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementRelationalExpr( this );
-    }
     
     @Override
     public void checkConstraints() {
-        // ...
+        
+        // Regra de Tipo: ambos os operandos devem ter o mesmo tipo.
+        
+        // Regra de Tipo: apenas os tipos escalares, Integer, Char ou Boolean, 
+        // são permitidos como operandos. Na CPRL, não é permitido que ambos os 
+        // operandos sejam arrays ou literais de String.
+        
+        // Regra Variada: o resultado tem que ser do tipo Boolean.
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        try {
+            
+            Expression leftOperand = getLeftOperand();
+            Expression rightOperand = getRightOperand();
+            Token operator = getOperator();
+
+            leftOperand.checkConstraints();
+            rightOperand.checkConstraints();
+            
+            if( !matchTypes(leftOperand.getType(), rightOperand.getType()) ) {
+                String errorMsg = "Type mismatch for left and right operands of a relational expression.";
+                throw error( operator.getPosition(), errorMsg );
+            }
+            
+            if(leftOperand.getType() != Type.Char 
+                && leftOperand.getType() != Type.Integer 
+                && leftOperand.getType() != Type.Boolean) {
+                String errorMsg = "Type of operands not permitted for a relational expression.";
+                throw error( operator.getPosition(), errorMsg );
+            }
+            
+        } catch ( ConstraintException e ) {
+            ErrorHandler.getInstance().reportError( e );
+        }
+
+        // </editor-fold>
+
     }
 
     @Override

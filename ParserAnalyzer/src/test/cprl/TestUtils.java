@@ -6,18 +6,11 @@
 package test.cprl;
 
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import edu.citadel.compiler.ErrorHandler;
-import edu.citadel.compiler.InternalCompilerException;
 import edu.citadel.compiler.Source;
 import edu.citadel.cprl.Parser;
 import edu.citadel.cprl.ast.AST;
-import edu.citadel.cprl.ast.ExitStmt;
 import edu.citadel.cprl.ast.Program;
-import edu.citadel.cprl.ast.ReturnStmt;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -159,34 +152,6 @@ public class TestUtils {
             "../examples/Incorrect/Arrays/Incorrect_305.cprl"
     };// </editor-fold>
     
-    private static final Gson gson = new GsonBuilder().
-            setPrettyPrinting().
-            serializeNulls().
-            setExclusionStrategies( new ExclusionStrategy(){
-                @Override
-                public boolean shouldSkipField( FieldAttributes fa ) {
-                    return fa.getDeclaringClass() == ExitStmt.class &&
-                           fa.getName().equals( "loopStmt" );
-                }
-
-                @Override
-                public boolean shouldSkipClass( Class<?> type ) {
-                    return false;
-                }
-            }, new ExclusionStrategy(){
-                @Override
-                public boolean shouldSkipField( FieldAttributes fa ) {
-                    return fa.getDeclaringClass() == ReturnStmt.class &&
-                           fa.getName().equals( "subprogramDecl" );
-                }
-
-                @Override
-                public boolean shouldSkipClass( Class<?> type ) {
-                    return false;
-                }
-            }).
-            create();
-    
     /*
      * Executa um teste comparando a saída do escaneamento de um arquivo de
      * código fonte e um arquivo de resultado.
@@ -215,7 +180,7 @@ public class TestUtils {
     
     public static void testarVarios( 
             String[] titulos, 
-            String[] caminhosFontes,
+            String[] caminhosFontes, 
             boolean executarTestesDeUnidade ) throws FileNotFoundException, IOException {
         
         int total = titulos.length;
@@ -321,7 +286,7 @@ public class TestUtils {
         
         StringBuilder expResultBuilder = new StringBuilder();
         
-        try ( Scanner s = new Scanner( new File( "../examples/testParser3_all Results - projeto.txt" ), StandardCharsets.UTF_8 ) ) {
+        try ( Scanner s = new Scanner( new File( "../examples/cprlc_all Results - projeto.txt" ), StandardCharsets.UTF_8 ) ) {
             while ( s.hasNextLine() ) {
                 expResultBuilder.append( s.nextLine() ).append( "\n" );
             }
@@ -331,7 +296,7 @@ public class TestUtils {
         
         for ( String s : expResultBuilder.toString().replace( "\r", "" ).trim().split( "<sep>" ) ) {
             s = s.trim();
-            r.put( s.split( "\n" )[0].replace( "Parsing ", "Teste" ).replace( ".cprl...", "" ).trim(), s );
+            r.put( s.split( "\n" )[0].replace( "Starting compilation for ", "Teste" ).replace( ".cprl...", "" ).trim(), s );
         }
         
         return r;
@@ -364,55 +329,33 @@ public class TestUtils {
     
     public static void executar( String fileName ) throws IOException {
         
-        File f = new File( fileName );
-        FileReader fileReader = null;
-
-        fileReader = new FileReader( fileName, StandardCharsets.UTF_8 );
-
-        System.out.println( "Parsing " + f.getName() + "..." );
-
-        Source source = new Source( fileReader );
+        File sourceFile = new File( fileName );
+        FileReader reader = new FileReader( sourceFile, StandardCharsets.UTF_8 );
+        Source source = new Source( reader );
         edu.citadel.cprl.Scanner scanner = new edu.citadel.cprl.Scanner( source );
         Parser parser = new Parser( scanner );
-        boolean ok = true;
+
+        ErrorHandler errorHandler = ErrorHandler.getInstance();
         
-        Program program = null;
+        System.out.println( "Starting compilation for " + sourceFile.getName() + "..." );
         
-        try {
-            
-            program = parser.parseProgram();
-            
-            if ( ErrorHandler.getInstance().errorsExist() ) {
-                System.out.println( "Errors detected in " + f.getName() + " -- parsing terminated." );
-                ok = false;
-            }
-            
-        } catch ( IllegalStateException e ) {
-            ok = false;
-        } catch ( InternalCompilerException e ) {
-            ok = false;
+        Program program = parser.parseProgram();
+
+        if ( !errorHandler.errorsExist() ) {
+            System.out.println( "Checking constraints..." );
+            program.checkConstraints();
         }
-        
-        if ( ok ) {
-            System.out.println( "Parsing complete." );
-        }
-                
-        System.out.println( "\n*** AST Dump ***" );
-        if ( program != null ) {
-            System.out.println( "Program: " + gson.toJson( program ) );
+
+        if ( errorHandler.errorsExist() ) {
+            errorHandler.printMessage( "Errors detected in " + sourceFile.getName()
+                    + " -- compilation terminated." );
         } else {
-            System.out.println( "The AST could not be built." );
+            System.out.println( "Compilation complete." );
         }
-        
-        /*if ( program != null ) {
-            XMLArvoreVisitor xav = new XMLArvoreVisitor();
-            program.accept( xav );
-            System.out.println( xav.getXMLArvore() );
-        }*/
         
         ErrorHandler.getInstance().resetErrorCount();
         AST.resetCurrentLabelNum();
-        fileReader.close();
+        reader.close();
         
     }
     

@@ -4,7 +4,6 @@ import edu.citadel.compiler.CodeGenException;
 import edu.citadel.compiler.ConstraintException;
 import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.compiler.Position;
-import test.cprl.gui.visitor.Visitor;
 
 /**
  * The abstract syntax tree node for a return statement.
@@ -38,18 +37,51 @@ public class ReturnStmt extends Statement {
     public Position getReturnPosition() {
         return returnPosition;
     }
-
-    @Override
-    public void accept( Visitor v ) {
-        v.visitConcreteElementReturnStmt( this );
-    }
     
     @Override
     public void checkConstraints() {
         
         assert subprogramDecl != null : "Return statement must be nested within a subprogram.";
 
-        // ...
+        // Regra de Tipo: se a instrução retorna o valor de uma função, então o 
+        // tipo da expressão que será retornada deve ser do mesmo tipo do 
+        // retorno da função.
+        
+        // Regra Variada: se a instrução return retorna um valor, então ela 
+        // deve estar aninhada à declaração de uma função. 
+        
+        // Regra Variada: se a instrução return está aninhada a uma função, 
+        // então ela deve retornar um valor.
+        
+        // Regra Variada: a instrução return deve estar aninhada a um 
+        // subprograma, o que é tratado pelo parser usando SubprogramContext.
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        try {
+            
+            if (returnExpr != null) {
+                returnExpr.checkConstraints();
+                
+                if (!(subprogramDecl instanceof FunctionDecl)) {
+                    String errorMsg = "Return expression allowed only within functions.";
+                    throw error(returnExpr.getPosition(), errorMsg);
+                }
+                
+                if (returnExpr.getType() != subprogramDecl.getType()) {
+                    String errorMsg = "Return expression type does not match function return type.";
+                    throw error(returnExpr.getPosition(), errorMsg);
+                }
+            } else {
+                String errorMsg = "A return statement nested within a function must return a value.";
+                throw error(returnPosition, errorMsg);
+            }
+
+        } catch ( ConstraintException e ) {
+            ErrorHandler.getInstance().reportError( e );
+        }
+
+        // </editor-fold>
         
     }
 
