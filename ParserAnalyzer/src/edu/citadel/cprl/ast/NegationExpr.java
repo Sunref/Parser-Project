@@ -42,7 +42,8 @@ public class NegationExpr extends UnaryExpr {
             // os operadores unários +/- podem ser aplicados somente à
             // expressões do tipo Integer
             if ( operand.getType() != Type.Integer ) { // pode usar matchTypes também!
-                String errorMsg = "Expression following \"-\" operator is not a Integer expression.";
+                String errorMsg = "Expression following \"-\" operator is not a"
+                        + " Integer expression.";
                 throw error( operand.getPosition(), errorMsg );
             }
 
@@ -54,7 +55,13 @@ public class NegationExpr extends UnaryExpr {
 
     @Override
     public void emit() throws CodeGenException {
-        // ...
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        // sua implementação aqui
+
+        // </editor-fold>
+        
     }
     
 }

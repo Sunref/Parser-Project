@@ -50,7 +50,16 @@ public class DeclarativePart extends AST {
 
     @Override
     public void emit() throws CodeGenException {
-        // ...
+        
+        // a emissão das declarações iniciais é desnecessária
+        for ( InitialDecl decl : initialDecls ) {
+            decl.emit();
+        }
+        
+        for ( SubprogramDecl decl : subprogDecls ) {
+            decl.emit();
+        }
+        
     }
     
 }

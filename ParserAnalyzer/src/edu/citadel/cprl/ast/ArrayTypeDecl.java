@@ -33,27 +33,18 @@ public class ArrayTypeDecl extends InitialDecl {
         // itens de um array deve ser do tipo Integer e o valor associado deve 
         // ser um número positivo.
         
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-        
         try {
             
             numElements.checkConstraints();
-
-            if ( numElements.getType() != Type.Integer) {
-                String errorMsg = "Index expression must have type Integer.";
-                throw error( numElements.getPosition(), errorMsg );
-            }
             
-            if(numElements.getLiteralIntValue() <= 0) {
+            if ( numElements.getLiteralIntValue() <= 0 ) {
                 String errorMsg = "Invalid constant.";
-                throw error( numElements.getPosition(), errorMsg );
+                throw error( getPosition(), errorMsg );
             }
             
         } catch ( ConstraintException e ) {
             ErrorHandler.getInstance().reportError( e );
         }
-
-        // </editor-fold>
         
     }
     

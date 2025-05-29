@@ -19,7 +19,14 @@ public class ProcedureDecl extends SubprogramDecl {
     
     @Override
     public void emit() throws CodeGenException {
-        // ...
+        
+        setRelativeAddresses();
+
+        emitLabel( getSubprogramLabel() );
+        emit( "PROC " + getVarLength() );
+        getStatementPart().emit();
+        emit( "RET " + getParamLength() );
+        
     }
     
 }

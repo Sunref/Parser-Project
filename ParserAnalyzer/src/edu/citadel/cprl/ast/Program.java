@@ -96,7 +96,7 @@ public class Program extends AST {
             declPart.emit();
             emitLabel( L1 );
         }
-
+        
         stmtPart.emit();
         emit( "HALT" );
         

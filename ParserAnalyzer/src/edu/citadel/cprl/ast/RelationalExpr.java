@@ -54,34 +54,31 @@ public class RelationalExpr extends BinaryExpr {
         
         // Regra Variada: o resultado tem que ser do tipo Boolean.
         
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-                    
         try {
             
             Expression leftOperand = getLeftOperand();
             Expression rightOperand = getRightOperand();
-            Token operator = getOperator();
 
             leftOperand.checkConstraints();
             rightOperand.checkConstraints();
-            
-            if( !matchTypes(leftOperand.getType(), rightOperand.getType()) ) {
+
+            if ( leftOperand.getType() != rightOperand.getType() ) {
                 String errorMsg = "Type mismatch for left and right operands of a relational expression.";
-                throw error( operator.getPosition(), errorMsg );
-            }
-            
-            if(leftOperand.getType() != Type.Char 
-                && leftOperand.getType() != Type.Integer 
-                && leftOperand.getType() != Type.Boolean) {
-                String errorMsg = "Type of operands not permitted for a relational expression.";
-                throw error( operator.getPosition(), errorMsg );
+                throw error( getPosition(), errorMsg );
+            } else {
+                
+                if ( leftOperand.getType() != Type.Integer &&
+                     leftOperand.getType() != Type.Char &&
+                     leftOperand.getType() != Type.Boolean ) {  // ou !leftOperand.getType().isScalar()
+                    String errorMsg = "Type of operands not permitted for a relational expression.";
+                    throw error( getPosition(), errorMsg );
+                }
+                
             }
             
         } catch ( ConstraintException e ) {
             ErrorHandler.getInstance().reportError( e );
         }
-
-        // </editor-fold>
 
     }
 

@@ -3,6 +3,7 @@ package edu.citadel.cprl.ast;
 import edu.citadel.compiler.CodeGenException;
 import edu.citadel.compiler.ConstraintException;
 import edu.citadel.compiler.ErrorHandler;
+import edu.citadel.cprl.ArrayType;
 import edu.citadel.cprl.Type;
 
 /**
@@ -30,28 +31,36 @@ public class ReadStmt extends Statement {
         // Regra de Tipo: a variável deve ser do tipo Integer ou do tipo Char.
         // Dica: cuidado com variáveis de tipos de arrays.
         
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-                    
         try {
             
-            variable.checkConstraints();
-            
-            if(variable.getType() != Type.Integer && variable.getType() != Type.Char) {
+            if ( variable.getType() != Type.Integer && 
+                 variable.getType() != Type.Char && 
+                 !( variable.getType() instanceof ArrayType ) ) {
                 String errorMsg = "Input supported only for integers and characters.";
                 throw error( variable.getPosition(), errorMsg );
+            } else {
+                variable.checkConstraints();
             }
             
         } catch ( ConstraintException e ) {
             ErrorHandler.getInstance().reportError( e );
         }
-
-        // </editor-fold>
         
     }
 
     @Override
     public void emit() throws CodeGenException {
-        // ...
+        
+        variable.emit();
+
+        if ( variable.getType() == Type.Integer ) {
+            emit( "GETINT" );
+        } else {  // o tipo tem que ser Char
+            emit( "GETCH" );
+        }
+
+        emitStoreInst( variable.getType() );
+        
     }
     
 }

@@ -67,7 +67,11 @@ public class AssignmentStmt extends Statement {
 
     @Override
     public void emit() throws CodeGenException {
-        // ...
+        
+        variable.emit();
+        expr.emit();
+        emitStoreInst( expr.getType() );
+        
     }
     
 }

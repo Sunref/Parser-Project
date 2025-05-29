@@ -41,7 +41,7 @@ public class IfStmt extends Statement {
         this.thenStmts = thenStmts;
         this.elsifParts = elsifParts;
         this.elseStmts = elseStmts;
-
+        
         L1 = getNewLabel();
         L2 = getNewLabel();
         

@@ -125,27 +125,6 @@ public class Scanner {
                 
                 switch ( (char) source.getChar() ) {
                     
-                    // este é o passo 01 da sua implementação, onde você deve
-                    // identificar se o que será processado é um comentário de
-                    // uma linha. note que como um comentário inicia com o
-                    // caractere barra (/), o analisador léxico precisa
-                    // diferenciar um comentário de um operador de divisão                   
-                    
-                    // para o descarte do comentário, você deve implementar o
-                    // método skipComment (pular comentário) e usá-lo. lembre-se
-                    // que o comentário é irrelevante de depos de escaneado,
-                    // deve ser descartado.
-                    
-                    // <editor-fold defaultstate="collapsed" desc="Implementação do Passo 01">
-                    
-                    // sua implementação aqui
-                    
-                    // </editor-fold>
-
-
-
-                    // <editor-fold defaultstate="collapsed" desc="Solução do Passo 01">
-                    
                     case '/':
                         source.advance();
                         if ( (char) source.getChar() == '/' ) {
@@ -157,16 +136,6 @@ public class Scanner {
                         }
                         break;
                     
-                    // </editor-fold>
-                    
-                    
-                    
-                    // este é o passo 03 da sua implementação, onde deve-se
-                    // escanear todos os tokens que representam operadores,
-                    // delimitadores etc. alguns exemplos seguem abaixo:
-                        
-                    
-                    // exemplo 1: adição
                     case '+': // se é um caractere +
                         
                         // sabe-se que é um símbolo do tipo plus
@@ -177,8 +146,6 @@ public class Scanner {
                         
                         break;
                     
-                        
-                    // exemplo 2: maior e maior ou igual
                     case '>': // se é um caractere >
                         
                         // pode ser que seja um maior ou igual, então
@@ -204,23 +171,6 @@ public class Scanner {
                         
                         break;
                     
-                    // a partir daqui você deve implementar o restante das
-                    // regras para reconhecimento do que foi citado acima.
-                    // sugestão: operadores e delimitadores de um caractere
-                    //           depois os de dois caracteres.
-                    // Obs: lembre-se que a divisão será tratada no
-                    // processamento do comentário (primeiro case desse switch).
-                        
-                    // <editor-fold defaultstate="collapsed" desc="Implementação do Passo 03">
-                    
-                    // sua implementação aqui
-                    
-                    // </editor-fold>
-
-
-
-                    // <editor-fold defaultstate="collapsed" desc="Solução do Passo 03">
-                        
                     case '-':
                         symbol = Symbol.minus;
                         source.advance();
@@ -302,28 +252,6 @@ public class Scanner {
                         }
                         break;
                     
-                    // </editor-fold>
-
-                        
-                    // este é o passo 04 da sua implementação, onde deve-se
-                    // escanear os literais de caracteres ('a', 'b' etc) e 
-                    // strings ("abc", "", "x" etc).
-                        
-                    // o método scanCharLiteral já está pronto e o método
-                    // scanStringLiteral deve ser implementado. para a
-                    // implementação do escaneamento de strings, use como base
-                    // o escaneamento de caracteres
-                    
-                    // <editor-fold defaultstate="collapsed" desc="Implementação do Passo 04">
-                    
-                    // sua implementação aqui
-                    
-                    // </editor-fold>
-                    
-                        
-                    
-                    // <editor-fold defaultstate="collapsed" desc="Solução do Passo 04">
-                        
                     case '\'':
                         symbol = Symbol.charLiteral;
                         text = scanCharLiteral();
@@ -333,10 +261,6 @@ public class Scanner {
                         symbol = Symbol.stringLiteral;
                         text = scanStringLiteral();
                         break;
-                    
-                    // </editor-fold>
-                    
-                    
                     
                     // erro: caractere inválido
                     default:
@@ -385,16 +309,6 @@ public class Scanner {
      */
     private void skipComment() throws ScannerException, IOException {
         
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-                    
-        // sua implementação aqui
-
-        // </editor-fold>
-        
-        
-        
-        // <editor-fold defaultstate="collapsed" desc="Solução">
-        
         // recursivo
         /*source.advance();
         if ( ( (char) source.getChar() ) != '\n' ) {
@@ -408,8 +322,6 @@ public class Scanner {
         
         // ou usando skipToEndOfLine()
         skipToEndOfLine();
-        
-        // </editor-fold>
         
     }
     
@@ -431,19 +343,6 @@ public class Scanner {
      */
     private String scanIdentifier() throws IOException {
         
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-                    
-        // sua implementação aqui
-        
-        // esta linha deve ser alterada para retornar a string do identificador
-        //return "";
-        
-        // </editor-fold>
-        
-        
-        
-        // <editor-fold defaultstate="collapsed" desc="Solução">
-        
         clearScanBuffer();
         
         
@@ -454,8 +353,6 @@ public class Scanner {
                   Character.isDigit( (char) source.getChar() )  );
         
         return scanBuffer.toString();
-        
-        // </editor-fold>
         
     }
     
@@ -473,26 +370,11 @@ public class Scanner {
      */
     private Symbol getIdentifierSymbol( String idString ) {
         
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-                    
-        // sua implementação aqui
-        
-        // esta linha deve ser alterada para retornar o símbolo apropriado
-        //return Symbol.unknown;
-        
-        // </editor-fold>
-        
-        
-        
-        // <editor-fold defaultstate="collapsed" desc="Solução">
-        
         if ( symbolMap.containsKey( idString ) ) {
             return symbolMap.get( idString );
         } else {
             return Symbol.identifier;
         }
-        
-        // </editor-fold>
         
     }
 
@@ -525,18 +407,6 @@ public class Scanner {
         String errorMsg = "Invalid String literal.";
         clearScanBuffer();
         
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-                    
-        // sua implementação aqui
-        
-        //return scanBuffer.toString();
-        
-        // </editor-fold>
-        
-        
-        
-        // <editor-fold defaultstate="collapsed" desc="Solução">
-
         // insere as aspas duplas de abertura
         char c = (char) source.getChar();
         scanBuffer.append( c );
@@ -582,8 +452,6 @@ public class Scanner {
         }
 
         return scanBuffer.toString();
-        
-        // </editor-fold>
         
     }
 

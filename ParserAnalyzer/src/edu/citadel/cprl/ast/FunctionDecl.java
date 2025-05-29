@@ -4,6 +4,7 @@ import edu.citadel.compiler.CodeGenException;
 import edu.citadel.compiler.ConstraintException;
 import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Token;
+
 import java.util.List;
 
 /**
@@ -95,38 +96,30 @@ public class FunctionDecl extends SubprogramDecl {
         
         // Dica: veja a implementação de SubprogramDecl
         
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-                    
         try {
             
-            List<InitialDecl> initial = getInitialDecls();
-            List<ParameterDecl> formalParams = getFormalParams();
-            StatementPart stmtPart = getStatementPart();
-
-            stmtPart.checkConstraints();
-            
-            for (InitialDecl init: initial) {
-                init.checkConstraints();
-            }
-            for (ParameterDecl decl : formalParams) {
-                if (decl.isVarParam()) {
-                    String errorMsg = "A function cannot have var parameters.";
-                    throw error(decl.getPosition(), errorMsg);
-                }
+            for ( InitialDecl decl : getInitialDecls() ) {
                 decl.checkConstraints();
-
             }
 
-            if (!hasReturnStmt(stmtPart.getStatements())) {
+            for ( ParameterDecl paramDecl : getFormalParams() ) {
+                if ( paramDecl.isVarParam() ) {
+                    String errorMsg = "A function cannot have var parameters.";
+                    throw error( paramDecl.getPosition(), errorMsg );
+                }
+                paramDecl.checkConstraints();
+            }
+
+            if ( !hasReturnStmt( getStatementPart().getStatements() ) ) {
                 String errorMsg = "A function must have at least one return statement.";
-                throw error(getPosition(), errorMsg);
+                throw error( getPosition(), errorMsg );
             }
 
-        } catch (ConstraintException e) {
-            ErrorHandler.getInstance().reportError(e);
+            getStatementPart().checkConstraints();
+        
+        } catch ( ConstraintException e ) {
+            ErrorHandler.getInstance().reportError( e );
         }
-
-        // </editor-fold>
         
     }
     

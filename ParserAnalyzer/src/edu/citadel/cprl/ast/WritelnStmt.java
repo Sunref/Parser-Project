@@ -20,7 +20,13 @@ public class WritelnStmt extends OutputStmt {
     
     @Override
     public void emit() throws CodeGenException {
-        // ...
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        // sua implementação aqui
+
+        // </editor-fold>
+        
     }
     
 }

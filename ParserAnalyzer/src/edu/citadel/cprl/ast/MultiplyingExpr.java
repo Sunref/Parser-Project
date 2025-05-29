@@ -3,6 +3,7 @@ package edu.citadel.cprl.ast;
 import edu.citadel.compiler.CodeGenException;
 import edu.citadel.compiler.ConstraintException;
 import edu.citadel.compiler.ErrorHandler;
+import edu.citadel.cprl.Symbol;
 import edu.citadel.cprl.Token;
 import edu.citadel.cprl.Type;
 
@@ -34,8 +35,6 @@ public class MultiplyingExpr extends BinaryExpr {
         
         // Regra Variada: o resultado tem que ser do tipo Integer.
         
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-                    
         try {
             
             Expression leftOperand = getLeftOperand();
@@ -43,7 +42,8 @@ public class MultiplyingExpr extends BinaryExpr {
 
             leftOperand.checkConstraints();
             rightOperand.checkConstraints();
-            
+
+            // somente inteiros
             if ( leftOperand.getType() != Type.Integer ) {
                 String errorMsg = "Left operand for expression should have type Integer.";
                 throw error( leftOperand.getPosition(), errorMsg );
@@ -57,14 +57,18 @@ public class MultiplyingExpr extends BinaryExpr {
         } catch ( ConstraintException e ) {
             ErrorHandler.getInstance().reportError( e );
         }
-
-        // </editor-fold>
         
     }
 
     @Override
     public void emit() throws CodeGenException {
-        // ...
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        // sua implementação aqui
+
+        // </editor-fold>
+        
     }
     
 }

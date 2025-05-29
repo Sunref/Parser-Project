@@ -35,15 +35,14 @@ public class NotExpr extends UnaryExpr {
         
         // Regra Variada: o resultado tem que ser do tipo Boolean.
         
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-                    
         try {
 
             Expression operand = getOperand();
             operand.checkConstraints();
 
             if ( operand.getType() != Type.Boolean ) {
-                String errorMsg = "Expression following \"not\" operator is not a Boolean expression.";
+                String errorMsg = "Expression following \"not\" operator is not"
+                                  + " a Boolean expression.";
                 throw error( operand.getPosition(), errorMsg );
             }
 
@@ -51,13 +50,17 @@ public class NotExpr extends UnaryExpr {
             ErrorHandler.getInstance().reportError( e );
         }
 
-        // </editor-fold>
-
     }
 
     @Override
     public void emit() throws CodeGenException {
-        // ...
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        // sua implementação aqui
+
+        // </editor-fold>
+        
     }
     
 }

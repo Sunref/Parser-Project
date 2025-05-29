@@ -5,25 +5,17 @@ da AST a implementação parcial contém:
     - o construtor e os métodos sobrescritos sem código em seus respectivos blocos;
     - os atributos/campos são mantidos para que possam ser usados como dica.
 
-Neste passo do projeto, será necessário implementar o método checkConstraints()
-das classes da AST descritas abaixo. Note que logo a seguir há um resumo das
-classes que precisam ter esse método implementado! É nelas que você precisará
-mexer!
+Neste passo do projeto, será necessário implementar o método emit() das classes 
+da AST descritas abaixo. Note que logo a seguir há um resumo das classes que 
+precisam ter esse método implementado! É nelas que você precisará mexer!
 
-Implementar o método checkConstraints() nas classes abaixo, contidas no pacote
+Implementar o método emit() nas classes abaixo, contidas no pacote
 edu.citadel.cprl.ast:
 
-O  ArrayTypeDecl.java
-O  ConstDecl.java -> Reajustado
-O  ExitStmt.java -> Reajustado
-X  FunctionDecl.java -> Reajustado
-X  LoopStmt.java -> Reajustado
-O  MultiplyingExpr.java
-O  NotExpr.java
-O  ProcedureCallStmt.java
-O  ReadStmt.java
-O  RelationalExpr.java
-O  ReturnStmt.java 
+  MultiplyingExpr.java 
+  NegationExpr.java    
+  NotExpr.java         
+  WritelnStmt.java     
 
 
 Abaixo segue a listagem completa das classes:
@@ -44,41 +36,41 @@ No pacote edu.citadel.cprl.ast
 
   AST.java
   AddingExpr.java
-* ArrayTypeDecl.java         -> Implementar o método checkConstraints()
-* AssignmentStmt.java        -> Não precisa mexer por enquanto
-  BinaryExpr.java
-* ConstDecl.java             -> Implementar o método checkConstraints()
-  ConstValue.java
-  Declaration.java
-* DeclarativePart.java       -> Não precisa mexer por enquanto
-  ElsifPart
-* ExitStmt.java              -> Implementar o método checkConstraints()
-  Expression.java
-  FunctionCall.java
-* FunctionDecl.java          -> Implementar o método checkConstraints()
-  IfStmt.java
-  InitialDecl.java
-  LogicalExpr.java
-* LoopStmt.java              -> Implementar o método checkConstraints()
-* MultiplyingExpr.java       -> Implementar o método checkConstraints()
-  NamedDecl.java
-  NamedValue.java
-* NegationExpr.java          -> Não precisa mexer por enquanto
-* NotExpr.java               -> Implementar o método checkConstraints()
-  OutputStmt.java
-  ParameterDecl.java
-* ProcedureCallStmt.java     -> Implementar o método checkConstraints()
-* ProcedureDecl.java         -> Não precisa mexer por enquanto
-  Program.java
-* ReadStmt.java              -> Implementar o método checkConstraints()
-* RelationalExpr.java        -> Implementar o método checkConstraints()
-* ReturnStmt.java            -> Implementar o método checkConstraints()
-  SingleVarDecl.java
-  Statement.java
-* StatementPart.java         -> Não precisa mexer por enquanto
-  SubprogramDecl.java
-  UnaryExpr.java
-  VarDecl.java
+  ArrayTypeDecl.java
+  AssignmentStmt.java        
+  BinaryExpr.java    
+  ConstDecl.java             
+  ConstValue.java    
+  Declaration.java    
+  DeclarativePart.java
+  ElsifPart    
+  ExitStmt.java              
+  Expression.java    
+  FunctionCall.java    
+* FunctionDecl.java          -> Não precisa mexer por enquanto
+  IfStmt.java    
+  InitialDecl.java    
+  LogicalExpr.java    
+  LoopStmt.java              
+* MultiplyingExpr.java       -> Implementar o método emit()
+  NamedDecl.java             
+  NamedValue.java            
+* NegationExpr.java          -> Implementar o método emit()
+* NotExpr.java               -> Implementar o método emit()
+  OutputStmt.java    
+  ParameterDecl.java    
+* ProcedureCallStmt.java     -> Não precisa mexer por enquanto
+  ProcedureDecl.java
+  Program.java    
+  ReadStmt.java
+  RelationalExpr.java        
+  ReturnStmt.java
+  SingleVarDecl.java    
+  Statement.java    
+  StatementPart.java         
+  SubprogramDecl.java    
+  UnaryExpr.java    
+  VarDecl.java    
 * Variable.java              -> Não precisa mexer por enquanto
-  WriteStmt.java
-* WritelnStmt.java           -> Não precisa mexer por enquanto
+  WriteStmt.java    
+* WritelnStmt.java           -> Implementar o método emit()
