@@ -18,25 +18,26 @@ public class MultiplyingExpr extends BinaryExpr {
      * Construct a multiplying expression with the operator ("*", "/", or "mod")
      * and the two operands.
      */
-    public MultiplyingExpr( Expression leftOperand, Token operator, Expression rightOperand ) {
-        
-        super( leftOperand, operator, rightOperand );
-        setType( Type.Integer );
-        
-        assert operator.getSymbol().isMultiplyingOperator() :
-                "Operator is not a multiplying operator.";
-        
+    public MultiplyingExpr(
+        Expression leftOperand,
+        Token operator,
+        Expression rightOperand
+    ) {
+        super(leftOperand, operator, rightOperand);
+        setType(Type.Integer);
+
+        assert operator
+            .getSymbol()
+            .isMultiplyingOperator() : "Operator is not a multiplying operator.";
     }
-    
+
     @Override
     public void checkConstraints() {
-        
         // Regra de Tipo: ambos os operandos devem ser do tipo Integer.
-        
+
         // Regra Variada: o resultado tem que ser do tipo Integer.
-        
+
         try {
-            
             Expression leftOperand = getLeftOperand();
             Expression rightOperand = getRightOperand();
 
@@ -44,31 +45,38 @@ public class MultiplyingExpr extends BinaryExpr {
             rightOperand.checkConstraints();
 
             // somente inteiros
-            if ( leftOperand.getType() != Type.Integer ) {
-                String errorMsg = "Left operand for expression should have type Integer.";
-                throw error( leftOperand.getPosition(), errorMsg );
+            if (leftOperand.getType() != Type.Integer) {
+                String errorMsg =
+                    "Left operand for expression should have type Integer.";
+                throw error(leftOperand.getPosition(), errorMsg);
             }
 
-            if ( rightOperand.getType() != Type.Integer ) {
-                String errorMsg = "Right operand for expression should have type Integer.";
-                throw error( rightOperand.getPosition(), errorMsg );
+            if (rightOperand.getType() != Type.Integer) {
+                String errorMsg =
+                    "Right operand for expression should have type Integer.";
+                throw error(rightOperand.getPosition(), errorMsg);
             }
-            
-        } catch ( ConstraintException e ) {
-            ErrorHandler.getInstance().reportError( e );
+        } catch (ConstraintException e) {
+            ErrorHandler.getInstance().reportError(e);
         }
-        
     }
 
     @Override
     public void emit() throws CodeGenException {
-        
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-                    
-        // sua implementação aqui
+        // Implementação:
+        Expression leftOperand = getLeftOperand();
+        Expression rightOperand = getRightOperand();
+        Symbol operatorSym = getOperator().getSymbol();
 
-        // </editor-fold>
-        
+        leftOperand.emit();
+        rightOperand.emit();
+
+        if (operatorSym == Symbol.times) {
+            emit("MUL");
+        } else if (operatorSym == Symbol.divide) {
+            emit("DIV");
+        } else if (operatorSym == Symbol.modRW) {
+            emit("MOD");
+        }
     }
-    
 }
