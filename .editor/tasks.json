@@ -1,210 +1,62 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Build Project",
-            "type": "shell",
-            "command": "ant",
-            "args": [
-                "build"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": "$ant"
-        },
-        {
-            "label": "Clean Project",
-            "type": "shell",
-            "command": "ant",
-            "args": [
-                "clean"
-            ],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": "$ant"
-        },
-        {
-            "label": "Run Project",
-            "type": "shell",
-            "command": "ant",
-            "args": [
-                "run"
-            ],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": "$ant",
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "Clean and Build Project",
-            "type": "shell",
-            "command": "ant",
-            "args": [
-                "clean",
-                "build"
-            ],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": "$ant"
-        },
-        {
-            "label": "Debug Project",
-            "type": "shell",
-            "command": "ant",
-            "args": [
-                "debug"
-            ],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": "$ant"
-        },
-        {
-            "label": "Build Default",
-            "type": "shell",
-            "command": "ant",
-            "args": [
-                "build-default"
-            ],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": "$ant"
-        },
-        {
-            "label": "Build Corretor.java",
-            "type": "shell",
-            "command": "ant",
-            "args": [
-                "build-corretor"
-            ],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": "$ant"
-        },
-        {
-            "label": "Build TestParser.java",
-            "type": "shell",
-            "command": "ant",
-            "args": [
-                "build-testparser"
-            ],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": "$ant"
-        },
-        {
-            "label": "Build Selected",
-            "type": "shell",
-            "command": "ant",
-            "args": [
-                "build-selected"
-            ],
-            "options": {
-                "env": {
-                    "ANT_OPTS": "-Djavac.includes=${input:javacIncludes}"
-                }
-            },
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": "$ant"
-        },
-        {
-            "label": "Build and Run Open Window",
-            "type": "shell",
-            "command": "ant",
-            "args": [
-                "build-and-run-open-window"
-            ],
-            "options": {
-                "env": {
-                    "ANT_OPTS": "-Djavac.includes=${input:javacIncludes} -Drun.class=${input:runClass}"
-                }
-            },
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": "$ant"
-        },
-        {
-            "label": "Run Corretor.java",
-            "type": "shell",
-            "command": "ant",
-            "args": [
-                "run-corretor"
-            ],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": "$ant"
-        },
-        {
-            "label": "Run TestParser.java",
-            "type": "shell",
-            "command": "ant",
-            "args": [
-                "run-testparser"
-            ],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": "$ant"
-        },
-        {
-            "label": "Run Selected",
-            "type": "shell",
-            "command": "ant",
-            "args": [
-                "run-selected"
-            ],
-            "options": {
-                "env": {
-                    "ANT_OPTS": "-Djavac.includes=${input:javacIncludes} -Drun.class=${input:runClass}"
-                }
-            },
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            },
-            "problemMatcher": "$ant"
-        }
-    ],
-    "inputs": [
-        {
-            "id": "javacIncludes",
-            "type": "promptString",
-            "description": "Enter the relative path to the .java file (e.g. test/cprl/Corretor.java)"
-        },
-        {
-            "id": "runClass",
-            "type": "promptString",
-            "description": "Enter the fully qualified class name to run (e.g. cprl.Corretor)"
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Clean Project",
+      "type": "shell",
+      "command": "ant",
+      "args": ["-f", "nbproject/build-impl.xml", "clean"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Build Project",
+      "type": "shell",
+      "command": "ant",
+      "args": [
+        "-f",
+        "nbproject/build-impl.xml",
+        "-Dplatform.home=/usr/lib/jvm/java-17-openjdk-amd64",
+        "-Djava.home=/usr/lib/jvm/java-17-openjdk-amd64",
+        "compile"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Run Corretor",
+      "type": "shell",
+      "command": "ant",
+      "args": [
+        "-f",
+        "nbproject/build-impl.xml",
+        "-Dplatform.home=/usr/lib/jvm/java-17-openjdk-amd64",
+        "-Djava.home=/usr/lib/jvm/java-17-openjdk-amd64",
+        "-Djavac.includes=test/cprl/Corretor.java",
+        "-Drun.class=test.cprl.Corretor",
+        "-Drun.jvmargs=-Djunit.jar=${basedir}/lib/junit_4/junit-4.13.1.jar",
+        "-Drun.test.classpath=${basedir}/lib/junit_4/junit-4.13.1.jar:${basedir}/lib/junit_4/hamcrest-all-1.3.jar",
+        "run-single"
+      ],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    }
+  ]
 }
