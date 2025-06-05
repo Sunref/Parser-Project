@@ -56,38 +56,49 @@ public class ReturnStmt extends Statement {
         // Regra Variada: a instrução return deve estar aninhada a um 
         // subprograma, o que é tratado pelo parser usando SubprogramContext.
         
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-                    
         try {
             
-            if (returnExpr != null) {
+            if ( returnExpr != null ) {
+                
                 returnExpr.checkConstraints();
                 
-                if (!(subprogramDecl instanceof FunctionDecl)) {
+                if ( !( subprogramDecl instanceof FunctionDecl ) ) {
                     String errorMsg = "Return expression allowed only within functions.";
-                    throw error(returnExpr.getPosition(), errorMsg);
+                    throw error( returnExpr.getPosition(), errorMsg );
                 }
                 
-                if (returnExpr.getType() != subprogramDecl.getType()) {
+                if ( returnExpr.getType() != subprogramDecl.getType() ) {
                     String errorMsg = "Return expression type does not match function return type.";
-                    throw error(returnExpr.getPosition(), errorMsg);
+                    throw error( returnExpr.getPosition(), errorMsg );
                 }
+                
             } else {
-                String errorMsg = "A return statement nested within a function must return a value.";
-                throw error(returnPosition, errorMsg);
+                if ( subprogramDecl instanceof FunctionDecl ) {
+                    String errorMsg = "A return statement nested within a function must return a value.";
+                    throw error( returnPosition, errorMsg );
+                }
             }
-
+            
         } catch ( ConstraintException e ) {
             ErrorHandler.getInstance().reportError( e );
         }
-
-        // </editor-fold>
         
     }
 
     @Override
     public void emit() throws CodeGenException {
-        // ...
+        
+        if ( returnExpr != null ) {
+            
+            FunctionDecl funcDecl = (FunctionDecl) subprogramDecl;
+            emit( "LDLADDR " + funcDecl.getRelAddr() );
+            returnExpr.emit();
+            emitStoreInst( returnExpr.getType() );
+            
+        }
+
+        emit( "RET " + subprogramDecl.getParamLength() );
+        
     }
     
 }

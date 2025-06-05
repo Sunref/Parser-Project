@@ -5,6 +5,7 @@ import edu.citadel.compiler.ConstraintException;
 import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.cprl.Type;
 import java.util.ArrayList;
+
 import java.util.List;
 
 /**
@@ -24,8 +25,13 @@ public class LoopStmt extends Statement {
      * expression and an empty list of statements for the loop body.
      */
     public LoopStmt() {
+        
         whileExpr = null;
         statements = new ArrayList<>();
+        
+        L1 = getNewLabel();
+        L2 = getNewLabel();
+        
     }
 
     /**
@@ -74,34 +80,46 @@ public class LoopStmt extends Statement {
         // Regra de Tipo: se uma expressão while existir, ela tem que ser do
         // tipo Boolean.
         
-        // <editor-fold defaultstate="collapsed" desc="Implementação">
-                    
         try {
             
-            if(whileExpr != null){
-                whileExpr.checkConstraints();
-                
+            if ( whileExpr != null ) {
                 if ( whileExpr.getType() != Type.Boolean ) {
                     String errorMsg = "The \"while\" expression should have type Boolean.";
                     throw error( whileExpr.getPosition(), errorMsg );
+                } else {
+                    whileExpr.checkConstraints();
                 }
             }
             
-            for(Statement statement: statements){
-                statement.checkConstraints();
+            for ( Statement stmt : statements ) {
+                stmt.checkConstraints();
             }
             
         } catch ( ConstraintException e ) {
             ErrorHandler.getInstance().reportError( e );
         }
-
-        // </editor-fold>
         
     }
 
     @Override
     public void emit() throws CodeGenException {
-        // ...
+        
+        // L1:
+        emitLabel( L1 );
+
+        if ( whileExpr != null ) {
+            whileExpr.emitBranch( false, L2 );
+        }
+
+        for ( Statement stmt : statements ) {
+            stmt.emit();
+        }
+
+        emit( "BR " + L1 );
+
+        // L2:
+        emitLabel( L2 );
+        
     }
     
 }

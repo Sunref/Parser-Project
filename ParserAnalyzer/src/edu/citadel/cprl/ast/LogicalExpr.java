@@ -88,7 +88,7 @@ public class LogicalExpr extends BinaryExpr {
         Token operator = getOperator();
 
         Symbol operatorSym = operator.getSymbol();
-
+        
         if ( operatorSym == Symbol.andRW ) {
             // if true, branch to code that will evaluate right operand
             leftOperand.emitBranch( true, L1 );

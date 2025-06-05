@@ -6,6 +6,7 @@
 package test.cprl;
 
 
+import edu.citadel.compiler.CodeGenException;
 import edu.citadel.compiler.ErrorHandler;
 import edu.citadel.compiler.Source;
 import edu.citadel.cprl.Parser;
@@ -15,8 +16,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -35,6 +38,62 @@ public class TestUtils {
     // <editor-fold defaultstate="collapsed" desc="Dados dos Testes (não mexa!)">
         
     private static String[] titulos = { 
+            "TesteHello",
+            "TesteCorrect_101",
+            "TesteCorrect_102",
+            "TesteCorrect_103",
+            "TesteCorrect_104",
+            "TesteCorrect_105",
+            "TesteCorrect_106",
+            "TesteCorrect_107",
+            "TesteCorrect_108",
+            "TesteCorrect_109",
+            "TesteCorrect_110",
+            "TesteCorrect_111",
+            "TesteCorrect_112",
+            "TesteCorrect_113",
+            "TesteCorrect_114",
+            "TesteCorrect_115",
+            "TesteCorrect_116",
+            "TesteCorrect_117",
+            "TesteCorrect_118",
+            "TesteCorrect_119",
+            "TesteCorrect_120",
+            "TesteCorrect_121",
+            "TesteCorrect_122",
+            "TesteCorrect_123",
+            "TesteCorrect_124",
+            "TesteCorrect_125",
+            "TesteGCD0",
+            "TesteCorrect_201",
+            "TesteCorrect_202",
+            "TesteCorrect_203",
+            "TesteCorrect_204",
+            "TesteCorrect_205",
+            "TesteCorrect_206",
+            "TesteCorrect_207",
+            "TesteCorrect_208",
+            "TesteCorrect_209",
+            "TesteCorrect_210",
+            "TesteCorrect_211",
+            "TesteCorrect_212",
+            "TesteCorrect_213",
+            "TesteCorrect_214",
+            "TesteCorrect_215",
+            "TesteGCD",
+            "TesteInc",
+            "TesteMax",
+            "TesteAbs",
+            "TesteComposition",
+            "TesteReverse",
+            "TesteHanoi",
+            "TesteCorrect_301",
+            "TesteCorrect_302",
+            "TesteCorrect_303",
+            "TesteCorrect_304",
+            "TesteCorrect_401",
+            "TesteQuickSort",
+            "TesteSort",
             "TesteIncorrect_101",
             "TesteIncorrect_102",
             "TesteIncorrect_103",
@@ -94,6 +153,62 @@ public class TestUtils {
     };
 
     private static String[] caminhosFontes = {
+            "../examples/Correct/CPRL0/Hello.cprl",
+            "../examples/Correct/CPRL0/Correct_101.cprl",
+            "../examples/Correct/CPRL0/Correct_102.cprl",
+            "../examples/Correct/CPRL0/Correct_103.cprl",
+            "../examples/Correct/CPRL0/Correct_104.cprl",
+            "../examples/Correct/CPRL0/Correct_105.cprl",
+            "../examples/Correct/CPRL0/Correct_106.cprl",
+            "../examples/Correct/CPRL0/Correct_107.cprl",
+            "../examples/Correct/CPRL0/Correct_108.cprl",
+            "../examples/Correct/CPRL0/Correct_109.cprl",
+            "../examples/Correct/CPRL0/Correct_110.cprl",
+            "../examples/Correct/CPRL0/Correct_111.cprl",
+            "../examples/Correct/CPRL0/Correct_112.cprl",
+            "../examples/Correct/CPRL0/Correct_113.cprl",
+            "../examples/Correct/CPRL0/Correct_114.cprl",
+            "../examples/Correct/CPRL0/Correct_115.cprl",
+            "../examples/Correct/CPRL0/Correct_116.cprl",
+            "../examples/Correct/CPRL0/Correct_117.cprl",
+            "../examples/Correct/CPRL0/Correct_118.cprl",
+            "../examples/Correct/CPRL0/Correct_119.cprl",
+            "../examples/Correct/CPRL0/Correct_120.cprl",
+            "../examples/Correct/CPRL0/Correct_121.cprl",
+            "../examples/Correct/CPRL0/Correct_122.cprl",
+            "../examples/Correct/CPRL0/Correct_123.cprl",
+            "../examples/Correct/CPRL0/Correct_124.cprl",
+            "../examples/Correct/CPRL0/Correct_125.cprl",
+            "../examples/Correct/CPRL0/GCD0.cprl",
+            "../examples/Correct/Subprograms/Correct_201.cprl",
+            "../examples/Correct/Subprograms/Correct_202.cprl",
+            "../examples/Correct/Subprograms/Correct_203.cprl",
+            "../examples/Correct/Subprograms/Correct_204.cprl",
+            "../examples/Correct/Subprograms/Correct_205.cprl",
+            "../examples/Correct/Subprograms/Correct_206.cprl",
+            "../examples/Correct/Subprograms/Correct_207.cprl",
+            "../examples/Correct/Subprograms/Correct_208.cprl",
+            "../examples/Correct/Subprograms/Correct_209.cprl",
+            "../examples/Correct/Subprograms/Correct_210.cprl",
+            "../examples/Correct/Subprograms/Correct_211.cprl",
+            "../examples/Correct/Subprograms/Correct_212.cprl",
+            "../examples/Correct/Subprograms/Correct_213.cprl",
+            "../examples/Correct/Subprograms/Correct_214.cprl",
+            "../examples/Correct/Subprograms/Correct_215.cprl",
+            "../examples/Correct/Subprograms/GCD.cprl",
+            "../examples/Correct/Subprograms/Inc.cprl",
+            "../examples/Correct/Subprograms/Max.cprl",
+            "../examples/Correct/Subprograms/Abs.cprl",
+            "../examples/Correct/Subprograms/Composition.cprl",
+            "../examples/Correct/Subprograms/Reverse.cprl",
+            "../examples/Correct/Subprograms/Hanoi.cprl",
+            "../examples/Correct/Arrays/Correct_301.cprl",
+            "../examples/Correct/Arrays/Correct_302.cprl",
+            "../examples/Correct/Arrays/Correct_303.cprl",
+            "../examples/Correct/Arrays/Correct_304.cprl",
+            "../examples/Correct/ArraysAndProcedures/Correct_401.cprl",
+            "../examples/Correct/ArraysAndProcedures/Sort.cprl",
+            "../examples/Correct/ArraysAndProcedures/QuickSort.cprl",
             "../examples/Incorrect/CPRL0/Incorrect_101.cprl",
             "../examples/Incorrect/CPRL0/Incorrect_102.cprl",
             "../examples/Incorrect/CPRL0/Incorrect_103.cprl",
@@ -266,10 +381,10 @@ public class TestUtils {
     /*
      * Carrega um arquivo de solução e retorna a String com o conteúdo do mesmo.
      */
-    private static String carregar( String path ) throws FileNotFoundException {
+    private static String carregar( String path ) throws FileNotFoundException, IOException {
         
         StringBuilder expResultBuilder = new StringBuilder();
-        try ( Scanner s = new Scanner( new File( path ) ) ) {
+        try ( Scanner s = new Scanner( new File( path ), StandardCharsets.UTF_8 ) ) {
             while ( s.hasNextLine() ) {
                 expResultBuilder.append( s.nextLine() ).append( "\n" );
             }
@@ -286,7 +401,7 @@ public class TestUtils {
         
         StringBuilder expResultBuilder = new StringBuilder();
         
-        try ( Scanner s = new Scanner( new File( "../examples/cprlc_all Results - projeto.txt" ), StandardCharsets.UTF_8 ) ) {
+        try ( Scanner s = new Scanner( new File( "../examples/cprl_full Results - projeto.txt" ), StandardCharsets.UTF_8 ) ) {
             while ( s.hasNextLine() ) {
                 expResultBuilder.append( s.nextLine() ).append( "\n" );
             }
@@ -346,6 +461,25 @@ public class TestUtils {
             program.checkConstraints();
         }
 
+        if ( !errorHandler.errorsExist() ) {
+            
+            System.out.println( "Generating code..." );
+
+            try {
+                
+                // por padrão AST direcionará a emissão do código gerado
+                // na saída padrão
+                
+                //AST.setPrintWriter( getTargetPrintWriter( sourceFile ) );
+                
+                program.emit();
+                
+            } catch ( CodeGenException ex ) {
+                errorHandler.reportError( ex );
+            }
+            
+        }
+
         if ( errorHandler.errorsExist() ) {
             errorHandler.printMessage( "Errors detected in " + sourceFile.getName()
                     + " -- compilation terminated." );
@@ -378,6 +512,26 @@ public class TestUtils {
                 caminhosFontesL.toArray( new String[0] ),
                 executarTestesDeUnidade );
         
+    }
+    
+    private static PrintWriter getTargetPrintWriter( File sourceFile ) {
+        
+        String baseName = sourceFile.getName();
+        int suffixIndex = baseName.lastIndexOf( ".cprl" );
+        if ( suffixIndex > 0 ) {
+            baseName = sourceFile.getName().substring( 0, suffixIndex );
+        }
+
+        String targetFileName = baseName + ".asm";
+
+        try {
+            File targetFile = new File( sourceFile.getParent(), targetFileName );
+            return new PrintWriter( new FileWriter( targetFile, StandardCharsets.UTF_8 ), true );
+        } catch ( IOException e ) {
+            e.printStackTrace();
+            System.exit( -1 );
+            return null;   // will never execute
+        }
     }
     
 }

@@ -4,6 +4,7 @@ import edu.citadel.compiler.CodeGenException;
 import edu.citadel.compiler.ConstraintException;
 import edu.citadel.compiler.Position;
 import edu.citadel.cprl.Type;
+import java.io.PrintStream;
 
 import java.io.PrintWriter;
 
@@ -15,7 +16,8 @@ public abstract class AST {
     // número de espaços que serão impressos antes do opcode
     private static final String SPACES = "   ";
 
-    private static PrintWriter out = new PrintWriter( System.out );
+    private static PrintWriter pwOut;
+    private static PrintStream out = System.out;
 
     // número da label atual para controle de fluxo
     private static int currentLabelNum = -1;
@@ -24,7 +26,7 @@ public abstract class AST {
      * Configura o PrintWriter que será usado para a geração de código.
      */
     public static void setPrintWriter( PrintWriter out ) {
-        AST.out = out;
+        AST.pwOut = out;
     }
 
     /**
@@ -109,14 +111,22 @@ public abstract class AST {
      * única linha.
      */
     protected void emitLabel( String label ) {
-        out.println( label + ":" );
+        if ( pwOut != null ) {
+            pwOut.println( label + ":" );
+        } else {
+            out.println( label + ":" );
+        }
     }
 
     /**
      * Emite uma representação em String para uma instrução em assemply.
      */
     protected void emit( String instruction ) {
-        out.println( SPACES + instruction );
+        if ( pwOut != null ) {
+            pwOut.println( SPACES + instruction );
+        } else {
+            out.println( SPACES + instruction );
+        }
     }
     
     /**

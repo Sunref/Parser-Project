@@ -33,7 +33,11 @@ public class StatementPart extends AST {
 
     @Override
     public void emit() throws CodeGenException {
-        // ...
+        
+        for ( Statement stmt : statements ) {
+            stmt.emit();
+        }
+        
     }
     
 }
