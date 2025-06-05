@@ -97,7 +97,13 @@ public class ProcedureCallStmt extends Statement {
 
     @Override
     public void emit() throws CodeGenException {
-        // ...
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        // sua implementação aqui
+
+        // </editor-fold>
+        
     }
     
 }

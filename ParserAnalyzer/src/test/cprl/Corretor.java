@@ -17,7 +17,7 @@ public class Corretor {
     public static void main( String[] args ) throws IOException, FileNotFoundException {
         
         int[] intervalos = { 
-            1, 27
+            28, 56
         };
         
         TestUtils.testeEmLote( intervalos, false );

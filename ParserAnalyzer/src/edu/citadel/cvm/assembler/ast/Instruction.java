@@ -195,4 +195,15 @@ public abstract class Instruction extends AST {
     protected void emit( char arg ) throws IOException {
         getOutputStream().write( ByteUtil.charToBytes( arg ) );
     }
+    
+    /**
+     * Reinicia os mapas para uma próxima execução.
+     * 
+     * @author Prof. Dr. David Buzatto
+     */
+    public static void resetMaps() {
+        labelMap.clear();
+        idMap.clear();
+    }
+    
 }

@@ -125,7 +125,13 @@ public class FunctionDecl extends SubprogramDecl {
     
     @Override
     public void emit() throws CodeGenException {
-        // ...
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        // sua implementação aqui
+
+        // </editor-fold>
+        
     }
     
 }

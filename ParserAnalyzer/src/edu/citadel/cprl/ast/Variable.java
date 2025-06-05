@@ -110,18 +110,26 @@ public class Variable extends Expression {
             emit( "LDLADDR " + decl.getRelAddr() );
         }
 
-        // For an array, at this point the base address of the array
-        // is on the top of the stack.  We need to replace it by the
-        // sum: base address + offset
+        // Para um array, nesse ponto o endereço base do array está no topo da
+        // pilha. Você precisa substituí-lo pela soma: endereço base + offset
         // ...
         
-        // Big Hint: When you apply an index, you should be generating code based on the element type.
-        // Loop over the index expressions.
-        // Outside the loop declare
+        // Dica Importante: ao se aplicar um índice, você deve gerar código
+        // baseado no tipo do elemento.
+        // Itere pelas expressões de índices
+        // Fora do laço declare
         // Type declType = decl.getType();
-        // Inside the loop at the top, cast declType to a variable named arrayType (of type ArrayType).
-        // Instead of emitting based on getType().getSize(), emit based on arrayType.getElementType().getSize().
-        // At the end of the loop, set declType to arrayType.getElementType().
+        // Dentro do laço, logo no topo, faça o cast de declType para uma variável
+        // com nome de arrayType (do tipo ArrayType).
+        // Ao invés de emitir código baseado em getType().getSize(), emita com
+        // base em arrayType.getElementType().getSize().
+        // No fim do laço, configure declType como arrayType.getElementType().
+        
+        // <editor-fold defaultstate="collapsed" desc="Implementação">
+                    
+        // sua implementação aqui
+
+        // </editor-fold>
         
     }
     

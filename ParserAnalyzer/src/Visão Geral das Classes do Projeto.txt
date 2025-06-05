@@ -5,17 +5,16 @@ da AST a implementação parcial contém:
     - o construtor e os métodos sobrescritos sem código em seus respectivos blocos;
     - os atributos/campos são mantidos para que possam ser usados como dica.
 
-Neste passo do projeto, será necessário implementar o método emit() das classes
-da AST descritas abaixo. Note que logo a seguir há um resumo das classes que
-precisam ter esse método implementado! É nelas que você precisará mexer!
+Neste passo final do projeto, será necessário implementar o método emit() das
+classes da AST descritas abaixo. Note que logo a seguir há um resumo das classes
+que precisam ter esse método implementado! É nelas que você precisará mexer!
 
 Implementar o método emit() nas classes abaixo, contidas no pacote
 edu.citadel.cprl.ast:
 
-O  MultiplyingExpr.java -> Feito
-O  NegationExpr.java -> Feito
-O  NotExpr.java -> Feito
-O  WritelnStmt.java -> Feito
+  FunctionDecl.java
+  ProcedureCallStmt.java
+  Variable.java
 
 
 Abaixo segue a listagem completa das classes:
@@ -37,40 +36,40 @@ No pacote edu.citadel.cprl.ast
   AST.java
   AddingExpr.java
   ArrayTypeDecl.java
-  AssignmentStmt.java
-  BinaryExpr.java
-  ConstDecl.java
-  ConstValue.java
-  Declaration.java
+  AssignmentStmt.java        
+  BinaryExpr.java    
+  ConstDecl.java             
+  ConstValue.java    
+  Declaration.java    
   DeclarativePart.java
-  ElsifPart
-  ExitStmt.java
-  Expression.java
-  FunctionCall.java
-* FunctionDecl.java          -> Não precisa mexer por enquanto
-  IfStmt.java
-  InitialDecl.java
-  LogicalExpr.java
-  LoopStmt.java
-* MultiplyingExpr.java       -> Implementar o método emit()
-  NamedDecl.java
-  NamedValue.java
-* NegationExpr.java          -> Implementar o método emit()
-* NotExpr.java               -> Implementar o método emit()
-  OutputStmt.java
-  ParameterDecl.java
-* ProcedureCallStmt.java     -> Não precisa mexer por enquanto
+  ElsifPart    
+  ExitStmt.java              
+  Expression.java    
+  FunctionCall.java    
+* FunctionDecl.java          -> Implementar o método emit()
+  IfStmt.java    
+  InitialDecl.java    
+  LogicalExpr.java    
+  LoopStmt.java              
+  MultiplyingExpr.java 
+  NamedDecl.java             
+  NamedValue.java            
+  NegationExpr.java        
+  NotExpr.java             
+  OutputStmt.java    
+  ParameterDecl.java    
+* ProcedureCallStmt.java     -> Implementar o método emit()
   ProcedureDecl.java
-  Program.java
+  Program.java    
   ReadStmt.java
-  RelationalExpr.java
+  RelationalExpr.java        
   ReturnStmt.java
-  SingleVarDecl.java
-  Statement.java
-  StatementPart.java
-  SubprogramDecl.java
-  UnaryExpr.java
-  VarDecl.java
-* Variable.java              -> Não precisa mexer por enquanto
-  WriteStmt.java
-* WritelnStmt.java           -> Implementar o método emit()
+  SingleVarDecl.java    
+  Statement.java    
+  StatementPart.java         
+  SubprogramDecl.java    
+  UnaryExpr.java    
+  VarDecl.java    
+* Variable.java              -> Terminar a implementação do método emit()
+  WriteStmt.java    
+  WritelnStmt.java           

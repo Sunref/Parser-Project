@@ -37,7 +37,7 @@ public class TestUtils {
     
     // <editor-fold defaultstate="collapsed" desc="Dados dos Testes (não mexa!)">
         
-    private static String[] titulos = { 
+    public static String[] titulos = { 
             "TesteHello",
             "TesteCorrect_101",
             "TesteCorrect_102",
@@ -152,7 +152,7 @@ public class TestUtils {
             "TesteIncorrect_305"
     };
 
-    private static String[] caminhosFontes = {
+    public static String[] caminhosFontes = {
             "../examples/Correct/CPRL0/Hello.cprl",
             "../examples/Correct/CPRL0/Correct_101.cprl",
             "../examples/Correct/CPRL0/Correct_102.cprl",
@@ -207,8 +207,8 @@ public class TestUtils {
             "../examples/Correct/Arrays/Correct_303.cprl",
             "../examples/Correct/Arrays/Correct_304.cprl",
             "../examples/Correct/ArraysAndProcedures/Correct_401.cprl",
-            "../examples/Correct/ArraysAndProcedures/Sort.cprl",
             "../examples/Correct/ArraysAndProcedures/QuickSort.cprl",
+            "../examples/Correct/ArraysAndProcedures/Sort.cprl",
             "../examples/Incorrect/CPRL0/Incorrect_101.cprl",
             "../examples/Incorrect/CPRL0/Incorrect_102.cprl",
             "../examples/Incorrect/CPRL0/Incorrect_103.cprl",
