@@ -92,12 +92,10 @@ public class ProcedureCallStmt extends Statement {
     @Override
     public void emit() throws CodeGenException {
         // Implementação:
-        emit("ALLOC " + procDecl.getType().getSize());
-
         for (Expression expr : actualParams) {
             expr.emit();
         }
 
-        emit("CALL " + procId.getSubprogramLabel());
+        emit("CALL " + procDecl.getSubprogramLabel());
     }
 }

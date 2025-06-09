@@ -113,10 +113,8 @@ public class FunctionDecl extends SubprogramDecl {
     public void emit() throws CodeGenException {
         // Implementação:
         setRelativeAddresses();
-
         emitLabel(getSubprogramLabel());
-        emit("PROGRAM" + getVarLength());
+        emit(" PROC " + getVarLength());
         getStatementPart().emit();
-        emit("RET" + getParamLength());
     }
 }
