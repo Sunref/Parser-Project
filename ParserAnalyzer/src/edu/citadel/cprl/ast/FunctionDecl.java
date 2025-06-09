@@ -114,7 +114,7 @@ public class FunctionDecl extends SubprogramDecl {
         // Implementação:
         setRelativeAddresses();
         emitLabel(getSubprogramLabel());
-        emit(" PROC " + getVarLength());
+        emit("PROC " + getVarLength());
         getStatementPart().emit();
     }
 }
