@@ -128,22 +128,18 @@ public class Variable extends Expression {
 
         // Implementação:
         Type declType = decl.getType();
-        for (Expression indexExpr : indexExprs) {
-            indexExpr.emit();
-            emit("MUL " + declType.getSize()); // multiplicar pelo tamanho do elemento
-            emit("ADD"); // somar ao endereço base
-            declType = ((ArrayType) declType).getElementType(); // atualizar o tipo
-        }
-
-        // Emitir o código para carregar o valor do elemento.
-        if (declType == Type.Integer) {
-            emit("LOADI "); // carregar inteiro
-        } else if (declType == Type.Boolean) {
-            emit("LOADB "); // carregar booleano
-        } else if (declType == Type.Char) {
-            emit("LOADC "); // carregar caractere
-        } else {
-            emit("LOADW "); // carregar endereço do elemento
+        
+        for (Expression expr : indexExprs) {
+            ArrayType arrayType = (ArrayType) declType;
+            expr.emit();
+            
+            if(arrayType.getElementType() != Type.Boolean){
+                emit( "LDCINT " + arrayType.getElementType().getSize());
+                emit( "MUL" );
+            }
+            
+            emit( "ADD" );
+            declType = arrayType.getElementType();
         }
     }
 }
